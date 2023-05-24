@@ -1,0 +1,1 @@
+Instalar aws-amplify: npm install aws-amplify @aws-amplify/ui-react emotion

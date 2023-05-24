@@ -1,0 +1,171 @@
+.Entrar {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.Navbar {
+    width: 100%;
+    height: 11vh;
+    border-bottom: solid 1px rgb(187, 187, 187);
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    padding: .5rem 0;
+}
+.Navbar .Container {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.Navbar a{
+    text-decoration: none;
+    height: auto;
+    margin: auto 0;
+}
+.Navbar .Logo {
+    height: 100%;
+    width: auto;
+    display: flex;
+}
+.Navbar .Logo a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.Navbar .Logo img {
+    height: 80%;
+    width: auto;
+    margin: auto;
+}
+.Assinar {
+    display: flex;
+    min-width: 150px;
+    height: auto;
+    margin: auto .5rem;
+    text-align: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+.Assinar svg {
+    margin: 0 .8rem;
+}
+.Assinar p {
+    font-size: 20px;
+    margin: auto 0;
+    color: white;
+}
+.Assinar p:hover {
+    transition: 500ms;
+    color: rgb(224, 224, 224);
+}
+.EntrarBody {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+.LoginBox {
+    width: 60%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: auto;
+    border-radius: 2rem;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+}
+.LoginBox .Title {
+    width: 100%;
+    padding: 1rem;
+    padding-bottom: 0;
+}
+.LoginBox .Title p {
+    font-size: 25px;
+    font-weight: bold;
+}
+.Inputs {
+    width: 100%;
+    height: auto;
+}
+.Input {
+    width: 100%;
+    height: 4.5rem;
+    padding: 1rem;
+}
+.Input input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: 0;
+    padding: 0 5px;
+}
+.EsqueciSenha {
+    width: 100%;
+    text-align: start;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.EsqueciSenha a {
+    width: auto;
+    text-decoration: none;
+    font-weight: bold;
+    color: #3b5998;
+}
+.Button {
+    width: 100%;
+    height: 5rem;
+    padding: 1rem;
+}
+.Button button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    background: linear-gradient(yellow, #dbdb00);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+}
+.Button button:active {
+    position: relative;
+    top: 2px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.5);
+
+}
+.Divider {
+    width: 100%;
+    text-align: center;
+    color: gray;
+}
+.Alternatives {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: .5rem 0;
+}
+.Alternative {
+    width: 60px;
+    height: 60px;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    padding: .5rem;
+    margin: 0 1rem;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+.Alternative:active {
+    position: relative;
+    top: 3px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+.Alternative img {
+    height: 100%;
+    width: 100%;
+}
+.Facebook {
+    background-color: #3b5998;
+}

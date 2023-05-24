@@ -1,0 +1,35 @@
+.Initial2 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.Initial2 .Text {
+    width: 50%;
+    height: auto;
+    margin: auto;
+}
+.Initial2 .Text .Title {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(255, 255, 96);
+}
+.Initial2 .Text .Content {
+    text-align: justify;
+}
+.Initial2 .Text .ContentTitle {
+    font-size: 25px;
+    color: rgb(255, 255, 96);
+    font-weight: bold;
+    margin: 1rem 0;
+}
+.Initial2 .Image {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+}
+.Initial2 .Image img {
+    width: 80%;
+    height: auto;
+    margin: auto;
+}
