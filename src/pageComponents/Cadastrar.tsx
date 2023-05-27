@@ -1,6 +1,7 @@
 import Image from "next/image"
 import style from "../styles/Cadastrar.module.css"
 import Link from "next/link"
+import CadastrarBox from "@/layout/CadastrarBox"
 
 const Entrar = () => {
     return (
@@ -24,7 +25,7 @@ const Entrar = () => {
                 </div>
             </div>
             <div className={style.EntrarBody}>
-                {/*<LoginBox></LoginBox>*/}
+                <CadastrarBox></CadastrarBox>
             </div>
         </div>
     )
