@@ -1,0 +1,30 @@
+.AuthEmail {
+    width: 100%;
+    min-height: 89vh;
+    display: flex;
+}
+.AuthEmailBox {
+    width: 60%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.03);
+    margin: auto;
+    border-radius: 2rem;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+}
+.AuthEmailBox .Title {
+    width: 100%;
+    padding: 1rem;
+    padding-bottom: 0;
+}
+.AuthEmailBox .Title p {
+    font-size: 25px;
+    font-weight: bold;
+}
+.Content {
+    padding: 1rem;
+}
+.NovoEmail {
+    color: blue;
+    cursor: pointer;
+}

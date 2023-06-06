@@ -23,7 +23,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* <Modal id='cookiesModal' show={showModal} onClose={() => setShowModal(false)} title='cookies' body='Testando' isBrowser={isBrowser}/> */}
-      <TopNavbar></TopNavbar>
+      <TopNavbar entrarBt={true} cadastrarBt={true} perfilBt={false} fixed={true}></TopNavbar>
       <Body id='topo' bgImage='url(/media/img3.jpg)'>
         <Container>
           <Initial/>

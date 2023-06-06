@@ -9,7 +9,7 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }: A
   useEffect( () =>{require("bootstrap/dist/js/bootstrap.bundle.min.js");},[]);
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+        <Component {...pageProps} />
     </SessionProvider>
 
   )

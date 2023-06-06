@@ -1,9 +1,15 @@
-.TopNavbar {
+.TopNavbarFixed {
     width: 100%;
     height: 4.5rem;
     background-color: black;
     padding: .5rem 0;
     position: fixed;
+}
+.TopNavbarNormal {
+    width: 100%;
+    height: 4.5rem;
+    background-color: black;
+    padding: .5rem 0;
 }
 .Divs {
     display: flex;

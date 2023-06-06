@@ -1,7 +1,10 @@
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
-import EmailProvider from "next-auth/providers/email";
+import Credentials from "next-auth/providers/credentials";
+import { credentials as credentialsModel, payloadUserSendMail } from '../models/userModels'
+import { checkPass } from '../helpers/bcrypt'
+import { sendAuthMail } from '../services/userServices'
 
 export const authOptions = {
     providers: [
@@ -13,14 +16,92 @@ export const authOptions = {
             clientId: process.env.FACEBOOK_ID,
             clientSecret: process.env.FACEBOOK_SECRET
         }),
+        Credentials({
+            name: "Credentials",
+            type: "credentials",
+            async authorize(credentials, req) {
+              try {
+                if (credentials.authorization !== process.env.NEXT_PUBLIC_API_TOKEN) {
+                  console.log('Autorization error')
+                  return null
+                }
+                
+                const response = credentialsModel.safeParse(credentials)
+                if (!response.success) {
+                  const { error } = response.error;
+                  console.log('erros ' + error)
+                  return null
+                }
+                const getUser = fetch(`${process.env.API_URL}/auth/login`, {
+                  method: 'POST',
+                  body: JSON.stringify(response.data),
+                  headers: {'Content-Type': 'application/json'}
+                })
+                .then(response => response.json())
+                .then(data => {
+                  return data
+                })
+                const user = await getUser
+                if (!user || !await checkPass(credentials.password, user.hash)) {
+                  return null
+                }
+                
+                const payload = payloadUserSendMail.safeParse(user)
+                if (!payload.success) {
+                  const { error } = payload.error;
+                  console.log('erros ' + error)
+                  return null
+                }
+                const sendMail = await sendAuthMail(payload.data)
+                if (sendMail) {
+                  return user
+                }
+                return null
+                
+              } catch (error) {
+                console.log('erro ' + error)
+                return null
+              }
+            }
+        })
     ],
     callbacks: {
-        async redirect({ url, baseUrl }) {
-          // Allows relative callback URLs
-          if (url.startsWith("/")) return `${baseUrl}${url}`
-          // Allows callback URLs on the same origin
-          else if (new URL(url).origin === baseUrl) return url
-          return baseUrl
+        async jwt({ token, user, account }) {
+          // Persist the OAuth access_token to the token right after signin
+          if (account) {
+            token.accessToken = account.access_token
+            token.provider = account.provider
+          }
+          if (user) {
+            token.alternative_id = user.alternative_id
+            token.is_authenticated = user.is_authenticated
+            let data = new Date()
+            data.setHours(data.getHours() + 1)
+            token.last_email_exp = data
+          }
+          return token
+        },
+        async session({ session, token, user }) {
+          // Send properties to the client, like an access_token from a provider.
+          session.accessToken = token.accessToken
+          if (session?.user) {
+            session.user.alternative_id = token.alternative_id
+            session.user.provider = token.provider
+            session.user.is_authenticated = token.is_authenticated
+            session.user.last_email_exp = token.last_email_exp
+          }
+          return session
+        },
+        async signIn({ user, account, profile, email, credentials }) {
+          const isAllowedToSignIn = true
+          if (isAllowedToSignIn) {
+            return true
+          } else {
+            // Return false to display a default error message
+            return false
+            // Or you can return a URL to redirect to:
+            // return '/unauthorized'
+          }
         }
     },
     secret: process.env.NEXT_AUTH_SECRET
