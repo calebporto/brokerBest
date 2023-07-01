@@ -2,19 +2,21 @@ import Link from "next/link"
 import style from "../styles/Entrar.module.css"
 import Image from "next/image"
 import Alert, { _throwAlert } from "./Alert"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useSession, signIn, signOut } from "next-auth/react"
 import Router from "next/router"
+import { AuthContext } from "@/contexts/AuthContext"
 
 
 
 const LoginBox = () => {
-    
+    const { loginRequire, systemMessage } = useContext(AuthContext)
+    console.log(systemMessage)
+    const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
     const { data: session } = useSession() as any
-    
     function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
@@ -70,24 +72,32 @@ const LoginBox = () => {
         Router.push('/painel')
     }
     function googleLogin() {
-        signIn('google', {callbackUrl: '/painel'})
+        signIn('google', {callbackUrl: '/auth/login-social'})
     }
     function facebookLogin() {
-        signIn('facebook', {callbackUrl: '/painel'})
+        signIn('facebook', {callbackUrl: '/auth/login-social'})
     }
-    useEffect(() => {
-        if (session) {
-            if (!session.user.is_authenticated) {
-                Router.push('/entrar/auth-email')
-            } else{
-                Router.push('/painel')
-            }
+    
+    if (session === undefined) {
+        return null
+    } else if (session == null) {
+        if (!showPage) {
+            setShowPage(true)
         }
-    }, [session])
+    } else {
+        if (!session.user.is_authenticated) {
+            Router.push('/entrar/auth-email')
+        } else{
+            Router.push('/painel')
+        }
+    }
+    if (loginRequire) {
+        loginRequire(true)
+    }
     
     return (
-        <div id="loginBox" className={style.LoginBox}>
-            <Alert message={alertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} />
+        showPage ? <div id="loginBox" className={style.LoginBox}>
+            <Alert message={alertMessage} setMessage={setAlertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} showSystemMessage={true}/>
             <div className={style.Title}>
                 <p>Login</p>
             </div>
@@ -102,7 +112,7 @@ const LoginBox = () => {
                     <button id={'loginBt'} onClick={() => emailLogin()}>Entrar</button>
                 </div>
                 <div className={style.EsqueciSenha}>
-                    <Link href={'#'}>
+                    <Link href={'/entrar/forgot-password'}>
                         Esqueceu a senha?
                     </Link>
                 </div>
@@ -117,7 +127,7 @@ const LoginBox = () => {
                 </div>
             </div>
             <button onClick={() => signOut()}></button>
-        </div>
+        </div> : null
     )
 }
 export default LoginBox

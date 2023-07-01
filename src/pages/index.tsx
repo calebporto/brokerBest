@@ -4,16 +4,16 @@ import Container from '@/layout/Container'
 import TopNavbar from '@/layout/TopNavbar'
 import Initial2 from '@/components/Initial2'
 import Initial from '@/components/Initial'
-import { useEffect, useState } from 'react'
-import Modal from '@/layout/Modal'
 import Footer from '@/layout/Footer'
+import { checkContextUpdate } from '@/helpers/helpers'
+import { useContext } from 'react'
+import { AuthContext } from '@/contexts/AuthContext'
+
 export default function Home() {
-  // const [showModal, setShowModal] = useState(false)
-  // const [isBrowser, setIsBrowser] = useState(false)
-  // useEffect(() => {
-  //   setIsBrowser(true)
-  //   setShowModal(true)
-  // },[])
+  const { ...context } = useContext(AuthContext)
+  if (context.user.lastUpdate) {
+      checkContextUpdate(context)
+  }
   return (
     <>
       <Head>
@@ -22,8 +22,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {/* <Modal id='cookiesModal' show={showModal} onClose={() => setShowModal(false)} title='cookies' body='Testando' isBrowser={isBrowser}/> */}
-      <TopNavbar entrarBt={true} cadastrarBt={true} perfilBt={false} fixed={true}></TopNavbar>
+      <TopNavbar entrarBt={true} cadastrarBt={true} perfilBt={false} fixed={true} contextUser={context}></TopNavbar>
       <Body id='topo' bgImage='url(/media/img3.jpg)'>
         <Container>
           <Initial/>

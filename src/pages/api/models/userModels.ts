@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { nullable, z } from "zod";
 
 export const user = z.object({
     nome: z.string(),
@@ -11,7 +11,7 @@ export const user = z.object({
     bairro: z.string(),
     cidade: z.string(),
     uf: z.string(),
-    password: z.string(),
+    password: z.optional(z.string()),
     provider: z.number()
   });
 
@@ -40,4 +40,22 @@ export const emailValidateModel = z.object({
     name: z.string(),
     email: z.string()
   })
+})
+
+export const contextUserModel = z.object({
+  alternative_id: z.string().nullable(),
+  name: z.string().nullable(),
+  email: z.string().nullable(),
+  tel: z.string().nullable(),
+  cep: z.string().nullable(),
+  endereco: z.string().nullable(),
+  num: z.string().nullable(),
+  complemento: z.string().nullable(),
+  bairro: z.string().nullable(),
+  cidade: z.string().nullable(),
+  uf: z.string().nullable(),
+  provider: z.number().nullable(),
+  is_admin: z.boolean().nullable(),
+  is_complete_data: z.boolean().nullable(),
+  lastUpdate: z.date().nullable()
 })

@@ -15,6 +15,7 @@
     display: flex;
     height: 100%;
     justify-content: space-between;
+    width: 100%;
 }
 .Divs .Logo {
     height: 100%;
@@ -27,16 +28,20 @@
     margin: auto;
 }
 .Buttons {
+    position: relative;
     display: flex;
+    justify-content: flex-end;
+    width: 45%;
 }
 .Buttons a{
     text-decoration: none;
     height: auto;
     margin: auto 0;
+    width: 33%;
 }
 .Entrar, .Assinar {
     display: flex;
-    min-width: 150px;
+    width: 100%;
     height: auto;
     margin: auto .5rem;
     text-align: center;
@@ -49,10 +54,88 @@
     margin: 0 .8rem;
 }
 .Entrar p, .Assinar p {
-    font-size: 20px;
+    font-size: 16px;
     margin: auto 0;
 }
 .Entrar:hover, .Assinar:hover {
     transition: 500ms;
     color: rgb(224, 224, 224);
+}
+.PerfilDropdown {
+    position: absolute;
+    width: 40%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.DropdownButton {
+    width: 50%;
+    height: 2.5rem;
+    display: flex;
+    margin: .5rem 0 .8rem auto;
+}
+.BtContent {
+    width: 85%;
+    height: 100%;
+    border-end-end-radius: 0;
+    border-start-end-radius: 0;
+}
+.BtToggler {
+    width: 15%;
+    height: 100%;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+}
+.DropdownContent {
+    width: 100%;
+    padding: .5rem;
+    background-color: rgb(230, 230, 230);
+}
+.DropdownItem {
+    width: 100%;
+    min-height: 30px;
+    border: none;
+    text-align: start;
+    background-color: rgb(230, 230, 230);
+}
+.DropdownItem:hover {
+    font-weight: bold;
+    transition: 300ms;
+}
+.TitleBar {
+    width: 100%;
+    height: 4rem;
+    background-color: rgb(247, 247, 247);
+    padding: .5rem 0;
+    display: flex;
+    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.5);
+}
+.TitleBar p {
+    height: auto;
+    margin: auto;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+@media (max-width : 767px) {
+    .Buttons {
+        width: 60%;
+    }
+    .Buttons a {
+        width: 25%;
+    }
+    .Entrar, .Assinar {
+        max-width: 100%;
+        min-width: 0px;
+    }
+    .Entrar svg, .Assinar svg {
+        margin: auto;
+    }
+    .PerfilDropdown {
+        width: 100%;
+    }
+    .DropdownButton {
+        width: 40%;
+        margin-right: 0;
+    }
 }

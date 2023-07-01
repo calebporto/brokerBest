@@ -9,6 +9,7 @@ type Token = {
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  
   const { method } = req
   if (method !== "POST") {
     res.setHeader("Allow", ["POST"]);
@@ -19,8 +20,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   authenticateRequest(req, res, async () => {
     const session = await getServerSession(req, res, authOptions)
-    
-
+    console.log('chamou api')
     const response = emailValidateModel.safeParse({
       token: JSON.parse(req.body).token,
       session: session.user
@@ -33,8 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         error: { message: "Invalid request", errors },
       });
     }
-    console.log('response')
-    console.log(response.data)
+    console.log('ate aqui')
     const sendToken = fetch(`${process.env.API_URL}/auth/email-validate`, {
       method: 'POST',
       body: JSON.stringify(response.data),
@@ -42,10 +41,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     })
     .then(response => response.json())
     .then(data => {
-      return data
+      return JSON.parse(data)
     })
     const result = await sendToken
-    console.log(result)
-    res.status(200).json('ok')
+    if (result) {
+      res.status(200).json('ok')
+    } else {
+      res.status(401).json('ok')
+    }
   })
 }

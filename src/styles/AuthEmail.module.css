@@ -28,3 +28,9 @@
     color: blue;
     cursor: pointer;
 }
+
+@media (max-width: 767px) {
+    .AuthEmailBox {
+        width: 90%;
+    }
+}

@@ -1,14 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getSession } from 'next-auth/react'
+import { OptionalChain } from 'typescript'
 
 type Data = {
-  name: string
+  name?: string
+  error?: string
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  console.log(req.headers)
+  const session = await getSession()
+  if (session == null) {
+    res.status(401).json({error: 'Unauthorizated'})
+  }
   res.status(200).json({ name: 'John Doe' })
 }

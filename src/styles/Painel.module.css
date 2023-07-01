@@ -1,0 +1,58 @@
+.PainelList {
+    display: flex;
+    width: 100%;
+}
+.List {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    justify-content: space-between;
+}
+.Destaques {
+    width: 100%;
+    margin: 4rem 0;
+    position: relative;
+}
+.DivCarousel {
+    height: 100vh;
+    width: 100%;
+}
+.Title {
+    height: 4rem;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+}
+.Title p {
+    font-size: 25px;
+    font-weight: bold;
+    margin: auto 0;
+    color: rgb(250, 250, 250);
+}
+.PremiumImg {
+    height: 50%;
+    width: auto;
+    margin: auto 2rem;
+}
+.Legenda {
+    background-color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+.Legenda:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 767px) {
+    .Destaques {
+        height: 350px;
+    }
+    .Title {
+        height: 3rem;
+    }
+    .Title p {
+        font-size: 15px;
+    }
+}

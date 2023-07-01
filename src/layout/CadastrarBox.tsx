@@ -2,8 +2,10 @@ import style from "../styles/Cadastrar.module.css"
 import Alert, {_throwAlert} from "./Alert"
 import { useEffect, useState } from "react"
 import IMask from "imask"
-import { useSession } from "next-auth/react"
+import { getCsrfToken, useSession } from "next-auth/react"
 import Router from 'next/router'
+import { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { GetCsrfToken } from "@/helpers/helpers"
 
 class newUser {
     nome: string
@@ -35,8 +37,18 @@ class newUser {
         this.provider = provider
     }
 }
-const CadastrarBox = () => {
+type csrfModel = {
+    csrfToken: string
+}
+type Repo = {
+    name: string
+    stargazers_count: number
+  }
+
+  
+  const CadastrarBox = () => {
     const { data: session } = useSession() as any
+    const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
@@ -54,44 +66,36 @@ const CadastrarBox = () => {
     const [password, setPassword] = useState('')
     const [password2, setPassword2] = useState('')
     useEffect(() => {
-        let telefone = document.getElementById('tel') as HTMLInputElement
-        let telOptions = {
-        mask: '(00) 00000-0000'
-        };
-        let telMask = IMask(telefone, telOptions);
-        
-        let cep = document.getElementById('cep') as HTMLInputElement
-        let cepOptions = {
-        mask: '00.000-000'
-        };
-        let cepMask = IMask(cep, cepOptions);
-        
-        let numero = document.getElementById('num') as HTMLInputElement
-        let numeroOptions = {
-            mask: '000000'
-        };
-        let numeroMask = IMask(numero, numeroOptions);
-        
-        let uf = document.getElementById('uf') as HTMLInputElement
-        let ufOptions = {
-            mask: 'aa',
-            prepare: function (str: string) {
-                return str.toUpperCase();
-            }
-        };
-        let ufMask = IMask(uf, ufOptions);
-    }, [])
-    useEffect(() => {
-        console.log(session)
-        if (session) {
-            if (!session.is_authenticated) {
-                Router.push('/entrar/auth-email')
-            } else{
-                Router.push('/painel')
-            }
+        if (showPage) {
+            let telefone = document.getElementById('tel') as HTMLInputElement
+            let telOptions = {
+            mask: '(00) 00000-0000'
+            };
+            let telMask = IMask(telefone, telOptions);
+
+            let cep = document.getElementById('cep') as HTMLInputElement
+            let cepOptions = {
+            mask: '00.000-000'
+            };
+            let cepMask = IMask(cep, cepOptions);
+
+            let numero = document.getElementById('num') as HTMLInputElement
+            let numeroOptions = {
+                mask: '000000'
+            };
+            let numeroMask = IMask(numero, numeroOptions);
+
+            let uf = document.getElementById('uf') as HTMLInputElement
+            let ufOptions = {
+                mask: 'aa',
+                prepare: function (str: string) {
+                    return str.toUpperCase();
+                }
+            };
+            let ufMask = IMask(uf, ufOptions);
         }
-    }, [session])
-    
+    }, [showPage])
+
     function cepCallback(conteudo: any) {
         if (!("erro" in conteudo)) {
             setEndereco(conteudo.logradouro)
@@ -114,6 +118,20 @@ const CadastrarBox = () => {
         setBairro('')
         setCidade('')
         setUf('')
+    }
+    function limpaTodoFormulario() {
+        setNome('')
+        setEmail('')
+        setTel('')
+        setCep('')
+        setEndereco('')
+        setNum('')
+        setComplemento('')
+        setBairro('')
+        setCidade('')
+        setUf('')
+        setPassword('')
+        setPassword2('')
     }
     function findCep(valor: string) {
         var cep = valor.replace(/\D/g, '')
@@ -187,7 +205,7 @@ const CadastrarBox = () => {
             message: ''
         }
     }
-    function register() {
+    async function register() {
         setAlertShow(false)
         if (!nome || nome.length < 10) {
             throwAlert('Nome inválido.', 'danger')
@@ -255,21 +273,53 @@ const CadastrarBox = () => {
             password,
             1
         )
+        let csrfToken = await GetCsrfToken()
+        let body = {
+            csrfToken: csrfToken,
+            data: send
+        }
         fetch(`/api/user-register`, {
             method: 'POST',
-            body: JSON.stringify(send),
+            body: JSON.stringify(body),
             headers: {
                 'authorization': process.env.NEXT_PUBLIC_API_TOKEN as string
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            throwAlert('Cadastro efetuado com sucesso. Clique aqui para entrar.', 'success')
-            setAlertClick('/entrar')
+        .then(response => response.status)
+        .then(status => {
+            if (status == 200) {
+                throwAlert('Cadastro efetuado com sucesso. Clique aqui para entrar.', 'success')
+                setAlertClick('/entrar')
+            } else if (status == 460) {
+                throwAlert('Email já cadastrado.', 'danger')
+            } else if (status == 461) {
+                throwAlert('Você já possui cadastro usando o login via Google. Clique aqui para entrar', 'danger')
+                setAlertClick('/entrar')
+            } else if (status == 462) {
+                throwAlert('Você já possui cadastro usando o login via Facebook. Clique aqui para entrar', 'danger')
+                setAlertClick('/entrar')
+            } else {
+                throwAlert('Erro no servidor. Tente novamente mais tarde.', 'danger')
+            }
+            limpaTodoFormulario()
         })
     }
+
+    if (session === undefined) {
+        return null
+    } else if (session == null) {
+        if (!showPage) {
+            setShowPage(true)
+        }
+    } else {
+        if (session.user.is_authenticated) {
+            Router.push('/painel')
+        } else {
+            Router.push('/entrar/auth-email')
+        }
+    }
     return (
-        <div id="loginBox" className={style.CadastrarBox}>
+        showPage ? <div id="loginBox" className={style.CadastrarBox}>
             <Alert message={alertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} clickAction={alertClick} />
             <div className={style.Title}>
                 <p>Cadastrar-se</p>
@@ -329,7 +379,7 @@ const CadastrarBox = () => {
                     <button onClick={() => register()}>Enviar</button>
                 </div>
             </div>
-        </div>
+        </div> : null
     )
 }
 export default CadastrarBox

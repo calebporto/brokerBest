@@ -1,3 +1,4 @@
-var data = new Date()
+var data = 1
 
-console.log(data)
+data == 1 ? console.log('é 1') : null
+if (data == 1) console.log('1')

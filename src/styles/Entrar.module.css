@@ -112,3 +112,9 @@
 .Facebook {
     background-color: #3b5998;
 }
+
+@media (max-width: 767px) {
+    .LoginBox {
+        width: 90%;
+    }
+}

@@ -1,43 +1,31 @@
-import { ReactNode, useEffect, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import style from '../styles/Modal.module.css'
 import ReactDOM from "react-dom";
 
-const Modal = (props: {id: string, show: boolean, onClose: Function, title: string, body: ReactNode, isBrowser: boolean}) => {
-    const handleCloseClick = (e: any) => {
-      e.preventDefault();
-      props.onClose();
-    };
-
-    const modalContent = props.show ? (
-      <div className="modalOverlay">
-        <div className="modalStyle">
-          <div className="modalHeader">
-            <div className="modalTitle">{props.title}</div>
-            <a href="#" onClick={handleCloseClick}>
-              x
-            </a>
+const Modal = (props: {show: boolean, setShow: Dispatch<SetStateAction<boolean>>, title: string, children: ReactNode}) => {
+    
+  const modalContent = (
+      <div className={style.Overlay}>
+          <div className={style.Wrapper}>
+              <div className={style.Modal}>
+                  <div className={style.Header}>
+                    <p className={style.Title}></p>
+                    <span className={style.Close} onClick={() => props.setShow(false)}>{props.title}</span>
+                  </div>
+                  <div className={style.Body}>
+                    {props.children}
+                  </div>
+                  <div className={style.Footer}>
+                    <button className="btn btn-secondary">Fechar</button>
+                  </div>
+              </div>
           </div>
-          <div className="modalBody">Tresrtwset</div>
-          <div className="modalFooter">
-            <button className="cancelarBt">Cancelar</button>
-            <button className="confirmarBt">Confirmar</button>
-          </div>
-        </div>
       </div>
-    ) : null
+  );
 
-
-    if (props.isBrowser) {
-      const modalDiv = document.getElementById("modal-root")!
-      if (modalDiv) {
-        return ReactDOM.createPortal(
-            modalContent,
-            modalDiv
-        );
-      } else {
-        return null
-      }
-    } else {
-      return null;
-    }    
+  return ReactDOM.createPortal(
+    modalContent,
+    document.getElementById("modal-root") as HTMLDivElement
+);
 }
 export default Modal

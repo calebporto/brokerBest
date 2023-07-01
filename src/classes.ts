@@ -1,4 +1,4 @@
-class newUser {
+export class newUser {
     nome: string
     email: string
     tel: string
@@ -12,7 +12,7 @@ class newUser {
     password: string
 
     constructor(nome: string, email: string, tel: string, cep: string, endereco: string,
-        num: string, complemento: string, bairro: string, cidade: string, uf: string, password: string ) {
+        num: string, complemento: string, bairro: string, cidade: string, uf: string, password: string) {
         this.nome = nome;
         this.email = email;
         this.tel = tel;
@@ -24,5 +24,35 @@ class newUser {
         this.cidade = cidade;
         this.uf = uf;
         this.password = password;
+    }
+}
+
+export class CompleteData {
+    nome: string
+    email: string
+    tel: string
+    cep: string
+    endereco: string
+    num: string
+    complemento: string
+    bairro: string
+    cidade: string
+    uf: string
+    provider: number
+
+
+    constructor(nome: string, email: string, tel: string, cep: string, endereco: string,
+        num: string, complemento: string, bairro: string, cidade: string, uf: string, provider: number) {
+        this.nome = nome;
+        this.email = email;
+        this.tel = tel;
+        this.cep = cep;
+        this.endereco = endereco;
+        this.num = num;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.provider = provider;
     }
 }

@@ -14,7 +14,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   authenticateRequest(req, res, async () => {
-    const response = user.safeParse(JSON.parse(req.body))
+    const reqBody = JSON.parse(req.body)
+    const response = user.safeParse(reqBody.data)
     if (!response.success) {
       const { errors } = response.error;
       console.log('errors '+ errors)
@@ -24,17 +25,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
     var data = response.data
-    data.password = await hashPass(data.password)
-    fetch(`${process.env.API_URL}/user-register/new`, {
+    data.password = await hashPass(data.password as string)
+    const sendData = fetch(`${process.env.API_URL}/user-register/new`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json'}
     })
-    .then(response => response.json())
-    .then(res => {
-      
-    })
+    .then(response => response.status)
 
-    res.status(200).json({ message: "Authenticated request" });
+    res.status(await sendData).json('');
   });
 }

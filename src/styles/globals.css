@@ -81,3 +81,14 @@
     margin: 0 .3rem;
     cursor: pointer;
   }
+  .WaitingWindow {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+  }
+  .WaitingCenter {
+    width: auto;
+    height: auto;
+    text-align: center;
+    margin: auto;
+  }

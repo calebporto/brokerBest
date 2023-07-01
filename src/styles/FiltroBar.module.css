@@ -1,0 +1,50 @@
+.FiltroBar {
+    width: 100%;
+    height: auto;
+    padding: .5rem;
+    display: flex;
+}
+.Body {
+    display: flex;
+}
+.Buttons {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    padding: .5rem;
+}
+.Buttons button {
+    width: 100%;
+    margin: .3rem 0;
+}
+.Filtros {
+    width: 80%;
+    padding: .8rem;
+}
+.FiltrosDisplay {
+    padding: .5rem;
+    border: dotted 1px gray;
+    border-radius: .5rem;
+    height: 100%;
+}
+
+@media (max-width: 767px) {
+    .Body {
+        flex-wrap: wrap;
+    }
+    .Buttons {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        padding: .5rem 0;
+    }
+    .Buttons button {
+        width: 50%;
+        margin: .5rem;
+    }
+    .Filtros {
+        width: 100%;
+        min-height: 4rem;
+        padding: 0 .5rem;
+    }
+}

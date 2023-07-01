@@ -39,6 +39,7 @@ export const authOptions = {
                 })
                 .then(response => response.json())
                 .then(data => {
+                  data.is_authenticated = false
                   return data
                 })
                 const user = await getUser
@@ -66,7 +67,7 @@ export const authOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user, account }) {
+        async jwt({ token, user, account, trigger, session }) {
           // Persist the OAuth access_token to the token right after signin
           if (account) {
             token.accessToken = account.access_token
@@ -79,16 +80,32 @@ export const authOptions = {
             data.setHours(data.getHours() + 1)
             token.last_email_exp = data
           }
+          if (trigger === "update") {
+            if (session?.is_authenticated) {
+              token.is_authenticated = session.is_authenticated
+            }
+            if (session?.last_email_exp) {
+              token.last_email_exp = session.last_email_exp
+            }
+          }
           return token
         },
         async session({ session, token, user }) {
           // Send properties to the client, like an access_token from a provider.
           session.accessToken = token.accessToken
           if (session?.user) {
-            session.user.alternative_id = token.alternative_id
-            session.user.provider = token.provider
-            session.user.is_authenticated = token.is_authenticated
-            session.user.last_email_exp = token.last_email_exp
+            if (token.provider == 'google') {
+              session.user.provider = 2
+              session.user.is_authenticated = true
+            } else if (token.provider == 'facebook') {
+              session.user.provider = 3
+              session.user.is_authenticated = true
+            } else {
+              session.user.alternative_id = token.alternative_id
+              session.user.provider = token.provider
+              session.user.is_authenticated = token.is_authenticated
+              session.user.last_email_exp = token.last_email_exp
+            }
           }
           return session
         },
