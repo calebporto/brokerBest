@@ -49,8 +49,8 @@ const PainelPage = () => {
             <TitleBar title='Painel do Corretor' />
             <Destaques imgs={carouselImgs} />
             {/* <FiltroBar /> */}
+            {/* <PainelList/> */}
             <DriveBar />
-            <PainelList/>
             <Footer></Footer>
         </> : null
     )

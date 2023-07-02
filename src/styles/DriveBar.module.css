@@ -1,7 +1,50 @@
 .DriveBar {
-    height: 4.5rem;
+    min-height: 4.5rem;
     width: 100%;
     border: solid 1px rgb(207, 207, 207);
     border-radius: .5rem;
     box-shadow: 0px 5px 5px rgb(99, 99, 99);
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+.Title {
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    font-size: 30px;
+    font-weight: bold;
+}
+.Filter {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    border-top: solid 1px gray;
+}
+.Filter button {
+    margin: 0 .5rem;
+}
+.List {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    border: solid 1px gray;
+    border-radius: .5rem;
+    min-height: 5rem;
+}
+.ListBt {
+    min-width: 10%;
+    height: 2rem;
+    text-align: center;
+    padding: 3px 6px;
+    margin: 3px;
+    font-weight: 420;
+    box-shadow: 0px 3px 2px rgb(99, 99, 99);
+}
+.ListBt:active {
+    position: relative;
+    top: 3px;
+    box-shadow: 0px 0px 2px rgb(99, 99, 99);
+
 }
