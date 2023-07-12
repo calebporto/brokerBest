@@ -24,7 +24,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         error: { message: "Invalid request", errors },
       });
     }
-    console.log('novo e-mail de autenticação')
     const newEmail = await sendAuthMail(response.data)
     res.status(200).json('ok')
   })

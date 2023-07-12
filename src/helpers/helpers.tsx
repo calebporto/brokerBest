@@ -31,7 +31,6 @@ export function setWindowDimensions(setPageSize: Dispatch<SetStateAction<WindowD
 }
 
 export async function globalSignOut(redirect: boolean = true) {
-    console.log(redirect)
     if (redirect) {
         signOut({callbackUrl: '/entrar'})
     } else {
@@ -49,4 +48,105 @@ export function checkContextUpdate(context: GeneralContext) {
     if (dateNow.getTime() - lastUpdate.getTime() > 600000) {
         contextUpdate()
     }
+}
+
+export function allFirstUppercase(string: string | null | undefined) {
+    if (!string) return
+    let words = string.split(' ')
+    let newWords = [] as Array<string>
+    words.forEach(word => {
+        if (word == 'de' || word == 'dos' || word == 'das' || word == 'do' || word == 'da') {
+            newWords.push(word)
+            return
+        }
+        let newWord = word[0].toUpperCase() + word.substring(1)
+        newWords.push(newWord)
+    })
+    return newWords.join(' ').trim()
+}
+
+export function firstAndParagraphUppercase(string: string | null | undefined) {
+    function isAlphabet(char: string) {
+        let alphabet = 'abcdefghijklmnopqrstuvwxyzãáàâéèêíìõóòôú'
+        if (alphabet.indexOf(char) != -1 && alphabet.toUpperCase().indexOf(char) != -1) {
+            return true
+        }
+        return false
+    }
+
+    if (!string) return
+    let newString = ''
+    let isAfterPoint = false
+    for (let i = 0; i < string.length; i++) {
+        if (i == 0) {
+            newString = newString + string[i].toUpperCase()
+            continue
+        }
+        if (string[i] == '.' || string[i] == '!' || string[i] == '?') {
+            isAfterPoint = true
+            newString = newString + string[i]
+            continue
+            // if (i + 1 < string.length) {
+            //     if (isAlphabet(string[i + 1])) {
+            //         newString = newString + string[i + 1].toUpperCase()
+            //         continue
+            //     } else {
+                //         newString = newString + string[i + 1]
+                //         continue
+                //     }
+                // }
+        }
+        if (string[i] == ' ') {
+            newString = newString + string[i]
+            continue
+        }
+        if (isAfterPoint) {
+            if (isAlphabet(string[i])) {
+                newString = newString + string[i].toUpperCase()
+                isAfterPoint = false
+                continue
+            } else {
+                newString = newString + string[i]
+                continue
+            }
+        } else {
+            newString = newString + string[i]
+            continue
+        }
+    }
+    return newString
+}
+export function parseAddress(
+    address: string | null | undefined, 
+    num: string | null | undefined, 
+    complement: string | null | undefined,
+    district: string | null | undefined,
+    city: string | null | undefined,
+    uf: string | null | undefined): string{
+
+    if (!address && !district && !city) return ''
+    var completeAddress = ''
+    if (address) {
+        completeAddress = address
+        if (num) {
+            completeAddress = `${completeAddress} ${num}`
+        }
+        if (complement) {
+            completeAddress = `${completeAddress}, ${complement}`
+        }
+    }
+    if (district) {
+        if (completeAddress == '') {
+            completeAddress = district
+        } else {
+            completeAddress = `${completeAddress}, ${allFirstUppercase(district)}`
+        }
+    }
+    if (city) {
+        completeAddress = `${completeAddress}. ${allFirstUppercase(city)}`
+        if (uf) {
+            completeAddress = `${completeAddress} - ${uf.toUpperCase()}`
+        }
+    }
+    return completeAddress
 }

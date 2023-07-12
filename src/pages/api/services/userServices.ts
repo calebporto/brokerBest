@@ -5,7 +5,9 @@ export const sendAuthMail = async (userData: Object) => {
     const sendData = fetch(`${process.env.API_URL}/auth/send-auth-email`, {
         method: 'POST',
         body: JSON.stringify(userData),
-        headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'application/json',
+        'authenticator': process.env.AUTH_KEY as string
+        }
     })
     .then(response => response.json())
     .then(resp => {

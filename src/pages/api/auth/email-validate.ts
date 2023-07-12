@@ -20,7 +20,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   authenticateRequest(req, res, async () => {
     const session = await getServerSession(req, res, authOptions)
-    console.log('chamou api')
     const response = emailValidateModel.safeParse({
       token: JSON.parse(req.body).token,
       session: session.user
@@ -33,11 +32,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         error: { message: "Invalid request", errors },
       });
     }
-    console.log('ate aqui')
     const sendToken = fetch(`${process.env.API_URL}/auth/email-validate`, {
       method: 'POST',
       body: JSON.stringify(response.data),
-      headers: {'Content-Type': 'application/json'}
+      headers: {
+        'Content-Type': 'application/json',
+        'authenticator': process.env.AUTH_KEY as string
+      }
     })
     .then(response => response.json())
     .then(data => {

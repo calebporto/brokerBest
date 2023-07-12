@@ -1,0 +1,85 @@
+.Card {
+    width: 32%;
+    height: 22rem;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    border: solid 1px gray;
+    margin: .65%;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+.Card:hover {
+    border: solid 2px rgb(70, 70, 70);
+}
+.Image {
+    width: 100%;
+    height: 70%;
+    position: relative;
+}
+.Img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: .3rem;
+}
+.Title {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 10%;
+    display: flex;
+    margin-top: .5rem;
+}
+.Title p {
+    font-size: 20px;
+    font-weight: bold;
+    height: auto;
+    margin: auto;
+}
+.Info {
+    display: flex;
+    height: 30%;
+    width: 100%;
+}
+.DeliveryDate {
+    width: 100%;
+    display: flex;
+}
+.DeliveryDate p {
+    font-size: 15px;
+    margin: auto;
+}
+.DeliveryDate p span {
+    font-weight: bold;
+    margin: 0 .5rem;
+}
+.EditarBt {
+    width: 20%;
+    display: flex;
+    padding: .5rem 0;
+}
+.EditarBt button {
+    width: 80%;
+    height: 100%;
+    margin: auto;
+}
+
+@media (max-width: 767px) {
+    .Card {
+        width: 100%;
+        height: 16rem;
+    }
+    .Title p {
+        font-size: 15px;
+    }
+    .DeliveryDate p {
+        font-size: 12px;
+    }
+    .DeliveryDate p span {
+        font-size: 12px;
+    }
+    .EditarBt button {
+        height: 2rem;
+        display: flex;
+    }
+}

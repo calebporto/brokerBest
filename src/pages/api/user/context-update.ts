@@ -19,7 +19,11 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
             } else {
                 url = `${process.env.API_URL}/user-services/get-context-user?email=${session.user.email}`
             }
-            return await fetch(url)
+            return await fetch(url,{
+                headers: {
+                    'authenticator': process.env.AUTH_KEY as string
+                }
+            })
             .then(response => {
                 if (!response.ok) return null
                 else {

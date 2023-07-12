@@ -31,6 +31,7 @@ export default () => {
     const router = useRouter()
 
     useEffect(() => {
+        console.log(user)
         if (user && user.name) {
             if (user.provider == 1) {
                 setSystemMessage('Você já possui cadastro na plataforma. Use seu e-mail e senha.')
@@ -177,7 +178,6 @@ export default () => {
             return
         }
         if (!uf) {
-            console.log(uf)
             throwAlert('UF inválido.', 'danger')
             return
         }

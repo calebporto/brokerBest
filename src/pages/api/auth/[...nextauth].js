@@ -35,7 +35,10 @@ export const authOptions = {
                 const getUser = fetch(`${process.env.API_URL}/auth/login`, {
                   method: 'POST',
                   body: JSON.stringify(response.data),
-                  headers: {'Content-Type': 'application/json'}
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'authenticator': process.env.AUTH_KEY
+                  }
                 })
                 .then(response => response.json())
                 .then(data => {

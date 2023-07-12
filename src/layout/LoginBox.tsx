@@ -11,7 +11,6 @@ import { AuthContext } from "@/contexts/AuthContext"
 
 const LoginBox = () => {
     const { loginRequire, systemMessage } = useContext(AuthContext)
-    console.log(systemMessage)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')

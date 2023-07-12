@@ -1,5 +1,5 @@
 import style from '../styles/Painel.module.css'
-import Card from './Card'
+import Card from './ProjectCard'
 import Container from './Container'
 
 export default function PainelList() {

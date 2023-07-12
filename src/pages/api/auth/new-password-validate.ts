@@ -12,14 +12,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         const tokenValidate = fetch(`${process.env.API_URL}/auth/new-password-validate`, {
             method: 'POST',
             body: JSON.stringify(send),
-            headers: {'Content-Type': 'application/json'}
+            headers: {
+                'Content-Type': 'application/json',
+                'authenticator': process.env.AUTH_KEY as string
+            }
         })
         .then(response => response.json())
         .then(data => {
             return data
         })
         const result = await tokenValidate
-        console.log(result)
         if (result.status != 200) {
             res.status(result.status).json('')
             return
@@ -33,13 +35,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         const sendHashedPassword = fetch(`${process.env.API_URL}/auth/new-password-validate`, {
             method: 'POST',
             body: JSON.stringify(sendBody),
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json',
+            'authenticator': process.env.AUTH_KEY as string
+            }
         })
         .then(response => {
             return response.status
         })
         const status = await sendHashedPassword
-        console.log('status = ' + status)
         res.status(status).json('')
     })
 }

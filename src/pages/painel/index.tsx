@@ -1,12 +1,11 @@
 import { AuthContext } from "@/contexts/AuthContext"
+import { PremiumContext } from "@/contexts/PremiumContext"
+import Alert, { _throwAlert } from "@/layout/Alert"
 import Destaques from "@/layout/Destaques"
 import DriveBar from "@/layout/DriveBar"
-import FiltroBar from "@/layout/FiltroBar"
 import Footer from "@/layout/Footer"
-import PainelList from "@/layout/PainelList"
 import TitleBar from "@/layout/TitleBar"
 import TopNavbar from "@/layout/TopNavbar"
-import { useSession } from "next-auth/react"
 import Head from "next/head"
 import Router, { useRouter } from "next/router"
 import { useContext, useState } from "react"
@@ -22,7 +21,15 @@ const carouselImgs = [
 const PainelPage = () => {
     const [showPage, setShowPage] = useState(false)
     const context = useContext(AuthContext)
-    const { user, session } = context
+    const premiumContext = useContext(PremiumContext)
+    const { user, session, systemMessage } = context
+    const [alertShow, setAlertShow] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertType, setAlertType] = useState('danger')
+    
+    function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
+        _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
+    }
 
     if (session === undefined) return
     if (session == null) {
@@ -47,7 +54,8 @@ const PainelPage = () => {
             </Head>
             <TopNavbar perfilBt={true} contextUser={context}/>
             <TitleBar title='Painel do Corretor' />
-            <Destaques imgs={carouselImgs} />
+            <Alert message={alertMessage} setMessage={setAlertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} showSystemMessage={true}></Alert>
+            <Destaques/>
             {/* <FiltroBar /> */}
             {/* <PainelList/> */}
             <DriveBar />

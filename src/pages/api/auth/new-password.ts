@@ -9,7 +9,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const sendEmail = fetch(`${process.env.API_URL}/auth/send-new-password`, {
         method: 'POST',
         body: req.body,
-        headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'application/json',
+        'authenticator': process.env.AUTH_KEY as string
+        }
       })
       .then(response => {
         return response.status

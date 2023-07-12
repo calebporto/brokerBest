@@ -35,7 +35,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const sendData = fetch(`${process.env.API_URL}/user-register/complete`, {
         method: 'POST',
         body: JSON.stringify(data),
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'authenticator': process.env.AUTH_KEY as string
+        }
       })
       .then(response => response.status)
       

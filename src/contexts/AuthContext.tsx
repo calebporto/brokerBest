@@ -10,6 +10,7 @@ const initialData = {
     session: undefined,
     update: undefined,
     user: {
+        id: null,
         alternative_id: null,
         name: null,
         email: null,
@@ -85,6 +86,7 @@ export function AuthProvider(props: {children: ReactNode}) {
                 if (!response.ok) {
                     if (response.status == 460) {
                         let userData = {
+                            id: null,
                             alternative_id: null,
                             name: session.user.name,
                             email: session.user.email,
@@ -119,6 +121,7 @@ export function AuthProvider(props: {children: ReactNode}) {
                             globalSignOut();
                         }
                         let userData = {
+                            id: data.id,
                             alternative_id: data.alternative_id,
                             name: data.name,
                             email: data.email,
@@ -141,9 +144,7 @@ export function AuthProvider(props: {children: ReactNode}) {
                             console.log(errors);
                             return;
                         }
-                        console.log('atualizou')
                         setContextUser(user.data);
-                        console.log(contextUser)
                         return;
                     });
                 }

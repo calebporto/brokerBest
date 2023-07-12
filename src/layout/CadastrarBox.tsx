@@ -236,7 +236,6 @@ type Repo = {
             return
         }
         if (!uf) {
-            console.log(uf)
             throwAlert('UF inválido.', 'danger')
             return
         }

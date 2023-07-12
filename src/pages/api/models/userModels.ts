@@ -43,6 +43,7 @@ export const emailValidateModel = z.object({
 })
 
 export const contextUserModel = z.object({
+  id: z.number().nullable(),
   alternative_id: z.string().nullable(),
   name: z.string().nullable(),
   email: z.string().nullable(),

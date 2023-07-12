@@ -13,30 +13,29 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         const type = req.query.type
 
         var responseList = [] as Array<string>
-        if (type == 'bairro') {
-            responseList = [
-                'guaxindiba',
-                'santa clara',
-                'gargau',
-                'sossego',
-                'travessao',
-                'maquina',
-                'lagoa feia',
-                'morro do bode',
-                'praça joão pessoa',
-                'centro',
-                'volta redonda'
-            ]
-        } else if (type == 'regiao') {
-            responseList = [
-                'zona sul',
-                'zona norte',
-                'pedregal',
-                'ilha dos mineiros',
-                'barra velha'
-            ]
+
+        const getProjectNames = async () => {
+            var url = `${process.env.API_URL}/project-services/get-project-names?filter=${type}`
+            
+            return await fetch(url, {
+                headers: {
+                    'authenticator': process.env.AUTH_KEY as string
+                }
+            })
+            .then(response => {
+                if (!response.ok) return null
+                else {
+                    return response.json().then(data => data)
+                }
+            })
+
         }
-        res.status(200).json(responseList)
-        return
+        const projectNames = await getProjectNames()
+        if (projectNames) {
+            res.status(200).json(projectNames)
+            return
+        } else {
+            res.status(400).json('filtro invalido')
+        }
     })
 }
