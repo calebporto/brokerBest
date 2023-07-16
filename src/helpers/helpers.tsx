@@ -150,3 +150,10 @@ export function parseAddress(
     }
     return completeAddress
 }
+
+
+export function windowOpen(window: Window | null, link: string | null | undefined) {
+    if (window && link) {
+        window.open(link)
+    }
+}

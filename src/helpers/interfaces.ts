@@ -119,7 +119,7 @@ export interface Property {
     project_id: number | null
     name: string | null
     description: string | null
-    delivery_date: Date | null
+    delivery_date: Date | string | null
     model: string | null
     measure: string | null
     size: string | null
@@ -130,8 +130,27 @@ export interface Property {
     videos: Array<string>
 }
 
+export interface Company {
+    id: number | null
+    name: string | null
+    description: string | null
+    email: string | null
+    tel: string | null
+    address: string | null
+    num: string | null
+    complement: string | null
+    district: string | null
+    city: string | null
+    uf: string | null
+    cep: string | null
+    thumb: string | null
+    images: string | null
+    admin_id: number | null
+    is_active: boolean | null
+}
+
 export interface ProjectView {
     project: Project | null
-    cp_name: string | null
+    company: Company | null
     properties: Array<Property>
 }

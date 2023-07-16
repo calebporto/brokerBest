@@ -1,18 +1,12 @@
+.Property {
+    width: 100%;
+}
 .Thumb {
     width: 100%;
-    height: 100vh;
+    height: 600px;
     object-fit: cover;
+    margin-bottom: 1rem;
     cursor: pointer;
-}
-.Body {
-    width: 100%;
-    border: solid 1px rgb(207, 207, 207);
-    border-radius: .5rem;
-    box-shadow: 0px 5px 5px rgb(99, 99, 99);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    margin: 2rem 0;
 }
 .EditarBt {
     width: 100%;
@@ -32,6 +26,16 @@
 .Title {
     font-size: 20px!important;
     font-weight: bold;
+}
+.Images {
+    width: 100%;
+    height: 600px;
+}
+.Video {
+    margin-top: 1rem;
+    width: 100%;
+    height: 600px;
+    z-index: 1;
 }
 .InfoTable {
     width: 100%;
@@ -66,29 +70,10 @@
 .RowDescription button {
     max-width: 100%;
 }
-.Images {
-    margin: 2rem 0;
-    width: 100%;
-    height: 650px;
-}
-.Video {
-    margin-top: 2rem;
-    width: 100%;
-    height: 670px;
-}
-.Properties {
-    display: flex;
-}
-.EmpreendimentosBar {
-    height: auto;
-    margin: 1rem 0;
-}
-@media(max-width: 767px) {
+
+@media(max-width:767px) {
     .Thumb {
-        height: 350px;
-    }
-    .Properties {
-        flex-direction: column;
+        height: 250px;
     }
     .Row {
         min-height: 2rem;
@@ -104,9 +89,9 @@
         word-wrap: break-word;
     }
     .Images {
-        height: 350px;
+        height: 250px;
     }
     .Video {
-        height: 300px;
+        height: 250px;
     }
 }

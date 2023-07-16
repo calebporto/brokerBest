@@ -7,10 +7,12 @@ import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import TitleBar from "@/layout/TitleBar"
-import { allFirstUppercase } from "@/helpers/helpers"
+import { allFirstUppercase, windowOpen } from "@/helpers/helpers"
 import Image from "next/image"
 import style from '../../styles/Empreendimentos.module.css'
 import ProjectData from "@/layout/ProjectData"
+import Head from "next/head"
+import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 
 export const getServerSideProps: GetServerSideProps<{project: ProjectView | null}> = async (context) => {
     
@@ -50,6 +52,13 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
     const context = useContext(AuthContext)
     const [showPage, setShowPage] = useState(false)
     const router = useRouter()
+    const [windowElement, setWindowElement] = useState<Window | null>(null)
+
+    useEffect(() => {
+        if (!windowElement) {
+            setWindowElement(window)
+        }
+    }, [])
     
     useEffect(() => {
         if (!project) {
@@ -61,9 +70,16 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
     return (
         project ? (
         <>
+            <Head>
+                <title>Broker Best</title>
+                <meta name="description" content="Broker Best teste" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <TopNavbar contextUser={context} ></TopNavbar>
+            <EmpreendimentosBar></EmpreendimentosBar>
             <TitleBar title={allFirstUppercase(project.project?.name as string)}></TitleBar>
-            <Image className={style.Thumb} alt="" src={project.project?.thumb as string} width={1200} height={724}></Image>
+            <Image onClick={() => windowOpen(windowElement, project.project?.thumb)} className={style.Thumb} alt="" src={project.project?.thumb as string} width={1200} height={724}></Image>
             <ProjectData project={project}></ProjectData>
         </>
         ) : null

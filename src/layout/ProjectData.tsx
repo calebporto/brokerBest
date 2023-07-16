@@ -1,11 +1,26 @@
 import Container from "./Container"
 import style from '../styles/Empreendimentos.module.css'
-import { ProjectView } from "@/helpers/interfaces"
-import { allFirstUppercase, firstAndParagraphUppercase, parseAddress } from "@/helpers/helpers"
+import companyStyle from '../styles/Company.module.css'
+import { ProjectView, Property } from "@/helpers/interfaces"
+import { allFirstUppercase, firstAndParagraphUppercase, parseAddress, windowOpen } from "@/helpers/helpers"
 import Image from 'next/image'
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "@/contexts/AuthContext"
+import PropertyCard from "./PropertyCard"
+import Modal from "./Modal"
 
-export default (props: {project: ProjectView}) => {
+export default (props: { project: ProjectView }) => {
     const project = props.project
+    const context = useContext(AuthContext)
+    const { user } = context
+    const [showCompanyModal, setShowCompanyModal] = useState(false)
+    const [windowElement, setWindowElement] = useState<Window | null>(null)
+
+    useEffect(() => {
+        if (!windowElement) {
+            setWindowElement(window)
+        }
+    }, [])
     
     function bookPdf() {
         window.open(project.project?.book)
@@ -16,7 +31,7 @@ export default (props: {project: ProjectView}) => {
             let imgs = images.map((image: string, index: number) => {
                 if (index > 0) activeClass = ''
                 return (
-                    <div key={index} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer'}}>
+                    <div key={index} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer' }}>
                         <Image style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={image} width={1200} height={724} alt='' />
                     </div>
                 )
@@ -25,11 +40,102 @@ export default (props: {project: ProjectView}) => {
         }
         return null
     }
+    var videoRender = (links: Array<string> | null | undefined) => {
+        if (!links) return null
+        const videos = links.map(link => {
+            return (
+                <div className={style.Video}>
+                    <iframe style={{ width: '100%', height: '100%' }} src={link} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                </div>
+            )
+        })
+        return videos
+    }
+    function propertyCardsGenerate() {
+        let elements = [] as Array<JSX.Element>
+        project.properties.forEach(item => {
+            const Card = (
+                <PropertyCard
+                    key={item.id}
+                    id={item.id}
+                    thumb={item.thumb}
+                    name={item.name}
+                    admin_id={project.company?.admin_id}
+                    propertyData={item}
+                ></PropertyCard>
+            )
+            elements.push(Card)
+        })
+        return elements
+    }
+    var companyElements = () => {
+        const company = project.company
+        return (
+            <div className={companyStyle.Company}>
+                {project.company?.thumb ? (
+                    <Image onClick={() => windowOpen(windowElement, project.company?.thumb)} className={companyStyle.Thumb} alt="" src={project.company.thumb} width={1200} height={724}></Image>
+                ) : null}
+                {company?.admin_id == user.id || user.is_admin ? (
+                    <div className={companyStyle.EditarBt}>
+                        <button className="btn btn-warning">Editar</button>
+                    </div>
+                ): null}
+                <div className={companyStyle.Description}>
+                    <p className={companyStyle.Title}>Descrição:</p>
+                    <p>{company?.description}</p>
+                </div>
+                <div className={companyStyle.InfoTable}>
+                    <div className={companyStyle.Row}>
+                        <div className={companyStyle.RowTitle}>Nome:</div>
+                        <div className={companyStyle.RowDescription}>
+                            {allFirstUppercase(company?.name)}
+                        </div>
+                    </div>
+                    <div className={companyStyle.Row}>
+                        <div className={companyStyle.RowTitle}>Email:</div>
+                        <div className={companyStyle.RowDescription}>
+                            {company?.email}
+                        </div>
+                    </div>
+                    <div className={companyStyle.Row}>
+                        <div className={companyStyle.RowTitle}>Telefone:</div>
+                        <div className={companyStyle.RowDescription}>
+                            {company?.tel}
+                        </div>
+                    </div>
+                    <div className={companyStyle.Row}>
+                        <div className={companyStyle.RowTitle}>CEP:</div>
+                        <div className={companyStyle.RowDescription}>
+                            {company?.cep}
+                        </div>
+                    </div>
+                    <div className={companyStyle.Row}>
+                        <div className={companyStyle.RowTitle}>Endereço:</div>
+                        <div className={companyStyle.RowDescription}>
+                            {parseAddress(
+                                company?.address,
+                                company?.num,
+                                company?.complement,
+                                company?.district,
+                                company?.city,
+                                company?.uf
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div style={{width: '100%'}}>
+        <div style={{ width: '100%' }}>
             <Container>
                 <div className={style.Body}>
+                    {project.company?.admin_id == user.id ? (
+                        <div className={style.EditarBt}>
+                            <button className="btn btn-warning">Editar Dados</button>
+                        </div>
+                    ) : null}
                     <div className={style.Description}>
                         <p className={style.Title}>Descrição:</p>
                         <p>{project.project?.description as string}</p>
@@ -42,7 +148,10 @@ export default (props: {project: ProjectView}) => {
                         <div className={style.Row}>
                             <div className={style.RowTitle}>Construtora:</div>
                             <div className={style.RowDescription}>
-                                <button className="btn btn-dark">{allFirstUppercase(project.cp_name)}</button>
+                                <Modal show={showCompanyModal} setShow={setShowCompanyModal} title={allFirstUppercase(project.company?.name)}>
+                                    {companyElements()}
+                                </Modal>
+                                <button onClick={() => setShowCompanyModal(true)} className="btn btn-dark">{allFirstUppercase(project.company?.name)}</button>
                             </div>
                         </div>
                         <div className={style.Row}>
@@ -91,12 +200,12 @@ export default (props: {project: ProjectView}) => {
                         <div className={style.Row}>
                             <div className={style.RowTitle}>Drive da Construtora:</div>
                             <div className={style.RowDescription}>
-                                <button onClick={() => bookPdf()} className="btn btn-dark">Download</button>
+                                <button onClick={() => windowOpen(windowElement, project.project?.link)} className="btn btn-dark">Abrir</button>
                             </div>
                         </div>
                     </div>
                     {project.project?.images?.length as number > 0 ? (
-                        <div style={{width: '100%', marginTop: '2rem'}}>
+                        <div style={{ width: '100%', marginTop: '2rem' }}>
                             <p className={style.Title}>Imagens:</p>
                             <div className={style.Images}>
                                 <div id="carouselExampleControls" style={{ height: '100%' }} className="carousel slide" data-bs-ride="carousel">
@@ -116,9 +225,25 @@ export default (props: {project: ProjectView}) => {
                         </div>
                     ) : null}
                     {project.project?.videos?.length as number > 0 ? (
-                        <div style={{width: '100%'}}>
+                        <div style={{ width: '100%' }}>
+                            <p className={style.Title}>Vídeos</p>
+                            {videoRender(project.project?.videos)}
                         </div>
                     ) : null}
+                    {project.properties.length > 0 ? (
+                        <div style={{ width: '100%', margin: '2rem 0' }}>
+                            <p className={style.Title}>Imóveis</p>
+                            <div className={style.Properties}>
+                                {[...propertyCardsGenerate()]}
+                            </div>
+                        </div>
+                    ) : (
+                        project.company?.admin_id == user.id || user.is_admin ? (
+                            <div className={style.EditarBt}>
+                                <button className="btn btn-warning">Adicionar Imóvel</button>
+                            </div>
+                        ) : null
+                    )}
                 </div>
             </Container>
         </div>

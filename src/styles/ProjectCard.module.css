@@ -38,7 +38,7 @@
 }
 .Info {
     display: flex;
-    height: 30%;
+    height: 20%;
     width: 100%;
 }
 .DeliveryDate {
@@ -61,6 +61,15 @@
 .EditarBt button {
     width: 80%;
     height: 100%;
+    margin: auto;
+}
+
+.EditarPropertyBt {
+    width: 100%;
+    display: flex;
+}
+.EditarPropertyBt button {
+    width: 100%;
     margin: auto;
 }
 
