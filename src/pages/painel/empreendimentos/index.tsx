@@ -5,11 +5,11 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { getServerSession } from "next-auth"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
-import { authOptions } from "../api/auth/[...nextauth]"
+import { authOptions } from "../../api/auth/[...nextauth]"
 import TitleBar from "@/layout/TitleBar"
 import { allFirstUppercase, windowOpen } from "@/helpers/helpers"
 import Image from "next/image"
-import style from '../../styles/Empreendimentos.module.css'
+import style from '../../../styles/Empreendimentos.module.css'
 import ProjectData from "@/layout/ProjectData"
 import Head from "next/head"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
@@ -51,9 +51,22 @@ export const getServerSideProps: GetServerSideProps<{project: ProjectView | null
 export default ({ project }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const context = useContext(AuthContext)
     const [showPage, setShowPage] = useState(false)
-    const router = useRouter()
     const [windowElement, setWindowElement] = useState<Window | null>(null)
+    const { session, user } = context
+    const router = useRouter()
 
+    if (session === undefined) return
+    if (session == null) {
+        router.push('/entrar')
+    } else if (!session.user.is_authenticated) {
+        router.push('/entrar/auth-email')
+    } else if (!user.is_complete_data) {
+        router.push('/auth/login-social')
+    } else {
+        if (!showPage) {
+            setShowPage(true)
+        }
+    }
     useEffect(() => {
         if (!windowElement) {
             setWindowElement(window)
@@ -68,7 +81,7 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
     }, [project])
 
     return (
-        project ? (
+        showPage && project ? (
         <>
             <Head>
                 <title>Broker Best</title>

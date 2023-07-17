@@ -21,9 +21,15 @@ export default () => {
     const queryParams = useRef<ProjectQueryParams>(InitQueryParams)
     const projectData = useRef<ProjectData>(InitProjectData)
     const [projectElements, setProjectElements] = useState<Array<JSX.Element>>([])
+    const [showVerMais, setShowVerMais] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
+        projectData.current.data = []
+        projectData.current.partialCount = 0
+        projectData.current.totalCount = 0
+        queryParams.current = InitQueryParams
+        verMaisShow()
         porBairro()
     }, [])
 
@@ -42,6 +48,7 @@ export default () => {
                     projectData.current.totalCount = data.count
                     projectCardsGenerate()
                     selectedFilterGenerate()
+                    verMaisShow()
                 })
             }
         })
@@ -70,7 +77,6 @@ export default () => {
         })
         setProjectElements(elements)
     }
-    
     function filterListGenerate(data: Array<string>) {
         let getProjects = (key: string) => {
             //setProjectList([])
@@ -97,7 +103,6 @@ export default () => {
             </>
         )
     }
-
     function getFilterData() {
         setItemList(
             <div className="d-flex justify-content-center" style={{width: '100%'}}>
@@ -123,6 +128,13 @@ export default () => {
     }
     function verMais() {
         getProjectsData()
+    }
+    function verMaisShow() {
+        if (projectData.current.partialCount < projectData.current.totalCount) {
+            if (!showVerMais) setShowVerMais(true)
+        } else {
+            if (showVerMais) setShowVerMais(false)
+        }
     }
 
     function porBairro() {

@@ -8,11 +8,13 @@ import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "@/contexts/AuthContext"
 import PropertyCard from "./PropertyCard"
 import Modal from "./Modal"
+import { useRouter } from "next/router"
 
 export default (props: { project: ProjectView }) => {
     const project = props.project
     const context = useContext(AuthContext)
     const { user } = context
+    const router = useRouter()
     const [showCompanyModal, setShowCompanyModal] = useState(false)
     const [windowElement, setWindowElement] = useState<Window | null>(null)
 
@@ -77,7 +79,7 @@ export default (props: { project: ProjectView }) => {
                 ) : null}
                 {company?.admin_id == user.id || user.is_admin ? (
                     <div className={companyStyle.EditarBt}>
-                        <button className="btn btn-warning">Editar</button>
+                        <button onClick={() => router.push(`/painel/empreendimentos/construtora/editar?id=${project.company?.id}`)} className="btn btn-warning">Editar</button>
                     </div>
                 ): null}
                 <div className={companyStyle.Description}>
@@ -133,7 +135,7 @@ export default (props: { project: ProjectView }) => {
                 <div className={style.Body}>
                     {project.company?.admin_id == user.id ? (
                         <div className={style.EditarBt}>
-                            <button className="btn btn-warning">Editar Dados</button>
+                            <button onClick={() => router.push(`/painel/empreendimentos/editar?id=${project.project?.id}`)} className="btn btn-warning">Editar Dados</button>
                         </div>
                     ) : null}
                     <div className={style.Description}>
@@ -230,20 +232,19 @@ export default (props: { project: ProjectView }) => {
                             {videoRender(project.project?.videos)}
                         </div>
                     ) : null}
-                    {project.properties.length > 0 ? (
                         <div style={{ width: '100%', margin: '2rem 0' }}>
                             <p className={style.Title}>Imóveis</p>
-                            <div className={style.Properties}>
-                                {[...propertyCardsGenerate()]}
-                            </div>
+                            {project.company?.admin_id == user.id || user.is_admin ? (
+                                <div className={style.EditarBt}>
+                                    <button onClick={() => router.push(`/painel/empreendimentos/adicionar-imovel?empreendimentoId=${project.project?.id}`)} className="btn btn-warning">Adicionar Imóvel</button>
+                                </div>
+                            ) : null}
+                            {project.properties.length > 0 ? (
+                                <div className={style.Properties}>
+                                    {[...propertyCardsGenerate()]}
+                                </div>
+                            ) : null}
                         </div>
-                    ) : (
-                        project.company?.admin_id == user.id || user.is_admin ? (
-                            <div className={style.EditarBt}>
-                                <button className="btn btn-warning">Adicionar Imóvel</button>
-                            </div>
-                        ) : null
-                    )}
                 </div>
             </Container>
         </div>

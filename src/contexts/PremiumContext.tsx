@@ -12,7 +12,7 @@ export function PremiumProvider(props: {children: ReactNode}) {
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
     const {session} = useContext(AuthContext)
 
-    function getPremium() {
+    function getPremium(): null {
         fetch('/api/projects/get-premium-projects')
         .then(response => {
             if (!response.ok) return
@@ -22,6 +22,7 @@ export function PremiumProvider(props: {children: ReactNode}) {
                 setLastUpdate(new Date())
             })
         })
+        return null
     }
     function premiumUpdate(getPremium: Function) {
         if (lastUpdate) {

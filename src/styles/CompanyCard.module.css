@@ -1,0 +1,65 @@
+.Card {
+    width: 32%;
+    height: 27rem;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    border: solid 1px gray;
+    margin: .65%;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+.Card:hover {
+    border: solid 2px rgb(70, 70, 70);
+}
+.Image {
+    width: 100%;
+    height: 14rem;
+    position: relative;
+}
+.Img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: .3rem;
+}
+.Title {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 10%;
+    display: flex;
+    margin-top: .5rem;
+}
+.Title p {
+    font-size: 20px;
+    font-weight: bold;
+    height: auto;
+    margin: auto;
+}
+.Buttons {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.Buttons button {
+    height: 2.5rem;
+}
+.VerEmpBt {
+    width: 100%;
+    margin: 3px 0;
+}
+.OptBt {
+    width: 49%;
+    margin: 3px 0;
+    display: flex;
+}
+.OptBt svg {
+    margin: auto;
+}
+
+@media (max-width: 767px) {
+    .Card {
+        width: 100%;
+    }
+}

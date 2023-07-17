@@ -16,7 +16,7 @@ const Alert = (props: {
             Router.push(props.clickAction)
         }
     }
-    const actionStyle = props.clickAction ? {cursor: 'pointer'} : {}
+    const actionStyle = props.clickAction ? {cursor: 'pointer', width: '100%'} : {width: '100%'}
 
     if (props.showSystemMessage) {
         if (systemMessage && systemMessage != '') {
