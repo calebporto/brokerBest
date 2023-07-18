@@ -7,7 +7,6 @@ import Head from "next/head"
 import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "../api/auth/[...nextauth]"
 import { Company, GeneralContext, Project, ProjectData, ProjectQueryParams, ProjectResponse } from "@/helpers/interfaces"
-import style from '../../styles/Company.module.css'
 import MEStyle from '../../styles/MeusEmpreendimentos.module.css'
 import CompanyCard from "@/layout/CompanyCard"
 import Container from "@/layout/Container"

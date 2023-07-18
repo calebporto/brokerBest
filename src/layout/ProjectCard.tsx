@@ -36,7 +36,7 @@ export default function ProjectCard(props: {
             </div>
             <div className={style.Info}>
                 <div className={style.DeliveryDate}>
-                    <p><span>Data de Entrega: </span> {props.deliveryDate}</p>
+                    <p><span>Data de Entrega: </span> {props.deliveryDate ? props.deliveryDate : null}</p>
                 </div>
                 {props.admin_id == context.user.id || context.user.is_admin ? (
                     <div className={style.EditarBt}>

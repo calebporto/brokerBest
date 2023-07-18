@@ -159,7 +159,7 @@ export default (props: { project: ProjectView }) => {
                         <div className={style.Row}>
                             <div className={style.RowTitle}>Data de Entrega:</div>
                             <div className={style.RowDescription}>
-                                {new Date(project.project?.delivery_date as Date).toLocaleDateString('pt-BR')}
+                                {project.project?.delivery_date ? new Date(project.project?.delivery_date as Date).toLocaleDateString('pt-BR') : null}
                             </div>
                         </div>
                         <div className={style.Row}>

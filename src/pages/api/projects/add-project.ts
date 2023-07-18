@@ -10,6 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return
         }
         const data = JSON.parse(req.body).project
+        console.log(data.delivery_date)
+        console.log(JSON.stringify(data))
         const sendNewProject = await fetch(`${process.env.API_URL}/project-services/add-project`, {
             method: 'POST',
             body: JSON.stringify(data),

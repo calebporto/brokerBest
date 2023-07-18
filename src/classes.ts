@@ -163,7 +163,7 @@ export class Project {
     company_id: number | null
     name: string | null
     description?: string | null
-    delivery_date?: Date | null
+    delivery_date?: Date | string | null
     address?: string | null
     num?: string | null
     complement?: string | null
@@ -187,7 +187,7 @@ export class Project {
         company_id: number | null,
         name: string | null,
         description?: string | null,
-        delivery_date?: Date | null,
+        delivery_date?: Date | string | null,
         address?: string | null,
         num?: string | null,
         complement?: string | null,

@@ -10,12 +10,49 @@ import IMask from 'imask'
 import { compressAndUploadToIbb, parseYoutubeLink } from '@/helpers/helpers'
 import { Project } from '@/classes'
 import Modal from '@/layout/Modal'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { Company } from '@/helpers/interfaces'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
-export default () => {
+export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
+    try {
+        const session = await getServerSession(context.req, context.res, authOptions)
+        if (!session) {
+            return { props: { company: null } }
+        }
+        const getCompanyById = async () => {
+            let url = `${process.env.API_URL}/project-services/get-company-by-id?id=${context.query.companyId}
+            `
+            return await fetch(url, {
+                headers: {
+                    'authenticator': process.env.AUTH_KEY as string
+                }
+            })
+                .then(response => {
+                    if (!response.ok) return null
+                    else return response.json().then((data: Company) => {
+                        return data
+                    })
+                })
+        }
+        const company = await getCompanyById()
+        if (company != null) {
+            return { props: { company } }
+        } else {
+            return { props: { company: null } }
+        }
+    } catch (error) {
+        console.log(error)
+        return { props: { company: null } }
+    }
+}
+
+export default ({ company }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [showPage, setShowPage] = useState(false)
     const router = useRouter()
     const context = useContext(AuthContext)
-    const { session, user } = context
+    const { session, user, setSystemMessage } = context
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
@@ -39,23 +76,6 @@ export default () => {
     const [book, setBook] = useState('')
     const [sending, setSending] = useState(false)
     const [showWaitingModal, setShowWaitingModal] = useState(false)
-
-    if (session === undefined) return
-    if (session == null) {
-        router.push('/entrar')
-    } else if (!session.user.is_authenticated) {
-        router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
-        router.push('/auth/login-social')
-    } else {
-        if (!showPage) {
-            setShowPage(true)
-        }
-    }
-
-    function throwAlert(message: string, type: 'warning' | 'danger' | 'success') {
-        _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
-    }
 
     useEffect(() => {
         if (showPage) {
@@ -119,7 +139,64 @@ export default () => {
         if (sending) setShowWaitingModal(true)
         else setShowWaitingModal(false)
     }, [sending])
+    
+    
+    if (session === undefined) return
+    if (session == null) {
+        router.push('/entrar')
+    } else if (!session.user.is_authenticated) {
+        router.push('/entrar/auth-email')
+    } else if (!user.is_complete_data) {
+        router.push('/auth/login-social')
+    } else {
+        if (!showPage) {
+            if (company && company.admin_id == user.id) {
+                setShowPage(true)
+            } else {
+                setSystemMessage('Você não tem permissão para essa ação.')
+                router.push('/painel')
+            }
+        }
+    }
 
+    function throwAlert(message: string, type: 'warning' | 'danger' | 'success') {
+        _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
+    }
+    function clean() {
+        setName('')
+        setDescription('')
+        setDeliveryDate('')
+        setAddress('')
+        setNum('')
+        setComplement('')
+        setDistrict('')
+        setZone('')
+        setCity('')
+        setUf('')
+        setLatitude('')
+        setLongitude('')
+        setStatus('')
+        setVideo('')
+        setLink('')
+        setBook('')
+        setVideo('')
+        setThumb(null)
+        setImages(null)
+
+        var thumbInput = document.getElementById('thumbInput') as HTMLInputElement
+        thumbInput.value = ''
+        thumbInput.files = null
+        
+        var imagesInput = document.getElementById('imagesInput') as HTMLInputElement
+        imagesInput.value = ''
+        imagesInput.files = null
+
+        var selectZone = document.getElementById('zona') as HTMLSelectElement
+        selectZone.selectedIndex = 0
+        
+        var selectStatus = document.getElementById('status') as HTMLSelectElement
+        selectStatus.selectedIndex = 0
+    }
     async function register() {
         setAlertShow(false)
         if (!name) {
@@ -214,14 +291,17 @@ export default () => {
             }
             imageLinks.push(img)
         }
-
+        var data = new Date()
+        data.setDate(parseInt(deliveryDate.substring(0, 2)))
+        data.setMonth(parseInt(deliveryDate.substring(3, 5)))
+        data.setFullYear(parseInt(deliveryDate.substring(6, 10)))
         const send = new Project(
             null,
             user.id,
             parseInt(router.query.companyId as string),
             name,
             description,
-            new Date(deliveryDate),
+            data,
             address,
             num,
             complement,
@@ -244,6 +324,7 @@ export default () => {
             method: 'POST',
             body: JSON.stringify({ project: send })
         }).then(res => {
+            clean()
             if (!res.ok) {
                 setSending(false)
                 throwAlert('Aldo deu errado. Tente novamente mais tarde.', 'danger')
@@ -292,7 +373,7 @@ export default () => {
                     </div>
                     <div className={style.SmInput}>
                         <span>Data de Entrega:</span>
-                        <input id='deliveryDate' value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} maxLength={50} type="text" />
+                        <input id='deliveryDate' value={deliveryDate} onInput={(e) => setDeliveryDate(e.currentTarget.value)} onChange={(e) => setDeliveryDate(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
                         <span>Endereço:</span>

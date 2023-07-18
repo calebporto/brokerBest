@@ -1,4 +1,5 @@
-var data = 1
+var data = '12/12/2023'
 
-data == 1 ? console.log('é 1') : null
-if (data == 1) console.log('1')
+var novaData = new Date(data)
+
+console.log(novaData)
