@@ -10,7 +10,7 @@ import { allFirstUppercase } from '@/helpers/helpers'
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
 
-export default () => {
+export default function DriveBar() {
     const [bairroSelect, setBairroSelect] = useState(false)
     const [regiaoSelect, setRegiaoSelect] = useState(false)
     const [construtoraSelect, setContrutoraSelect] = useState(false)
@@ -21,6 +21,7 @@ export default () => {
     const queryParams = useRef<ProjectQueryParams>(InitQueryParams)
     const projectData = useRef<ProjectData>(InitProjectData)
     const [projectElements, setProjectElements] = useState<Array<JSX.Element>>([])
+    const [showList, setShowList] = useState(true)
     const [showVerMais, setShowVerMais] = useState(false)
     const router = useRouter()
 
@@ -32,6 +33,16 @@ export default () => {
         verMaisShow()
         porBairro()
     }, [])
+    useEffect(() => {
+        if (mapSelect) {
+            setShowList(false)
+            //initMap()
+        } 
+        else {
+            setShowList(true)
+            //destroyMap()
+        } 
+    }, [mapSelect])
 
     function getProjectsData() {
         fetch(`/api/projects/get-projects?filterBy=${filterType.current}&key=${queryParams.current.key}&orderBy=${queryParams.current.order_by}&offset=${queryParams.current.offset}&guidance=${queryParams.current.guidance}`)
@@ -218,12 +229,13 @@ export default () => {
                             )}
                         </div>
                     </div>
+                    {showList ? (
                     <div className={style.List}>
                         {projectElements.length > 0 ? [...projectElements] : null}
                         {projectData.current.partialCount < projectData.current.totalCount ? (
                             <button onClick={() => verMais()} className={"btn btn-warning " + style.VerMaisBt}>Ver Mais</button>
                         ) : null}
-                    </div>
+                    </div>) : null}
                 </div>
             </Container>
         </div>

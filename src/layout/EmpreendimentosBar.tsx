@@ -4,7 +4,7 @@ import Container from "./Container"
 import style from '../styles/Empreendimentos.module.css'
 import { useRouter } from "next/router"
 
-export default () => {
+export default function EmpreendimentosBar() {
     const router = useRouter()
     return (
         <div style={{ width: '100&', height: 'auto', display: 'flex' }}>

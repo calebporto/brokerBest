@@ -229,3 +229,52 @@ export class Project {
         this.book = book
     }
 }
+
+export class Property {
+    id: number | null
+    company_id: number | null
+    project_id: number | null
+    name: string | null
+    description: string | null
+    delivery_date: Date | string | null
+    model: string | null
+    measure: string | null
+    size: number | null
+    price: number | null
+    status: string | null
+    thumb: string | null
+    images: Array<string>
+    videos: Array<string>
+
+    constructor(
+        id: number | null,
+        company_id: number | null,
+        project_id: number | null,
+        name: string | null,
+        description: string | null,
+        delivery_date: Date | string | null,
+        model: string | null,
+        measure: string | null,
+        size: number | null,
+        price: number | null,
+        status: string | null,
+        thumb: string | null,
+        images: Array<string>,
+        videos: Array<string>
+    ) {
+        this.id = id
+        this.company_id = company_id
+        this.project_id = project_id
+        this.name = name
+        this.description = description
+        this.delivery_date = delivery_date
+        this.model = model
+        this.measure = measure
+        this.size = size
+        this.price = price
+        this.status = status
+        this.thumb = thumb
+        this.images = images
+        this.videos = videos
+    }
+}

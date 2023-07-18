@@ -11,7 +11,7 @@ import { compressAndUploadToIbb, compressFile } from "@/helpers/helpers"
 import Image from "next/image"
 import { Company } from "@/classes"
 
-export default () => {
+export default function AddConstrutora() {
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const [email, setEmail] = useState<string>('')
@@ -38,7 +38,7 @@ export default () => {
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
         router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
+    } else if (user.is_complete_data == false) {
         router.push('/auth/login-social')
     } else {
         if (!showPage) {

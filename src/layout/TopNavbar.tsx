@@ -101,7 +101,7 @@ const TopNavbar = (props: {
                 { open && (<div id='dropdown' className={style.DropdownContent}>
                     <button onClick={() => Router.push('/painel')} className={ style.DropdownItem } type="button">Painel</button>
                     <button onClick={() => Router.push('/painel/meus-empreendimentos')} className={ style.DropdownItem } type="button">Meus empreendimentos</button>
-                    { user.is_admin && <button onClick={() => Router.push('/painel/painel-administrativo')} className={ style.DropdownItem } type="button">Painel Administrativo</button>}
+                    {/* { user.is_admin && <button onClick={() => Router.push('/painel/painel-administrativo')} className={ style.DropdownItem } type="button">Painel Administrativo</button>} */}
                     <button onClick={() => globalSignOut() } className={ style.DropdownItem } type="button">Sair</button>
                 </div>)}
             </div>

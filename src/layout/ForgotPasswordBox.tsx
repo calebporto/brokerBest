@@ -4,7 +4,7 @@ import Alert, { _throwAlert } from './Alert'
 import { useSession } from 'next-auth/react'
 import Router from 'next/router'
 
-export default () => {
+export default function ForgotPassword() {
     const [showPage, setShowPage] = useState(false)
     const [input, setInput] = useState('')
     const [alertShow, setAlertShow] = useState(false)

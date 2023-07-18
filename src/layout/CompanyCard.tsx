@@ -12,12 +12,12 @@ import { AuthContext } from "@/contexts/AuthContext";
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
 
-export default (props: {
+export default function CompanyCard(props: {
     companyData: Company,
     getProjects: Function,
     queryParams: MutableRefObject<ProjectQueryParams>,
     projectData: MutableRefObject<ProjectData>
-}) => {
+}) {
     const router = useRouter()
     const context = useContext(AuthContext)
     const { user } = context

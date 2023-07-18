@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> 
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
 
-export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+export default function MeusEmpreendimentos({ companies }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const context = useContext(AuthContext) as GeneralContext
     const router = useRouter()
     const [companiesElements, setCompaniesElements] = useState<Array<JSX.Element> | null>(null)
@@ -81,7 +81,7 @@ export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideP
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
         router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
+    } else if (user.is_complete_data == false) {
         router.push('/auth/login-social')
     } else {
         if (!showPage) {

@@ -4,7 +4,7 @@ import EmailValidateBox from "@/layout/EmailValidateBox"
 import { AuthContext } from "@/contexts/AuthContext"
 import { useContext } from "react"
 
-export default () => {
+export default function EmailValidate() {
     const { ...context } = useContext(AuthContext)
     return (
         <>

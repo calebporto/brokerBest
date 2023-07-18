@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps<{ company: Company | null }>
     }
 }
 
-export default ({ company }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+export default function AddEmpreendimentos({ company }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const [showPage, setShowPage] = useState(false)
     const router = useRouter()
     const context = useContext(AuthContext)
@@ -146,10 +146,11 @@ export default ({ company }: InferGetServerSidePropsType<typeof getServerSidePro
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
         router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
+    } else if (user.is_complete_data == false) {
         router.push('/auth/login-social')
     } else {
         if (!showPage) {
+            if (!user.id || !company) return null
             if (company && company.admin_id == user.id) {
                 setShowPage(true)
             } else {

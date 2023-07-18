@@ -10,7 +10,7 @@ import PropertyCard from "./PropertyCard"
 import Modal from "./Modal"
 import { useRouter } from "next/router"
 
-export default (props: { project: ProjectView }) => {
+export default function ProjectData(props: { project: ProjectView }) {
     const project = props.project
     const context = useContext(AuthContext)
     const { user } = context

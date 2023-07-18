@@ -7,7 +7,7 @@ interface Props {
     id?: string, 
     children?: ReactNode
 }
-export default (props: Props) => {
+export default function Body(props: Props) {
     const style = {
         background: props.bg,
         backgroundColor: props.bgColor,

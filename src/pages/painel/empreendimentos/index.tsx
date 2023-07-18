@@ -21,6 +21,7 @@ export const getServerSideProps: GetServerSideProps<{project: ProjectView | null
         if (!session) {
             return { props : {project: null} }
         }
+        
         const getProjectById = async () => {
             let url = `${process.env.API_URL}/project-services/get-project-by-id?id=${context.query.id}
             `
@@ -48,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<{project: ProjectView | null
     }
 }
 
-export default ({ project }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+export default function Index({ project }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const context = useContext(AuthContext)
     const [showPage, setShowPage] = useState(false)
     const [windowElement, setWindowElement] = useState<Window | null>(null)
@@ -73,7 +74,7 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
         router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
+    } else if (user.is_complete_data == false) {
         router.push('/auth/login-social')
     } else {
         if (!showPage) {

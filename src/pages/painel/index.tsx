@@ -10,13 +10,6 @@ import Head from "next/head"
 import Router, { useRouter } from "next/router"
 import { useContext, useState } from "react"
 
-const carouselImgs = [
-    'https://i.ibb.co/7rV5YpW/GYM-E-KIDS-CAM3.jpg',
-    'https://i.ibb.co/f1ZjYt0/SPA-E-SAUNA-2-1.jpg',
-    'https://i.ibb.co/YdZgHSW/SALAO-DE-FESTAS-VISTA-2-pos.jpg',
-    'https://i.ibb.co/DYrpvh1/SALA-3-QUARTOS-06.jpg',
-    'https://i.ibb.co/26dmSMr/TRUST-FACHADA-frente-detalhe.jpg'
-]
 
 const PainelPage = () => {
     const [showPage, setShowPage] = useState(false)
@@ -36,7 +29,7 @@ const PainelPage = () => {
         Router.push('/entrar')
     } else if (!session.user.is_authenticated) {
         Router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
+    } else if (user.is_complete_data == false) {
         Router.push('/auth/login-social')
     } else {
         if (!showPage) {

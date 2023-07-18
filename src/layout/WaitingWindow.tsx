@@ -1,6 +1,6 @@
 import Spinner from "./Spinner"
 
-export default () => {
+export default function WaitingWindow() {
     return (
         <div className='WaitingWindow'>
             <div className="WaitingCenter">

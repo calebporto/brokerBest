@@ -7,7 +7,7 @@ import Router, { useRouter } from 'next/router'
 import { AuthContext } from '@/contexts/AuthContext'
 
 
-export default () => {
+export default function EmailValidateBox() {
     const { session, update } = useContext(AuthContext)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')

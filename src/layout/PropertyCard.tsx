@@ -8,13 +8,13 @@ import { Property } from "@/helpers/interfaces"
 import Modal from "./Modal"
 import propertyStyle from '../styles/Property.module.css'
 
-export default (props: {
+export default function PropertyCard(props: {
     id?: number | null,
     thumb: string | null,
     name?: string | null,
     admin_id?: number | null
     propertyData: Property | null
-}) => {
+}) {
     if (!props.thumb) return null
     const context = useContext(AuthContext)
     const router = useRouter()

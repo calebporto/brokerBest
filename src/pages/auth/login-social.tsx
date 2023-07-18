@@ -10,7 +10,7 @@ import TopNavbar from "@/layout/TopNavbar"
 import { CompleteData } from "@/classes"
 
 
-export default () => {
+export default function LoginSocial() {
     const context = useContext(AuthContext)
     const { session, user, setSystemMessage } = context
     const [showForm, setShowForm] = useState(false)
