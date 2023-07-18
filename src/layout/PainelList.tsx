@@ -7,15 +7,6 @@ export default function PainelList() {
         <div className={style.PainelList}>
             <Container>
                 <div className={style.List}>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
-                    <Card></Card>
                 </div>
             </Container>
         </div>
