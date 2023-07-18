@@ -2,11 +2,14 @@ import { AuthContext } from "@/contexts/AuthContext"
 import TitleBar from "@/layout/TitleBar"
 import TopNavbar from "@/layout/TopNavbar"
 import { useRouter } from "next/router"
-import { LegacyRef, useContext, useEffect, useRef, useState } from "react"
+import { InputHTMLAttributes, LegacyRef, useContext, useEffect, useRef, useState } from "react"
 import style from '../../../styles/Form.module.css'
 import Head from "next/head"
 import IMask from "imask"
 import Alert, { _throwAlert } from "@/layout/Alert"
+import { compressAndUploadToIbb, compressFile } from "@/helpers/helpers"
+import Image from "next/image"
+import { Company } from "@/classes"
 
 export default () => {
     const [name, setName] = useState<string>('')
@@ -19,6 +22,7 @@ export default () => {
     const [district, setDistrict] = useState<string>('')
     const [city, setCity] = useState<string>('')
     const [uf, setUf] = useState<string>('')
+    const [originalImg, setOriginalImg] = useState<FileList | null>(null)
     const context = useContext(AuthContext)
     const { session, user } = context
     const router = useRouter()
@@ -28,7 +32,6 @@ export default () => {
     const [alertType, setAlertType] = useState('danger')
 
     var sendBt: HTMLButtonElement | null;
-    var fileInput: HTMLInputElement | null;
 
     if (session === undefined) return
     if (session == null) {
@@ -42,15 +45,12 @@ export default () => {
             setShowPage(true)
         }
     }
-    
+
     useEffect(() => {
         if (showPage) {
-            sendBt = document.querySelector('#sendBt') as HTMLButtonElement
-            fileInput = document.querySelector('#fileInput') as HTMLInputElement
-
             let telefone = document.getElementById('tel') as HTMLInputElement
             let telOptions = {
-            mask: '(00) 00000-0000'
+                mask: '(00) 00000-0000'
             };
             let telMask = IMask(telefone, telOptions);
 
@@ -77,55 +77,75 @@ export default () => {
         }
     }, [showPage])
 
-    function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
+    // Visualização de imagem
+    // useEffect(() => {
+    //     if (!compressedImg) return;
+    //     const url = URL.createObjectURL(compressedImg);
+    //     setTestImageURL(url);
+    //     () => url && URL.revokeObjectURL(url);
+    // }, [compressedImg]);
+
+    function throwAlert(message: string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
-    
-    function register() {
+    function limparFormulario() {
+        setName('')
+        setDescription('')
+        setEmail('')
+        setTel('')
+        setAddress('')
+        setNum('')
+        setComplement('')
+        setDistrict('')
+        setCity('')
+        setUf('')
+        var fileInput = document.getElementById('fileInput') as HTMLInputElement
+        fileInput.value = ''
+        fileInput.files = null
+    }
+    async function register() {
         setAlertShow(false)
-        // if (!name) {
-        //     throwAlert('Nome inválido.', 'danger')
-        //     return
-        // }
-        // if (!description || description.length < 20) {
-        //     throwAlert('Descreva com mais detalhes a construtora.', 'danger')
-        //     return
-        // }
-        // if (!email || email.indexOf('@') == -1 || email.indexOf('.') == -1 || email.length < 8) {
-        //     throwAlert('E-mail inválido.', 'danger')
-        //     return
-        // }
-        // if (!tel || tel.length < 14 && tel.length > 15) {
-        //     throwAlert('Telefone inválido.', 'danger')
-        //     return
-        // }
-        // if (!address) {
-        //     throwAlert('Endereço inválido.', 'danger')
-        //     return
-        // }
-        // if (!num) {
-        //     throwAlert('Número inválido.', 'danger')
-        //     return
-        // }
-        // if (!district) {
-        //     throwAlert('Bairro inválido.', 'danger')
-        //     return
-        // }
-        // if (!city) {
-        //     throwAlert('Cidade inválida.', 'danger')
-        //     return
-        // }
-        // if (!uf) {
-        //     throwAlert('UF inválido.', 'danger')
-        //     return
-        // }
-        if (fileInput?.files?.length as number < 1) {
+        if (!name) {
+            throwAlert('Nome inválido.', 'danger')
+            return
+        }
+        if (!description || description.length < 20) {
+            throwAlert('Descreva com mais detalhes a construtora.', 'danger')
+            return
+        }
+        if (!email || email.indexOf('@') == -1 || email.indexOf('.') == -1 || email.length < 8) {
+            throwAlert('E-mail inválido.', 'danger')
+            return
+        }
+        if (!tel || tel.length < 14 && tel.length > 15) {
+            throwAlert('Telefone inválido.', 'danger')
+            return
+        }
+        if (!address) {
+            throwAlert('Endereço inválido.', 'danger')
+            return
+        }
+        if (!num) {
+            throwAlert('Número inválido.', 'danger')
+            return
+        }
+        if (!district) {
+            throwAlert('Bairro inválido.', 'danger')
+            return
+        }
+        if (!city) {
+            throwAlert('Cidade inválida.', 'danger')
+            return
+        }
+        if (!uf) {
+            throwAlert('UF inválido.', 'danger')
+            return
+        }
+        if (!originalImg || originalImg.length < 1) {
             throwAlert('Selecione uma imagem.', 'danger')
             return
         }
-        if (fileInput?.files) {
-            console.log(fileInput.files)
-        }
+        sendBt = document.querySelector('#sendBt') as HTMLButtonElement
         if (sendBt) {
             sendBt.innerHTML = `
             <div class="spinner-border text-dark" role="status">
@@ -133,10 +153,53 @@ export default () => {
             </div>
             `
         }
+        const imgName = `${name.replace(' ', '_')}_thumb`
+        console.log(imgName)
+        const ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
+        if (!ibbResponse) {
+            throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+        } else {
+            const newCompany = new Company(
+                null,
+                name,
+                description,
+                email,
+                tel,
+                address,
+                num,
+                complement,
+                district,
+                city,
+                uf,
+                null,
+                ibbResponse.data.image.url,
+                null,
+                user.id,
+                true
+            )
+            const send = await fetch('/api/projects/add-company', {
+                method: 'POST',
+                body: JSON.stringify({company: newCompany}),
+                headers: {authorization: process.env.NEXT_PUBLIC_API_TOKEN as string}
+            }).then(response => {
+                if (!response.ok) return false
+                else return true
+            })
+            if (!send) {
+                throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            } else {
+                throwAlert('Construtora cadastrada com sucesso.', 'success')
+            }
+        }
+        
+        limparFormulario()
+        if (sendBt) {
+            sendBt.innerHTML = 'Enviar'
+        }
 
     }
     return (
-         showPage ? <>  
+        showPage ? <>
             <Head>
                 <title>Broker Best</title>
                 <meta name="description" content="Broker Best teste" />
@@ -147,53 +210,53 @@ export default () => {
             <TitleBar title={'Adicionar Construtora'}></TitleBar>
             <div className={style.Body}>
                 <div className={style.Form}>
-                    <Alert handleShow={setAlertShow} 
-                    show={alertShow} 
-                    message={alertMessage} 
-                    type={alertType} />
+                    <Alert handleShow={setAlertShow}
+                        show={alertShow}
+                        message={alertMessage}
+                        type={alertType} />
                     <div className={style.LgInput}>
                         <span>Nome da Construtora:</span>
-                        <input onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />
+                        <input value={name} onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.LgInput}>
                         <span>Descrição:</span>
-                        <textarea onChange={(e) => setDescription(e.target.value)} maxLength={500} name="" id="" rows={4}></textarea>
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} name="" id="" rows={4}></textarea>
                     </div>
                     <div className={style.MdInput}>
                         <span>Email:</span>
-                        <input onChange={(e) => setEmail(e.target.value)} maxLength={50} type="text" />
+                        <input value={email} onChange={(e) => setEmail(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
                         <span>Telefone:</span>
-                        <input onChange={(e) => setTel(e.target.value)} id="tel" maxLength={15} type="text" />
+                        <input value={tel} onChange={(e) => setTel(e.target.value)} id="tel" maxLength={15} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Endereço:</span>
-                        <input onChange={(e) => setAddress(e.target.value)} maxLength={50} type="text" />
+                        <input value={address} onChange={(e) => setAddress(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.SmInput + ' ' + style.Right}>
                         <span>Número:</span>
-                        <input onChange={(e) => setNum(e.target.value)} id="num" maxLength={6} type="text" />
+                        <input value={num} onChange={(e) => setNum(e.target.value)} id="num" maxLength={6} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Complemento:</span>
-                        <input onChange={(e) => setComplement(e.target.value)} maxLength={50} type="text" />
+                        <input value={complement} onChange={(e) => setComplement(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
                         <span>Bairro:</span>
-                        <input onChange={(e) => setDistrict(e.target.value)} maxLength={50} type="text" />
+                        <input value={district} onChange={(e) => setDistrict(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Cidade:</span>
-                        <input onChange={(e) => setCity(e.target.value)} maxLength={50} type="text" />
+                        <input value={city} onChange={(e) => setCity(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.SmInput + ' ' + style.Right}>
                         <span>UF:</span>
-                        <input onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} id="uf" maxLength={2} type="text" />
+                        <input value={uf} onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} id="uf" maxLength={2} type="text" />
                     </div>
                     <div className={style.ImageInput}>
                         <span>Imagem de Capa:</span>
-                        <input id="fileInput" type="file" accept=".jpg, .jpeg, .png"/>
+                        <input max={1} onChange={(e) => setOriginalImg(e.target.files)} id="fileInput" type="file" accept="image/*" />
                     </div>
                     <div className={style.SendButton}>
                         <button id="sendBt" onClick={() => register()} className="btn btn-warning">Enviar</button>

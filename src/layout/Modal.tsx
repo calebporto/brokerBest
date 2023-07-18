@@ -3,7 +3,7 @@ import style from '../styles/Modal.module.css'
 import ReactDOM from "react-dom";
 import { allFirstUppercase } from "@/helpers/helpers";
 
-const Modal = (props: { show: boolean, setShow: Dispatch<SetStateAction<boolean>>, title: string | null | undefined, children: ReactNode }) => {
+const Modal = (props: { show: boolean, setShow: Dispatch<SetStateAction<boolean>>, title: string | null | undefined, shortModal?: boolean, children: ReactNode }) => {
 
   const [divModal, setDivModal] = useState<HTMLDivElement | null>(null)
   const [body, setBody] = useState<HTMLBodyElement | null>(null)
@@ -24,7 +24,7 @@ const Modal = (props: { show: boolean, setShow: Dispatch<SetStateAction<boolean>
 
   const modalContent = (
     <div className={style.Overlay}>
-      <div className={style.Wrapper}>
+      <div className={props.shortModal ? style.SmWrapper : style.Wrapper}>
         <div className={style.Modal}>
           <div className={style.Header}>
             <p className={style.Title}>{allFirstUppercase(props.title)}</p>

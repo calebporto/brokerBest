@@ -1,0 +1,38 @@
+{
+    "data": {
+        "id": "FBdqv2H",
+        "title": "blob",
+        "url_viewer": "https://ibb.co/FBdqv2H",
+        "url": "https://i.ibb.co/Zhb1s52/blob.jpg",
+        "display_url": "https://i.ibb.co/JzSFLV3/blob.jpg",
+        "width": 3610,
+        "height": 2030,
+        "size": 1030957,
+        "time": 1689611786,
+        "expiration": 0,
+        "image": {
+            "filename": "blob.jpg",
+            "name": "blob",
+            "mime": "image/jpeg",
+            "extension": "jpg",
+            "url": "https://i.ibb.co/Zhb1s52/blob.jpg"
+        },
+        "thumb": {
+            "filename": "blob.jpg",
+            "name": "blob",
+            "mime": "image/jpeg",
+            "extension": "jpg",
+            "url": "https://i.ibb.co/FBdqv2H/blob.jpg"
+        },
+        "medium": {
+            "filename": "blob.jpg",
+            "name": "blob",
+            "mime": "image/jpeg",
+            "extension": "jpg",
+            "url": "https://i.ibb.co/JzSFLV3/blob.jpg"
+        },
+        "delete_url": "https://ibb.co/FBdqv2H/73e72cc1d1ed5895be48de98e37c30e6"
+    },
+    "success": true,
+    "status": 200
+}

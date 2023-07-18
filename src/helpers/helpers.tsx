@@ -2,6 +2,7 @@ import { getCsrfToken, signOut } from 'next-auth/react'
 import Router from 'next/router'
 import { Dispatch, SetStateAction, useContext } from 'react'
 import { GeneralContext, WindowDimensions } from './interfaces'
+import imageCompression from 'browser-image-compression'
 
 export const authCheck = (session: any) => {
     if (session) {
@@ -32,9 +33,9 @@ export function setWindowDimensions(setPageSize: Dispatch<SetStateAction<WindowD
 
 export async function globalSignOut(redirect: boolean = true) {
     if (redirect) {
-        signOut({callbackUrl: '/entrar'})
+        signOut({ callbackUrl: '/entrar' })
     } else {
-        await signOut({redirect: false})
+        await signOut({ redirect: false })
         Router.push('/entrar')
     }
 }
@@ -91,10 +92,10 @@ export function firstAndParagraphUppercase(string: string | null | undefined) {
             //         newString = newString + string[i + 1].toUpperCase()
             //         continue
             //     } else {
-                //         newString = newString + string[i + 1]
-                //         continue
-                //     }
-                // }
+            //         newString = newString + string[i + 1]
+            //         continue
+            //     }
+            // }
         }
         if (string[i] == ' ') {
             newString = newString + string[i]
@@ -117,12 +118,12 @@ export function firstAndParagraphUppercase(string: string | null | undefined) {
     return newString
 }
 export function parseAddress(
-    address: string | null | undefined, 
-    num: string | null | undefined, 
+    address: string | null | undefined,
+    num: string | null | undefined,
     complement: string | null | undefined,
     district: string | null | undefined,
     city: string | null | undefined,
-    uf: string | null | undefined): string{
+    uf: string | null | undefined): string {
 
     if (!address && !district && !city) return ''
     var completeAddress = ''
@@ -156,4 +157,53 @@ export function windowOpen(window: Window | null, link: string | null | undefine
     if (window && link) {
         window.open(link)
     }
+}
+
+const defaultOptions = {
+    maxSizeMB: 1
+};
+export function compressFile(imageFile: File, options = defaultOptions) {
+    return imageCompression(imageFile, options);
+}
+
+export async function compressAndUploadToIbb(imageFile: File | null, imgName: string) {
+    try {
+        if (!imageFile) return null
+        var compressedImg = await compressFile(imageFile)
+    
+        const ibbKey = process.env.NEXT_PUBLIC_IBB_KEY as string
+        const formData = new FormData()
+        formData.append('image', compressedImg)
+        formData.append('key', ibbKey)
+        formData.append('name', imgName)
+        
+    
+        const ibbUpload = await fetch(`https://api.imgbb.com/1/upload?key=${ibbKey}`, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return null
+            }
+            else return response.json().then(data => {
+                return data
+            })
+        })
+        return await ibbUpload
+
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
+
+export function parseYoutubeLink(link: string) {
+    let inverted = ''
+    for (let i = link.length - 1; i >= 0; i--) {
+        if (link[i] == '=' || link[i] == '/') break
+        inverted = inverted + link[i]
+    }
+    let normal = inverted.split("").reverse().join("")
+
+    return 'https://www.youtube.com/embed/' + normal
 }

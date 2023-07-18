@@ -91,6 +91,8 @@ export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideP
     }, [])
 
     function getProjectsData() {
+        var list = document.querySelector('#List') as HTMLDivElement
+        list.focus()
         fetch(`/api/projects/get-projects?filterBy=companyId&key=${queryParams.current.key}&orderBy=${queryParams.current.order_by}&offset=${queryParams.current.offset}&guidance=${queryParams.current.guidance}`)
             .then(response => {
                 if (!response.ok) return null
@@ -183,7 +185,7 @@ export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideP
                     <div className={MEStyle.Title}>
                         Empreendimentos:
                     </div>
-                    <div className={MEStyle.List}>
+                    <div id="List" tabIndex={1} className={MEStyle.List}>
                         {projectElements.length > 0 ? [...projectElements] : (
                             <div className={MEStyle.NotEmp}>
                                 <p>Nenhum empreendimento a mostrar. Talvez ainda não haja nenhum cadastrado

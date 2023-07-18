@@ -13,6 +13,10 @@
     width: 80%;
     height: 95%;
 }
+.SmWrapper {
+    width: 50%;
+    height: 50%;
+}
 .Modal {
     background: white;
     height: 100%;
@@ -54,5 +58,8 @@
 @media(max-width: 767px) {
     .Wrapper {
         width: 95%;
+    }
+    .SmWrapper {
+        width: 70%;
     }
 }

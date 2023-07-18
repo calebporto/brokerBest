@@ -39,6 +39,9 @@
 .MdInput input {
     padding: 3px;
 }
+.MdInput select {
+    padding: 3.7px;
+}
 .SmInput {
     margin-top: .5rem;
     width: 15%;
