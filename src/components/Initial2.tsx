@@ -31,7 +31,7 @@ const Initial = () => {
                 manutenção, ajudando os corretores a alcançarem resultados excelentes através do poder da tecnologia.
                 </p>
                 <p className={style.ContentTitle}>Bora virar meu sócio?</p>
-                <PatternBt name="Quero ser sócio"></PatternBt>
+                <PatternBt clickAction={() => console.log('a')} name="Quero ser sócio"></PatternBt>
             </div>
             <div className={style.Image}>
                 <Image width={600} height={600} src={'/media/homem2.png'} alt=''/>
