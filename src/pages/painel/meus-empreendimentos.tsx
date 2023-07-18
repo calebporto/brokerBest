@@ -62,19 +62,6 @@ export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideP
     const { session, user } = context
     const [showPage, setShowPage] = useState(false)
 
-    if (session === undefined) return
-    if (session == null) {
-        router.push('/entrar')
-    } else if (!session.user.is_authenticated) {
-        router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
-        router.push('/auth/login-social')
-    } else {
-        if (!showPage) {
-            setShowPage(true)
-        }
-    }
-
     useEffect(() => {
         if (!windowElement) {
             setWindowElement(window)
@@ -88,6 +75,19 @@ export default ({ companies }: InferGetServerSidePropsType<typeof getServerSideP
         queryParams.current = InitQueryParams
         verMaisShow()
     }, [])
+    
+    if (session === undefined) return
+    if (session == null) {
+        router.push('/entrar')
+    } else if (!session.user.is_authenticated) {
+        router.push('/entrar/auth-email')
+    } else if (!user.is_complete_data) {
+        router.push('/auth/login-social')
+    } else {
+        if (!showPage) {
+            setShowPage(true)
+        }
+    }
 
     function getProjectsData() {
         var list = document.querySelector('#List') as HTMLDivElement

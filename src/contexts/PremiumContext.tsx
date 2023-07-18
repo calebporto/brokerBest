@@ -12,6 +12,12 @@ export function PremiumProvider(props: {children: ReactNode}) {
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
     const {session} = useContext(AuthContext)
 
+    useEffect(() => {
+        if (session) {
+            getPremium()
+        }
+    }, [session])
+
     function getPremium(): null {
         fetch('/api/projects/get-premium-projects')
         .then(response => {
@@ -32,11 +38,6 @@ export function PremiumProvider(props: {children: ReactNode}) {
             }
         }
     }
-    useEffect(() => {
-        if (session) {
-            getPremium()
-        }
-    }, [session])
 
     const context = new PremiumDataClass(
         premiumProjects,

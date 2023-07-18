@@ -48,6 +48,25 @@ export function AuthProvider(props: {children: ReactNode}) {
     const { data: session, update} = useSession() as any
     const router = useRouter()
     
+    useEffect(() => {
+        const { width, height } = contextWindowDimensions
+        if (!width || !height) {
+            setWindowDimensions(setContextWindowDimensions)
+        }
+        window.removeEventListener('resize', () => setWindowDimensions(setContextWindowDimensions))
+        window.addEventListener('resize', () => setWindowDimensions(setContextWindowDimensions))
+    },[])
+
+    useEffect(() => {
+        if (session) {
+            // Carrega os dados do usuário toda vez que fizer login
+            contextUpdate()
+        } else if (session === null) {
+            // Quando fizer logoff, zera o context user
+            setContextUser(initialData.user)
+        }
+    }, [session])
+
     function loginRequire(successCb: Function): void {
         // useEffect(() => {
         //     if (session === undefined) return
@@ -151,25 +170,6 @@ export function AuthProvider(props: {children: ReactNode}) {
             })
             
     }
-    
-    useEffect(() => {
-        const { width, height } = contextWindowDimensions
-        if (!width || !height) {
-            setWindowDimensions(setContextWindowDimensions)
-        }
-        window.removeEventListener('resize', () => setWindowDimensions(setContextWindowDimensions))
-        window.addEventListener('resize', () => setWindowDimensions(setContextWindowDimensions))
-    },[])
-
-    useEffect(() => {
-        if (session) {
-            // Carrega os dados do usuário toda vez que fizer login
-            contextUpdate()
-        } else if (session === null) {
-            // Quando fizer logoff, zera o context user
-            setContextUser(initialData.user)
-        }
-    }, [session])
 
     const context = {
         session: session,

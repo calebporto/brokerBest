@@ -55,18 +55,6 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
     const { session, user } = context
     const router = useRouter()
 
-    if (session === undefined) return
-    if (session == null) {
-        router.push('/entrar')
-    } else if (!session.user.is_authenticated) {
-        router.push('/entrar/auth-email')
-    } else if (!user.is_complete_data) {
-        router.push('/auth/login-social')
-    } else {
-        if (!showPage) {
-            setShowPage(true)
-        }
-    }
     useEffect(() => {
         if (!windowElement) {
             setWindowElement(window)
@@ -79,6 +67,19 @@ export default ({ project }: InferGetServerSidePropsType<typeof getServerSidePro
             router.push('/painel')
         }
     }, [project])
+
+    if (session === undefined) return
+    if (session == null) {
+        router.push('/entrar')
+    } else if (!session.user.is_authenticated) {
+        router.push('/entrar/auth-email')
+    } else if (!user.is_complete_data) {
+        router.push('/auth/login-social')
+    } else {
+        if (!showPage) {
+            setShowPage(true)
+        }
+    }
 
     return (
         showPage && project ? (
