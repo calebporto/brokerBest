@@ -15,7 +15,6 @@ export default function PropertyCard(props: {
     admin_id?: number | null
     propertyData: Property | null
 }) {
-    if (!props.thumb) return null
     const context = useContext(AuthContext)
     const router = useRouter()
     const [showModal, setShowModal] = useState(false)
@@ -56,9 +55,9 @@ export default function PropertyCard(props: {
 
     var videoRender = (links: Array<string> | null | undefined) => {
         if (!links) return null
-        const videos = links.map(link => {
+        const videos = links.map((link, index) => {
             return (
-                <div className={propertyStyle.Video}>
+                <div className={propertyStyle.Video} key={'video'+index.toString()}>
                     <iframe style={{ width: '100%', height: '100%' }} src={link} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                 </div>
             )
@@ -152,31 +151,34 @@ export default function PropertyCard(props: {
 
 
     return (
-        <>
-            <Modal show={showModal} setShow={setShowModal} title={allFirstUppercase(props.propertyData?.name)}>
-                {propertyElements()}
-            </Modal>
-            <div className={style.Card} onClick={() => setShowModal(true)}>
-                <div className={style.Image}>
-                    <Image className={style.Img} src={props.thumb as string} width={600} height={450} alt='' />
-                </div>
-                <div className={style.Title}>
-                    <p>{allFirstUppercase(props.name as string)}</p>
-                </div>
-                <div className={style.Info}>
-                    {props.admin_id == context.user.id || context.user.is_admin ? (
-                        <>
-                            <div className={style.EditarPropertyBt}>
-                                <button className={"btn btn-warning "} onClick={(e) => edit(e, props.id)}>
-                                    Editar
-                                </button>
-                            </div>
-                        </>
-                    ) : null
-                    }
+        props.thumb ? (
+                <>
+                    <Modal show={showModal} setShow={setShowModal} title={allFirstUppercase(props.propertyData?.name)}>
+                        {propertyElements()}
+                    </Modal>
+                    <div className={style.Card} onClick={() => setShowModal(true)}>
+                        <div className={style.Image}>
+                            <Image className={style.Img} src={props.thumb as string} width={600} height={450} alt='' />
+                        </div>
+                        <div className={style.Title}>
+                            <p>{allFirstUppercase(props.name as string)}</p>
+                        </div>
+                        <div className={style.Info}>
+                            {props.admin_id == context.user.id || context.user.is_admin ? (
+                                <>
+                                    <div className={style.EditarPropertyBt}>
+                                        <button className={"btn btn-warning "} onClick={(e) => edit(e, props.id)}>
+                                            Editar
+                                        </button>
+                                    </div>
+                                </>
+                            ) : null
+                            }
+        
+                        </div>
+                    </div>
+                </>
+            ) : null
 
-                </div>
-            </div>
-        </>
-    )
+        )
 }

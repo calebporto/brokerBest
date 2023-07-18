@@ -44,9 +44,9 @@ export default function ProjectData(props: { project: ProjectView }) {
     }
     var videoRender = (links: Array<string> | null | undefined) => {
         if (!links) return null
-        const videos = links.map(link => {
+        const videos = links.map((link, index) => {
             return (
-                <div className={style.Video}>
+                <div className={style.Video} key={'video'+index.toString()}>
                     <iframe style={{ width: '100%', height: '100%' }} src={link} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                 </div>
             )

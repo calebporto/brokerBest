@@ -33,7 +33,6 @@ export default function AddConstrutora() {
 
     var sendBt: HTMLButtonElement | null;
 
-    if (session === undefined) return
     if (session == null) {
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
