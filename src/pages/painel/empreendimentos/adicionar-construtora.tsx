@@ -12,6 +12,7 @@ import Image from "next/image"
 import { Company } from "@/classes"
 
 export default function AddConstrutora() {
+    const router = useRouter()
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const [email, setEmail] = useState<string>('')
@@ -23,27 +24,29 @@ export default function AddConstrutora() {
     const [city, setCity] = useState<string>('')
     const [uf, setUf] = useState<string>('')
     const [originalImg, setOriginalImg] = useState<FileList | null>(null)
-    const context = useContext(AuthContext)
-    const { session, user } = context
-    const router = useRouter()
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
+    const context = useContext(AuthContext)
+    const { session, user } = context
 
     var sendBt: HTMLButtonElement | null;
-
-    if (session == null) {
-        router.push('/entrar')
-    } else if (!session.user.is_authenticated) {
-        router.push('/entrar/auth-email')
-    } else if (user.is_complete_data == false) {
-        router.push('/auth/login-social')
-    } else {
-        if (!showPage) {
-            setShowPage(true)
+    useEffect(() => {
+        if (session != undefined && user.name) {
+            if (session == null) {
+                router.push('/entrar')
+            } else if (!session.user.is_authenticated) {
+                router.push('/entrar/auth-email')
+            } else if (user.is_complete_data == false) {
+                router.push('/auth/login-social')
+            } else {
+                if (!showPage) {
+                    setShowPage(true)
+                }
+            }
         }
-    }
+    }, [session, user])
 
     useEffect(() => {
         if (showPage) {
