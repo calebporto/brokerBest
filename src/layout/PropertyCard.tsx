@@ -43,7 +43,7 @@ export default function PropertyCard(props: {
             let imgs = images.map((image: string, index: number) => {
                 if (index > 0) activeClass = ''
                 return (
-                    <div key={index} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer' }}>
+                    <div key={'propertyImgs' + index.toString()} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer' }}>
                         <Image onClick={() => windowOpen(windowElement, image)} style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={image} width={1200} height={724} alt='' />
                     </div>
                 )

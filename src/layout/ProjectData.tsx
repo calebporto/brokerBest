@@ -84,7 +84,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                 ): null}
                 <div className={companyStyle.Description}>
                     <p className={companyStyle.Title}>Descrição:</p>
-                    <p>{company?.description}</p>
+                    <p>{firstAndParagraphUppercase(company?.description)}</p>
                 </div>
                 <div className={companyStyle.InfoTable}>
                     <div className={companyStyle.Row}>
