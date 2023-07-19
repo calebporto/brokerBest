@@ -140,7 +140,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                     ) : null}
                     <div className={style.Description}>
                         <p className={style.Title}>Descrição:</p>
-                        <p>{project.project?.description as string}</p>
+                        <p>{firstAndParagraphUppercase(project.project?.description) as string}</p>
                     </div>
                     <div className={style.InfoTable}>
                         <div className={style.Row}>
@@ -190,7 +190,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                         <div className={style.Row}>
                             <div className={style.RowTitle}>Status:</div>
                             <div className={style.RowDescription}>
-                                {project.project?.status}
+                                {allFirstUppercase(project.project?.status)}
                             </div>
                         </div>
                         <div className={style.Row}>
