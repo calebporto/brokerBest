@@ -416,7 +416,8 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                         <select onChange={(e) => setStatus(e.target.value)} name="status" id="status">
                             <option value='' selected disabled> -- Selecione --</option>
                             <option value='pronto'>Pronto</option>
-                            <option value='construindo'>Em construção</option>
+                            <option value='em construção'>Em construção</option>
+                            <option value='na planta'>Na planta</option>
                         </select>
                     </div>
                     <div className={style.MdInput}>
