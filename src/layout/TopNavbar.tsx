@@ -112,7 +112,7 @@ const TopNavbar = (props: {
         <div className={position}>
             <Container>
                 <div className={style.Divs}>
-                    <div className={style.Logo}>
+                    <div onClick={() => Router.push('/')} className={style.Logo}>
                         <Image width={300} height={100} src={'/media/logo2.png'} alt="" />
                     </div>
                     <div className={style.Buttons}>

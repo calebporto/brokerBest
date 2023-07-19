@@ -6,6 +6,7 @@ import { BasicProject, Project, ProjectData, ProjectQueryParams, ProjectResponse
 import { ProjectDataClass, ProjectQueryParamsClass } from '@/classes'
 import ProjectCard from './ProjectCard'
 import { allFirstUppercase } from '@/helpers/helpers'
+import Map from './Map'
 
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
@@ -23,6 +24,7 @@ export default function DriveBar() {
     const [projectElements, setProjectElements] = useState<Array<JSX.Element>>([])
     const [showList, setShowList] = useState(true)
     const [showVerMais, setShowVerMais] = useState(false)
+    const [map, setMap] = useState()
     const router = useRouter()
 
     useEffect(() => {
@@ -213,6 +215,7 @@ export default function DriveBar() {
                             </svg>
                         </button>
                     </div>
+                    {showList ? (
                     <div className={style.ShowFilter}>
                         <div className={style.FilterList}>
                             {itemList ? itemList : <p style={{ width: '100%', textAlign: 'center' }}>Nenhum dado encontrado</p>}
@@ -228,7 +231,7 @@ export default function DriveBar() {
                                 </>
                             )}
                         </div>
-                    </div>
+                    </div>): null}
                     {showList ? (
                     <div className={style.List}>
                         {projectElements.length > 0 ? [...projectElements] : null}
@@ -236,6 +239,11 @@ export default function DriveBar() {
                             <button onClick={() => verMais()} className={"btn btn-warning " + style.VerMaisBt}>Ver Mais</button>
                         ) : null}
                     </div>) : null}
+                    {mapSelect ? (
+                        <div className={style.Map}>
+                            <Map></Map>
+                        </div>
+                    ): null}
                 </div>
             </Container>
         </div>

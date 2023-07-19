@@ -30,7 +30,7 @@ export function PremiumProvider(props: {children: ReactNode}) {
         })
         return null
     }
-    function premiumUpdate(getPremium: Function) {
+    function premiumUpdate() {
         if (lastUpdate) {
             const dateNow = new Date()
             if (dateNow.getTime() - lastUpdate.getTime() > 600000) {
@@ -38,7 +38,6 @@ export function PremiumProvider(props: {children: ReactNode}) {
             }
         }
     }
-
     const context = new PremiumDataClass(
         premiumProjects,
         lastUpdate,

@@ -206,7 +206,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                             </div>
                         </div>
                     </div>
-                    {project.project?.images?.length as number > 0 ? (
+                    {project.project && project.project?.images?.length as number > 0 ? (
                         <div style={{ width: '100%', marginTop: '2rem' }}>
                             <p className={style.Title}>Imagens:</p>
                             <div className={style.Images}>
@@ -226,7 +226,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                             </div>
                         </div>
                     ) : null}
-                    {project.project?.videos?.length as number > 0 ? (
+                    {project.project && project.project?.videos?.length as number > 0 ? (
                         <div style={{ width: '100%' }}>
                             <p className={style.Title}>Vídeos</p>
                             {videoRender(project.project?.videos)}
@@ -234,12 +234,12 @@ export default function ProjectData(props: { project: ProjectView }) {
                     ) : null}
                         <div style={{ width: '100%', margin: '2rem 0' }}>
                             <p className={style.Title}>Imóveis</p>
-                            {project.company?.admin_id == user.id || user.is_admin ? (
+                            {project.company && project.company?.admin_id == user.id || user.is_admin ? (
                                 <div className={style.EditarBt}>
                                     <button onClick={() => router.push(`/painel/empreendimentos/adicionar-imovel?empreendimentoId=${project.project?.id}`)} className="btn btn-warning">Adicionar Imóvel</button>
                                 </div>
                             ) : null}
-                            {project.properties.length > 0 ? (
+                            {project.properties && project.properties.length > 0 ? (
                                 <div className={style.Properties}>
                                     {[...propertyCardsGenerate()]}
                                 </div>

@@ -1,5 +1,6 @@
 .DriveBar {
     min-height: 4.5rem;
+    height: auto;
     width: 100%;
     border: solid 1px rgb(207, 207, 207);
     border-radius: .5rem;
@@ -81,7 +82,11 @@
     height: 2.5rem;
     margin-top: 1rem;
 }
-
+.Map {
+    padding: 1rem;
+    width: 100%;
+    height: auto;
+}
 @media (max-width: 767px) {
     .Filter button {
         width: 45%;
