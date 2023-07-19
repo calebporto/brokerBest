@@ -81,7 +81,7 @@ const TopNavbar = (props: {
         let button = isPc ?
             (
                 <button type="button" className={"btn btn-warning " + style.BtContent}>
-                    { name[0].toUpperCase() + name.substring(1) }
+                    { name[0] ? name[0].toUpperCase() + name.substring(1) : null}
                 </button>
             ) : (
                 <button type="button" className={"btn btn-warning " + style.BtContent}>

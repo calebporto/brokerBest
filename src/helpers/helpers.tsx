@@ -60,7 +60,7 @@ export function allFirstUppercase(string: string | null | undefined) {
             newWords.push(word)
             return
         }
-        let newWord = word[0].toUpperCase() + word.substring(1)
+        let newWord = word.length > 0 ? word[0].toUpperCase() + word.substring(1) : word
         newWords.push(newWord)
     })
     return newWords.join(' ').trim()
