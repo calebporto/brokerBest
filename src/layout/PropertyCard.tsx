@@ -122,15 +122,15 @@ export default function PropertyCard(props: {
                     <div style={{ width: '100%', marginTop: '2rem' }}>
                         <p className={propertyStyle.Title}>Imagens:</p>
                         <div className={propertyStyle.Images}>
-                            <div id="carouselExampleControls" style={{ height: '100%' }} className="carousel slide" data-bs-ride="carousel">
+                            <div id="carouselExampleControlsProperty" style={{ height: '100%' }} className="carousel slide" data-bs-ride="carousel">
                                 <div className="carousel-inner" style={{ height: '100%' }}>
                                     {carouselGen(props.propertyData?.images)}
                                 </div>
-                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsProperty" data-bs-slide="prev">
                                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span className="visually-hidden">Anterior</span>
                                 </button>
-                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsProperty" data-bs-slide="next">
                                     <span className="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span className="visually-hidden">Próximo</span>
                                 </button>
