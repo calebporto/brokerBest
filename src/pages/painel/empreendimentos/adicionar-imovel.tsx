@@ -120,7 +120,6 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
         else setShowWaitingModal(false)
     }, [sending])
 
-    if (session === undefined) return null
     if (session == null) {
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
@@ -275,6 +274,7 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
                 return true
             }
         })
+        clean()
     }
     return (
         showPage ? <>
