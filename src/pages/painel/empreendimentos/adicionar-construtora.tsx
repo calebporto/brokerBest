@@ -10,6 +10,7 @@ import Alert, { _throwAlert } from "@/layout/Alert"
 import { compressAndUploadToIbb, compressFile } from "@/helpers/helpers"
 import Image from "next/image"
 import { Company } from "@/classes"
+import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 
 export default function AddConstrutora() {
     const router = useRouter()
@@ -210,6 +211,7 @@ export default function AddConstrutora() {
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Construtora'}></TitleBar>
+            <EmpreendimentosBar></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}

@@ -13,6 +13,7 @@ import Container from "@/layout/Container"
 import { ProjectDataClass, ProjectQueryParamsClass } from "@/classes"
 import ProjectCard from "@/layout/ProjectCard"
 import { useRouter } from "next/router"
+import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 
 export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> | null }> = async (context) => {
     try {
@@ -158,6 +159,7 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Meus Empreendimentos'}></TitleBar>
+            <EmpreendimentosBar></EmpreendimentosBar>
             <div style={{ width: '100%', display: 'flex' }}>
                 <Container>
                     <div className={MEStyle.Title}>

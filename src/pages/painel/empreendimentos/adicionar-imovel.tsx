@@ -14,6 +14,7 @@ import Alert, { _throwAlert } from "@/layout/Alert"
 import IMask from "imask"
 import { Property } from "@/classes"
 import { compressAndUploadToIbb } from "@/helpers/helpers"
+import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 
 export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
     try {
@@ -295,6 +296,7 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
             </Modal>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Imóvel'}></TitleBar>
+            <EmpreendimentosBar></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}

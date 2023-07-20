@@ -14,6 +14,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Company } from '@/helpers/interfaces'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import EmpreendimentosBar from '@/layout/EmpreendimentosBar'
 
 export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
     try {
@@ -358,6 +359,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             </Modal>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Empreendimento'}></TitleBar>
+            <EmpreendimentosBar></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}
