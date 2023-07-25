@@ -9,6 +9,7 @@ import { AuthContext } from "@/contexts/AuthContext"
 import PropertyCard from "./PropertyCard"
 import Modal from "./Modal"
 import { useRouter } from "next/router"
+import Alert, { _throwAlert } from "./Alert"
 
 export default function ProjectData(props: { project: ProjectView }) {
     const project = props.project
@@ -17,6 +18,12 @@ export default function ProjectData(props: { project: ProjectView }) {
     const router = useRouter()
     const [showCompanyModal, setShowCompanyModal] = useState(false)
     const [windowElement, setWindowElement] = useState<Window | null>(null)
+    const [alertShow, setAlertShow] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertType, setAlertType] = useState('danger')
+    function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
+        _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
+    }
 
     useEffect(() => {
         if (!windowElement) {
@@ -24,8 +31,24 @@ export default function ProjectData(props: { project: ProjectView }) {
         }
     }, [])
     
-    function bookPdf() {
-        window.open(project.project?.book)
+    async function bookPdf(key: string | undefined | null) {
+        //window.open(project.project?.book)
+        //window.open(`/painel/empreendimentos/book?key=${project.project?.book}`)
+        if (!key) {
+            throwAlert('Não foi possível abrir o book.', 'warning')
+                return
+        }
+        fetch(`/api/projects/get-pdf-url?key=${key}`)
+        .then(response => {
+            if (!response.ok) {
+                throwAlert('Não foi possível abrir o book.', 'warning')
+                return
+            } else {
+                return response.json().then((data) => {
+                    window.open(data.url)
+                })
+            }
+        })
     }
     var carouselGen = (images: Array<string> | null | undefined) => {
         let activeClass = ' active'
@@ -34,7 +57,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                 if (index > 0) activeClass = ''
                 return (
                     <div key={index} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer' }}>
-                        <Image style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={image} width={1200} height={724} alt='' />
+                        <Image priority style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={image} width={1200} height={724} alt='' />
                     </div>
                 )
             })
@@ -74,8 +97,9 @@ export default function ProjectData(props: { project: ProjectView }) {
         const company = project.company
         return (
             <div className={companyStyle.Company}>
+                <Alert message={alertMessage} setMessage={setAlertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} showSystemMessage={true}/>
                 {project.company?.thumb ? (
-                    <Image onClick={() => windowOpen(windowElement, project.company?.thumb)} className={companyStyle.Thumb} alt="" src={project.company.thumb} width={1200} height={724}></Image>
+                    <Image priority onClick={() => windowOpen(windowElement, project.company?.thumb)} className={companyStyle.Thumb} alt="" src={project.company.thumb} width={1200} height={724}></Image>
                 ) : null}
                 {company?.admin_id == user.id || user.is_admin ? (
                     <div className={companyStyle.EditarBt}>
@@ -135,7 +159,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                 <div className={style.Body}>
                     {project.company?.admin_id == user.id ? (
                         <div className={style.EditarBt}>
-                            <button onClick={() => router.push(`/painel/empreendimentos/editar?id=${project.project?.id}`)} className="btn btn-warning">Editar Dados</button>
+                            <button onClick={() => router.push(`/painel/empreendimentos/editar-empreendimento?id=${project.project?.id}`)} className="btn btn-warning">Editar Dados</button>
                         </div>
                     ) : null}
                     <div className={style.Description}>
@@ -196,7 +220,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                         <div className={style.Row}>
                             <div className={style.RowTitle}>Book PDF:</div>
                             <div className={style.RowDescription}>
-                                <button onClick={() => bookPdf()} className="btn btn-dark">Download</button>
+                                <button onClick={() => bookPdf(project.project?.book)} className="btn btn-dark">Abrir</button>
                             </div>
                         </div>
                         <div className={style.Row}>

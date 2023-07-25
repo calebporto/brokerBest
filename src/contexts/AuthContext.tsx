@@ -164,6 +164,12 @@ export function AuthProvider(props: {children: ReactNode}) {
                             return;
                         }
                         setContextUser(user.data);
+                        if (!session.user.id) {
+                            update({id: data.id})
+                        }
+                        if (session.user.is_admin == null || session.user.is_admin != data.is_admin) {
+                            update({is_admin: data.is_admin})
+                        }
                         return;
                     });
                 }

@@ -70,11 +70,12 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
     const [latitude, setLatitude] = useState<string>('')
     const [longitude, setLongitude] = useState<string>('')
     const [status, setStatus] = useState<string>('')
-    const [thumb, setThumb] = useState<FileList | null>()
-    const [images, setImages] = useState<FileList | null>()
+    const [thumb, setThumb] = useState<FileList | null>(null)
+    const [images, setImages] = useState<FileList | null>(null)
     const [video, setVideo] = useState('')
     const [link, setLink] = useState('')
-    const [book, setBook] = useState('')
+    const [bookFile, setBookFile] = useState<FileList | null>(null)
+    const [book, setBook] = useState<string>('')
     const [sending, setSending] = useState(false)
     const [showWaitingModal, setShowWaitingModal] = useState(false)
 
@@ -111,8 +112,9 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             let latitude = document.getElementById('latitude') as HTMLInputElement
             let latitudeOptions = {
                 mask: Number,
-                min: 0,
-                scale: 10,
+                min: -90,
+                max: 90,
+                scale: 6,
                 radix: '.',
                 mapToRadix: [',']
                 // prepare: function (str: string) {
@@ -124,8 +126,9 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             let longitude = document.getElementById('longitude') as HTMLInputElement
             let longitudeOptions = {
                 mask: Number,
-                min: 0,
-                scale: 10,
+                min: -180,
+                max: 180,
+                scale: 6,
                 radix: '.',
                 mapToRadix: [',']
                 // prepare: function (str: string) {
@@ -152,7 +155,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
     } else {
         if (!showPage) {
             if (!user.id || !company) return null
-            if (company && company.admin_id == user.id) {
+            if (company && user.is_admin == true) {
                 setShowPage(true)
             } else {
                 setSystemMessage('Você não tem permissão para essa ação.')
@@ -180,8 +183,8 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
         setStatus('')
         setVideo('')
         setLink('')
-        setBook('')
         setVideo('')
+        setBook('')
         setThumb(null)
         setImages(null)
 
@@ -192,6 +195,10 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
         var imagesInput = document.getElementById('imagesInput') as HTMLInputElement
         imagesInput.value = ''
         imagesInput.files = null
+        
+        var bookInput = document.getElementById('bookInput') as HTMLInputElement
+        bookInput.value = ''
+        bookInput.files = null
 
         var selectZone = document.getElementById('zona') as HTMLSelectElement
         selectZone.selectedIndex = 0
@@ -200,6 +207,29 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
         selectStatus.selectedIndex = 0
     }
     async function register() {
+        const getS3PresignedURL = async (key: string) => {
+            return await fetch(`/api/projects/get-s3-presigned-url?key=${key}`).then(response => {
+                if (!response.ok) return null
+                else {
+                    return response.json().then(data => data)
+                }
+            })
+        }
+        const bookUpload = async (file: File, presignedURLData: any) => {
+            const upload = await fetch(presignedURLData.url, {
+                method: 'PUT',
+                body: file,
+                headers: { "Content-Type": 'application/pdf' }
+            })
+            if (upload.ok) {
+                console.log('Uploaded successfully!')
+                return true
+            } else {
+                console.error('Upload failed.')
+                return false
+            }
+        }
+
         setAlertShow(false)
         if (!name) {
             throwAlert('Nome inválido.', 'danger')
@@ -217,9 +247,6 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             || parseInt(deliveryDate.substring(6, 10)) < 2023
             || parseInt(deliveryDate.substring(6, 10)) > 2100
         ) {
-            console.log(parseInt(deliveryDate.substring(0, 2)))
-            console.log(parseInt(deliveryDate.substring(3, 5)))
-            console.log(parseInt(deliveryDate.substring(6, 10)))
             throwAlert('Data de entrega inválida.', 'danger')
             return
         }
@@ -263,6 +290,10 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             throwAlert('Selecione uma capa.', 'danger')
             return
         }
+        if (!bookFile || bookFile.length < 1) {
+            throwAlert('Selecione um book em PDF.', 'danger')
+            return
+        }
         if (!images || images.length < 1) {
             throwAlert('Selecione ao menos uma imagem para o empreendimento.', 'danger')
             return
@@ -281,6 +312,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             console.log(error)
         }
 
+
         const imageLinks = []
         for (let i = 0; i < images.length; i++) {
             let img = ''
@@ -292,6 +324,13 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                 console.log(error)
             }
             imageLinks.push(img)
+        }
+        const bookKey = `${name.trim().toLowerCase().replace(' ', '-')}.pdf`
+        try {
+            const presignedURL = await getS3PresignedURL(bookKey)
+            const uploadStatus = await bookUpload(bookFile[0], presignedURL)
+        } catch (error) {
+            console.log(error)
         }
         var data = new Date()
         data.setDate(parseInt(deliveryDate.substring(0, 2)))
@@ -317,9 +356,9 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             status,
             thumbImg,
             imageLinks,
-            [parseYoutubeLink(video)],
+            video && video != '' ? [parseYoutubeLink(video)] : [],
             link,
-            book
+            bookKey
         )
 
         const response = await fetch('/api/projects/add-project', {
@@ -438,9 +477,9 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                         <span>Link do Drive Original da Imobiliária:</span>
                         <input value={link} onChange={(e) => setLink(e.target.value)} id="uf" maxLength={100} type="text" />
                     </div>
-                    <div className={style.MdInput}>
-                        <span>Link do Book em PDF da Imobiliária:</span>
-                        <input value={book} onChange={(e) => setBook(e.target.value)} id="uf" maxLength={100} type="text" />
+                    <div className={style.ImageInput}>
+                        <span>Book em PDF:</span>
+                        <input max={1} onChange={(e) => setBookFile(e.target.files)} id="bookInput" type="file" accept="application/pdf" />
                     </div>
                     <div className={style.ImageInput}>
                         <span>Imagem de Capa:</span>

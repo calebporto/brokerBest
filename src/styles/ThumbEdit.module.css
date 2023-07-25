@@ -1,0 +1,36 @@
+.Thumb {
+    width: 100%;
+    height: 600px;
+    position: relative;
+}
+.ChangeBt {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.712);
+    top: 80%;
+    height: 4rem;
+    display: flex;
+}
+.ChangeBt:hover {
+    background-color: rgba(0, 0, 0, 0.836);
+}
+.ChangeBt p {
+    width: auto;
+    height: auto;
+    margin: auto;
+    color: white;
+    font-size: 25px;
+}
+.ChangeBt input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: absolute;
+}
+.Thumb img {
+    width: 100%;
+    height: 95%;
+    object-fit: cover;
+}

@@ -27,7 +27,7 @@ export default function Destaques() {
                 if (index > 0) activeClass = ''
                 return (
                     <div key={index} onClick={() => open(project)} className={'carousel-item' + activeClass} style={{ height: '100%', cursor: 'pointer'}}>
-                        <Image style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={project.thumb || ''} width={1200} height={724} alt='' />
+                        <Image priority style={{ height: '100%', objectFit: 'cover' }} className="d-block w-100" src={project.thumb || ''} width={1200} height={724} alt='' />
                         <div className={'carousel-caption d-md-block ' + style.Legenda}>
                             <h5>{allFirstUppercase(project.name)}</h5>
                             <p>{firstAndParagraphUppercase(project.description)}</p>
@@ -43,9 +43,9 @@ export default function Destaques() {
     return (
         projects && projects.length > 0 ? (<div className={style.Destaques}>
             <div className={style.Title}>
-                <Image className={style.PremiumImg} src={'/media/premium.png'} height={96} width={96} alt='' />
+                <Image priority className={style.PremiumImg} src={'/media/premium.png'} height={96} width={96} alt='' />
                 <p>Premium</p>
-                <Image className={style.PremiumImg} src={'/media/premium.png'} height={96} width={96} alt='' />
+                <Image priority className={style.PremiumImg} src={'/media/premium.png'} height={96} width={96} alt='' />
             </div>
             <div className={style.DivCarousel}>
                 <div id="carouselExampleControls" style={{ height: '100%' }} className="carousel slide" data-bs-ride="carousel">

@@ -77,13 +77,21 @@ export const authOptions = {
             token.provider = account.provider
           }
           if (user) {
+            token.id = user.id
             token.alternative_id = user.alternative_id
             token.is_authenticated = user.is_authenticated
+            token.is_admin = user.is_admin
             let data = new Date()
             data.setHours(data.getHours() + 1)
             token.last_email_exp = data
           }
           if (trigger === "update") {
+            if (session?.id) {
+              token.adminId = session.id
+            }
+            if (session?.is_admin != null && session?.is_admin != undefined) {
+              token.is_admin = session.is_admin
+            }
             if (session?.is_authenticated) {
               token.is_authenticated = session.is_authenticated
             }
@@ -96,6 +104,12 @@ export const authOptions = {
         async session({ session, token, user }) {
           // Send properties to the client, like an access_token from a provider.
           session.accessToken = token.accessToken
+          if (token.adminId) {
+            session.user.id = token.adminId
+          }
+          if (token.is_admin != null && token.is_admin != undefined) {
+            session.user.is_admin = token.is_admin
+          }
           if (session?.user) {
             if (token.provider == 'google') {
               session.user.provider = 2
@@ -104,6 +118,8 @@ export const authOptions = {
               session.user.provider = 3
               session.user.is_authenticated = true
             } else {
+              session.user.id = token.id
+              session.user.is_admin = token.is_admin
               session.user.alternative_id = token.alternative_id
               session.user.provider = token.provider
               session.user.is_authenticated = token.is_authenticated

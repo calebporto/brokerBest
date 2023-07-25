@@ -162,8 +162,38 @@ export function windowOpen(window: Window | null, link: string | null | undefine
 const defaultOptions = {
     maxSizeMB: 1
 };
-export function compressFile(imageFile: File, options = defaultOptions) {
-    return imageCompression(imageFile, options);
+export async function compressFile(imageFile: File, options = defaultOptions) {
+    return await imageCompression(imageFile, options);
+}
+
+export async function uploadToIbb(imageFile: File | null, imgName: string) {
+    try {
+        if (!imageFile) return null
+
+        const ibbKey = process.env.NEXT_PUBLIC_IBB_KEY as string
+        const formData = new FormData()
+        formData.append('image', imageFile)
+        formData.append('key', ibbKey)
+        formData.append('name', imgName)
+        
+    
+        const ibbUpload = await fetch(`https://api.imgbb.com/1/upload?key=${ibbKey}`, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return null
+            }
+            else return response.json().then(data => {
+                return data
+            })
+        })
+        return await ibbUpload
+
+    } catch (error) {
+        console.log(error)
+        return null
+    }
 }
 
 export async function compressAndUploadToIbb(imageFile: File | null, imgName: string) {

@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]"
+import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -9,8 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(401).json('Unauthorized')
             return
         }
-        const data = JSON.parse(req.body).project
-        const sendNewProject = await fetch(`${process.env.API_URL}/project-services/add-project`, {
+        const data = JSON.parse(req.body).company
+        const companyEdit = await fetch(`${process.env.API_URL}/project-services/company-edit`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -21,9 +21,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!response.ok) return false
             else return true
         })
-        const response = sendNewProject
+        const response = companyEdit
         if (response) {
-            res.status(200).json('Empreendimento cadastrado com sucesso')
+            res.status(200).json('Cadastro editado com sucesso')
             return
         } else {
             res.status(400).json('Algo deu errado.')

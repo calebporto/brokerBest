@@ -31,7 +31,6 @@ export default function LoginSocial() {
     const router = useRouter()
 
     useEffect(() => {
-        console.log(user)
         if (user && user.name) {
             if (user.provider == 1) {
                 setSystemMessage('Você já possui cadastro na plataforma. Use seu e-mail e senha.')
@@ -212,8 +211,6 @@ export default function LoginSocial() {
                 throwAlert('Erro no servidor. Tente novamente mais tarde.', 'danger')
             }
             limpaTodoFormulario()
-            console.log(status)
-            console.log(user)
         })
         return null
     }

@@ -10,7 +10,7 @@ import { AuthContext } from "@/contexts/AuthContext"
 
 
 const LoginBox = () => {
-    const { loginRequire, systemMessage } = useContext(AuthContext)
+    const { systemMessage } = useContext(AuthContext)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
@@ -90,9 +90,6 @@ const LoginBox = () => {
             Router.push('/painel')
         }
     }
-    if (loginRequire) {
-        loginRequire(true)
-    }
     
     return (
         showPage ? <div id="loginBox" className={style.LoginBox}>
@@ -119,13 +116,12 @@ const LoginBox = () => {
             </div>
             <div className={style.Alternatives}>
                 <div className={`${style.Google} ${style.Alternative}`} onClick={() => googleLogin()}>
-                    <Image src={'/media/google.png'} width={150} height={150} alt="" />
+                    <Image priority src={'/media/google.png'} width={150} height={150} alt="" />
                 </div>
                 <div className={`${style.Facebook} ${style.Alternative}`} onClick={() => facebookLogin()}>
-                    <Image src={'/media/facebook.png'} width={150} height={150} alt="" />
+                    <Image priority src={'/media/facebook.png'} width={150} height={150} alt="" />
                 </div>
             </div>
-            <button onClick={() => signOut()}></button>
         </div> : null
     )
 }

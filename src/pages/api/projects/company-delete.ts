@@ -9,21 +9,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(401).json('Unauthorized')
             return
         }
-        const data = JSON.parse(req.body).project
-        const sendNewProject = await fetch(`${process.env.API_URL}/project-services/add-project`, {
-            method: 'POST',
-            body: JSON.stringify(data),
+        const sendNewProperty = await fetch(`${process.env.API_URL}/project-services/company-delete?id=${req.query.id}`, {
             headers: {
-                'Content-Type': 'application/json',
                 'authenticator': process.env.AUTH_KEY as string
             }
         }).then(response => {
             if (!response.ok) return false
             else return true
         })
-        const response = sendNewProject
+        const response = sendNewProperty
         if (response) {
-            res.status(200).json('Empreendimento cadastrado com sucesso')
+            res.status(200).json('Construtora removida com sucesso.')
             return
         } else {
             res.status(400).json('Algo deu errado.')

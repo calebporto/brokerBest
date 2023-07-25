@@ -13,7 +13,7 @@ import style from '../../../styles/Form.module.css'
 import Alert, { _throwAlert } from "@/layout/Alert"
 import IMask from "imask"
 import { Property } from "@/classes"
-import { compressAndUploadToIbb } from "@/helpers/helpers"
+import { compressAndUploadToIbb, parseYoutubeLink } from "@/helpers/helpers"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 
 export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
@@ -256,7 +256,7 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
             status,
             thumbImg,
             imageLinks,
-            video ? [video] : []
+            video && video != '' ? [parseYoutubeLink(video)] : []
         )
 
         const response = await fetch('/api/projects/add-property', {

@@ -2,35 +2,74 @@ import { AuthContext } from "@/contexts/AuthContext"
 import TitleBar from "@/layout/TitleBar"
 import TopNavbar from "@/layout/TopNavbar"
 import { useRouter } from "next/router"
-import { InputHTMLAttributes, LegacyRef, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import style from '../../../styles/Form.module.css'
 import Head from "next/head"
 import IMask from "imask"
 import Alert, { _throwAlert } from "@/layout/Alert"
-import { compressAndUploadToIbb, compressFile } from "@/helpers/helpers"
-import Image from "next/image"
+import { compressAndUploadToIbb, compressFile, uploadToIbb } from "@/helpers/helpers"
 import { Company } from "@/classes"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
+import { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import ThumbEdit from "@/layout/ThumbEdit"
 
-export default function AddConstrutora() {
+export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
+    try {
+        const session = await getServerSession(context.req, context.res, authOptions)
+        if (!session || session.user.is_admin == false) {
+            return { props: { company: null } }
+        }
+        const getcompany = async () => {
+            let url = `${process.env.API_URL}/project-services/get-company-by-id?id=${context.query.id}
+            `
+            return await fetch(url, {
+                headers: {
+                    'authenticator': process.env.AUTH_KEY as string
+                }
+            })
+                .then(response => {
+                    if (!response.ok) return null
+                    else return response.json().then((data: Company) => {
+                        return data
+                    })
+                })
+        }
+        const company = await getcompany()
+        if (company != null) {
+            return { props: { company } }
+        } else {
+            return { props: { company: null } }
+        }
+    } catch (error) {
+        console.log(error)
+        return { props: { company: null } }
+    }
+}
+
+export default function AddConstrutora({ company }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const router = useRouter()
-    const [name, setName] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [tel, setTel] = useState<string>('')
-    const [address, setAddress] = useState<string>('')
-    const [num, setNum] = useState<string>('')
-    const [complement, setComplement] = useState<string>('')
-    const [district, setDistrict] = useState<string>('')
-    const [city, setCity] = useState<string>('')
-    const [uf, setUf] = useState<string>('')
-    const [originalImg, setOriginalImg] = useState<FileList | null>(null)
+    const [name, setName] = useState<string | null>('')
+    const [description, setDescription] = useState<string | null>('')
+    const [email, setEmail] = useState<string | null>('')
+    const [tel, setTel] = useState<string | null>('')
+    const [address, setAddress] = useState<string | null>('')
+    const [num, setNum] = useState<string | null>('')
+    const [complement, setComplement] = useState<string | null>('')
+    const [district, setDistrict] = useState<string | null>('')
+    const [city, setCity] = useState<string | null>('')
+    const [uf, setUf] = useState<string | null>('')
+    const [currentImage, setCurrentImage] = useState<string>('')
+    const [fileImg, setFileImg] = useState<FileList | null>(null)
+    const [compressedImg, setCompressedImg] = useState<File | null>(null)
+    const [imgLoading, setImgLoading] = useState(false)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
     const context = useContext(AuthContext)
-    const { session, user } = context
+    const { session, user, setSystemMessage } = context
 
     var sendBt: HTMLButtonElement | null;
     useEffect(() => {
@@ -43,11 +82,44 @@ export default function AddConstrutora() {
                 router.push('/auth/login-social')
             } else {
                 if (!showPage) {
-                    setShowPage(true)
+                    if (!company) {
+                        setSystemMessage('Algo deu errado. Tente novamente mais tarde.')
+                        router.push('/painel/empreendimentos-admin')
+                    } else {
+                        setName(company.name ? company.name : '')
+                        setDescription(company.description ? company.description : '')
+                        setEmail(company.email ? company.email : '')
+                        setTel(company.tel ? company.tel : '')
+                        setAddress(company.address ? company.address : '')
+                        setNum(company.num ? company.num : '')
+                        setComplement(company.complement ? company.complement : '')
+                        setDistrict(company.district ? company.district : '')
+                        setCity(company.city ? company.city : '')
+                        setUf(company.uf ? company.uf : '')
+                        setCurrentImage(company.thumb ? company.thumb : '')
+                        setShowPage(true)
+                    }
                 }
             }
         }
-    }, [session, user])
+    }, [session, user, company])
+
+    //Visualização de imagem
+    useEffect(() => {
+        if (!fileImg) return;
+        setImgLoading(true)
+        const compress = async() => {
+            const compressed = await compressFile(fileImg[0])
+            console.log('terminou')
+            const url = URL.createObjectURL(compressed);
+            () => url && URL.revokeObjectURL(url);
+            setCurrentImage(url);
+            setCompressedImg(compressed)
+            setImgLoading(false)
+        }
+        compress()
+        .catch(console.error);
+    }, [fileImg]);
 
     useEffect(() => {
         if (showPage) {
@@ -102,9 +174,6 @@ export default function AddConstrutora() {
         setDistrict('')
         setCity('')
         setUf('')
-        var fileInput = document.getElementById('fileInput') as HTMLInputElement
-        fileInput.value = ''
-        fileInput.files = null
     }
     async function register() {
         setAlertShow(false)
@@ -144,10 +213,6 @@ export default function AddConstrutora() {
             throwAlert('UF inválido.', 'danger')
             return
         }
-        if (!originalImg || originalImg.length < 1) {
-            throwAlert('Selecione uma imagem.', 'danger')
-            return
-        }
         sendBt = document.querySelector('#sendBt') as HTMLButtonElement
         if (sendBt) {
             sendBt.innerHTML = `
@@ -156,30 +221,36 @@ export default function AddConstrutora() {
             </div>
             `
         }
-        const imgName = `${name.replace(' ', '_')}_thumb`
-        const ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
-        if (!ibbResponse) {
+
+        var ibbResponse = undefined
+        if (compressedImg) {
+            const imgName = `${name.replace(' ', '_')}_thumb`
+            ibbResponse = await compressAndUploadToIbb(compressedImg, imgName)
+        }
+        if (ibbResponse == null) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
         } else {
+            const img = ibbResponse.data.image.url
+            console.log('img= '+img)
             const newCompany = new Company(
+                company && company.id ? company.id : null,
+                name != '' ? name : null,
+                description != '' ? description : null,
+                email != '' ? email : null,
+                tel != '' ? tel : null,
+                address != '' ? address : null,
+                num != '' ? num : null,
+                complement != '' ? complement : null,
+                district != '' ? district : null,
+                city != '' ? city : null,
+                uf != '' ? uf : null,
                 null,
-                name,
-                description,
-                email,
-                tel,
-                address,
-                num,
-                complement,
-                district,
-                city,
-                uf,
-                null,
-                ibbResponse.data.image.url,
+                img ? img : null,
                 null,
                 user.id,
                 true
             )
-            const send = await fetch('/api/projects/add-company', {
+            const send = await fetch('/api/projects/company-edit', {
                 method: 'POST',
                 body: JSON.stringify({company: newCompany}),
                 headers: {authorization: process.env.NEXT_PUBLIC_API_TOKEN as string}
@@ -190,7 +261,8 @@ export default function AddConstrutora() {
             if (!send) {
                 throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
             } else {
-                throwAlert('Construtora cadastrada com sucesso.', 'success')
+                setSystemMessage('Cadastro alterado com sucesso.')
+                router.push('/painel/empreendimentos-admin')
             }
         }
         
@@ -217,49 +289,46 @@ export default function AddConstrutora() {
                         show={alertShow}
                         message={alertMessage}
                         type={alertType} />
+                    <ThumbEdit imgLoading={imgLoading} link={currentImage} setFile={setFileImg}></ThumbEdit>
                     <div className={style.LgInput}>
                         <span>Nome da Construtora:</span>
-                        <input value={name} onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />
+                        <input value={name as string} onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.LgInput}>
                         <span>Descrição:</span>
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={500} name="" id="" rows={4}></textarea>
+                        <textarea value={description as string} onChange={(e) => setDescription(e.target.value)} maxLength={500} name="" id="" rows={4}></textarea>
                     </div>
                     <div className={style.MdInput}>
                         <span>Email:</span>
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} maxLength={50} type="text" />
+                        <input value={email as string} onChange={(e) => setEmail(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
                         <span>Telefone:</span>
-                        <input value={tel} onChange={(e) => setTel(e.target.value)} id="tel" maxLength={15} type="text" />
+                        <input value={tel as string} onChange={(e) => setTel(e.target.value)} id="tel" maxLength={15} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Endereço:</span>
-                        <input value={address} onChange={(e) => setAddress(e.target.value)} maxLength={50} type="text" />
+                        <input value={address as string} onChange={(e) => setAddress(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.SmInput + ' ' + style.Right}>
                         <span>Número:</span>
-                        <input value={num} onChange={(e) => setNum(e.target.value)} id="num" maxLength={6} type="text" />
+                        <input value={num as string} onChange={(e) => setNum(e.target.value)} id="num" maxLength={6} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Complemento:</span>
-                        <input value={complement} onChange={(e) => setComplement(e.target.value)} maxLength={50} type="text" />
+                        <input value={complement as string} onChange={(e) => setComplement(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
                         <span>Bairro:</span>
-                        <input value={district} onChange={(e) => setDistrict(e.target.value)} maxLength={50} type="text" />
+                        <input value={district as string} onChange={(e) => setDistrict(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.MdInput}>
                         <span>Cidade:</span>
-                        <input value={city} onChange={(e) => setCity(e.target.value)} maxLength={50} type="text" />
+                        <input value={city as string} onChange={(e) => setCity(e.target.value)} maxLength={50} type="text" />
                     </div>
                     <div className={style.SmInput + ' ' + style.Right}>
                         <span>UF:</span>
-                        <input value={uf} onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} id="uf" maxLength={2} type="text" />
-                    </div>
-                    <div className={style.ImageInput}>
-                        <span>Imagem de Capa:</span>
-                        <input max={1} onChange={(e) => setOriginalImg(e.target.files)} id="fileInput" type="file" accept="image/*" />
+                        <input value={uf as string} onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} id="uf" maxLength={2} type="text" />
                     </div>
                     <div className={style.SendButton}>
                         <button id="sendBt" onClick={() => register()} className="btn btn-warning">Enviar</button>

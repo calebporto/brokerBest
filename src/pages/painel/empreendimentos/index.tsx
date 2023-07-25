@@ -94,7 +94,7 @@ export default function Index({ project }: InferGetServerSidePropsType<typeof ge
             <TopNavbar contextUser={context} ></TopNavbar>
             <EmpreendimentosBar></EmpreendimentosBar>
             <TitleBar title={allFirstUppercase(project.project?.name as string)}></TitleBar>
-            <Image onClick={() => windowOpen(windowElement, project.project?.thumb)} className={style.Thumb} alt="" src={project.project?.thumb as string} width={1200} height={724}></Image>
+            <Image priority onClick={() => windowOpen(windowElement, project.project?.thumb)} className={style.Thumb} alt="" src={project.project?.thumb as string} width={1200} height={724}></Image>
             <ProjectData project={project}></ProjectData>
         </>
         ) : null

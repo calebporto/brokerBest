@@ -14,6 +14,7 @@ import { ProjectDataClass, ProjectQueryParamsClass } from "@/classes"
 import ProjectCard from "@/layout/ProjectCard"
 import { useRouter } from "next/router"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
+import Alert, { _throwAlert } from "@/layout/Alert"
 
 export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> | null }> = async (context) => {
     try {
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> 
         if (!session) {
             return { props: { companies: null } }
         }
-        const getProjectById = async () => {
+        const getCompanies = async () => {
             let url = `${process.env.API_URL}/project-services/get-companies?userEmail=${session.user.email}
             `
             return await fetch(url, {
@@ -36,7 +37,7 @@ export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> 
                     })
                 })
         }
-        const companies = await getProjectById()
+        const companies = await getCompanies()
         if (companies != null) {
             return { props: { companies } }
         } else {
@@ -60,6 +61,13 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
     const [projectElements, setProjectElements] = useState<Array<JSX.Element>>([])
     const [showVerMais, setShowVerMais] = useState(false)
     const [windowElement, setWindowElement] = useState<Window | null>(null)
+    const [alertShow, setAlertShow] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertType, setAlertType] = useState('danger')
+    
+    function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
+        _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
+    }
     const { session, user } = context
     const [showPage, setShowPage] = useState(false)
 
@@ -77,7 +85,7 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
         verMaisShow()
     }, [])
     
-    if (session === undefined) return
+    if (session == undefined) return
     if (session == null) {
         router.push('/entrar')
     } else if (!session.user.is_authenticated) {
@@ -86,7 +94,12 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
         router.push('/auth/login-social')
     } else {
         if (!showPage) {
-            setShowPage(true)
+            // Página disponível apenas para admin. Futuramente pode ser mudado.
+            if (user.is_admin) {
+                setShowPage(true)
+            } else {
+                router.push('/painel')
+            }
         }
     }
 
@@ -162,6 +175,7 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
             <EmpreendimentosBar></EmpreendimentosBar>
             <div style={{ width: '100%', display: 'flex' }}>
                 <Container>
+                    <Alert show={alertShow} setMessage={setAlertMessage} message={alertMessage} handleShow={setAlertShow} type={alertType} showSystemMessage={true}></Alert>
                     <div className={MEStyle.Title}>
                         Selecione a construtora:
                     </div>

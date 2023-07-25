@@ -19,6 +19,27 @@ const TopNavbar = (props: {
     const isPc = windowDimensions.width as number > 767
     const [open, setOpen] = useState(false)
 
+    useEffect(() => {
+        window.addEventListener('click', (e) => {
+            const perfilBt = document.getElementById('perfilBt') as HTMLDivElement
+            const toggleBt = document.getElementById('toggleBt') as HTMLDivElement
+            const dropdown = document.getElementById('dropdown') as HTMLDivElement
+            const painelBt = document.getElementById('painelBt') as HTMLDivElement
+            const empAdminBt = document.getElementById('empAdminBt') as HTMLDivElement
+            const sairBt = document.getElementById('sairBt') as HTMLDivElement
+            
+            if (dropdown) {
+                if (e.target != dropdown 
+                    && e.target != painelBt 
+                    && e.target != empAdminBt 
+                    && e.target != sairBt 
+                    && e.target != perfilBt
+                    && e.target != toggleBt) {
+                    setOpen(false)
+                }
+            }
+        })
+    }, [setOpen])
     function toggleDropdown() {
         setOpen(!open)
     }
@@ -80,11 +101,11 @@ const TopNavbar = (props: {
         let name = user.name ? user.name.split(' ')[0] : ' '
         let button = isPc ?
             (
-                <button type="button" className={"btn btn-warning " + style.BtContent}>
+                <button id="perfilBt" onClick={() => toggleDropdown()} type="button" className={"btn btn-warning " + style.BtContent}>
                     { name[0] ? name[0].toUpperCase() + name.substring(1) : null}
                 </button>
             ) : (
-                <button type="button" className={"btn btn-warning " + style.BtContent}>
+                <button id="perfilBt" onClick={() => toggleDropdown()} type="button" className={"btn btn-warning " + style.BtContent}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-person-circle" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                         <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
@@ -96,13 +117,12 @@ const TopNavbar = (props: {
             <div className={style.PerfilDropdown}>
                 <div className={style.DropdownButton}>
                     { button }
-                    <button type="button" onClick={() => toggleDropdown()} className={"btn btn-warning dropdown-toggle " + style.BtToggler}></button>
+                    <button id="toggleBt" type="button" onClick={() => toggleDropdown()} className={"btn btn-warning dropdown-toggle " + style.BtToggler}></button>
                 </div>
                 { open && (<div id='dropdown' className={style.DropdownContent}>
-                    <button onClick={() => Router.push('/painel')} className={ style.DropdownItem } type="button">Painel</button>
-                    <button onClick={() => Router.push('/painel/meus-empreendimentos')} className={ style.DropdownItem } type="button">Meus empreendimentos</button>
-                    {/* { user.is_admin && <button onClick={() => Router.push('/painel/painel-administrativo')} className={ style.DropdownItem } type="button">Painel Administrativo</button>} */}
-                    <button onClick={() => globalSignOut() } className={ style.DropdownItem } type="button">Sair</button>
+                    <button id="painelBt" onClick={() => Router.push('/painel')} className={ style.DropdownItem } type="button">Painel</button>
+                    {user.is_admin ? <button  id="empAdminBt" onClick={() => Router.push('/painel/empreendimentos-admin')} className={ style.DropdownItem } type="button">Empreendimentos</button> : null}
+                    <button id="sairBt" onClick={() => globalSignOut() } className={ style.DropdownItem } type="button">Sair</button>
                 </div>)}
             </div>
         ) : null
@@ -113,7 +133,7 @@ const TopNavbar = (props: {
             <Container>
                 <div className={style.Divs}>
                     <div onClick={() => Router.push('/')} className={style.Logo}>
-                        <Image width={300} height={100} src={'/media/logo2.png'} alt="" />
+                        <Image priority width={300} height={100} src={'/media/logo2.png'} alt="" />
                     </div>
                     <div className={style.Buttons}>
                         {entrarBt()}

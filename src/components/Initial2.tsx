@@ -34,7 +34,7 @@ const Initial = () => {
                 <PatternBt clickAction={() => console.log('a')} name="Quero ser sócio"></PatternBt>
             </div>
             <div className={style.Image}>
-                <Image width={600} height={600} src={'/media/homem2.png'} alt=''/>
+                <Image priority width={600} height={600} src={'/media/homem2.png'} alt=''/>
             </div>
         </div>
     )
