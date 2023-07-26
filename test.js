@@ -1,4 +1,5 @@
-var a = ''
-var a = a[0].toUpperCase() + a.substring(1)
+var a = [1, 2, 3, 4]
 
-console.log(a)
+var b  = a.filter(item => item != 1)
+
+console.log(b)

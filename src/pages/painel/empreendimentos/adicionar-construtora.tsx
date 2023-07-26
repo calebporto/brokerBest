@@ -11,6 +11,7 @@ import { compressAndUploadToIbb, compressFile } from "@/helpers/helpers"
 import Image from "next/image"
 import { Company } from "@/classes"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
+import Modal from "@/layout/Modal"
 
 export default function AddConstrutora() {
     const router = useRouter()
@@ -30,7 +31,8 @@ export default function AddConstrutora() {
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
     const context = useContext(AuthContext)
-    const { session, user } = context
+    const { session, user, setSystemMessage } = context
+    const [showWaitingModal, setShowWaitingModal] = useState(false)
 
     var sendBt: HTMLButtonElement | null;
     useEffect(() => {
@@ -148,18 +150,13 @@ export default function AddConstrutora() {
             throwAlert('Selecione uma imagem.', 'danger')
             return
         }
-        sendBt = document.querySelector('#sendBt') as HTMLButtonElement
-        if (sendBt) {
-            sendBt.innerHTML = `
-            <div class="spinner-border text-dark" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            `
-        }
+        setShowWaitingModal(true)
+
         const imgName = `${name.replace(' ', '_')}_thumb`
         const ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
         if (!ibbResponse) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
         } else {
             const newCompany = new Company(
                 null,
@@ -181,19 +178,22 @@ export default function AddConstrutora() {
             )
             const send = await fetch('/api/projects/add-company', {
                 method: 'POST',
-                body: JSON.stringify({company: newCompany}),
-                headers: {authorization: process.env.NEXT_PUBLIC_API_TOKEN as string}
+                body: JSON.stringify({ company: newCompany }),
+                headers: { authorization: process.env.NEXT_PUBLIC_API_TOKEN as string }
             }).then(response => {
                 if (!response.ok) return false
                 else return true
             })
             if (!send) {
                 throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+                setShowWaitingModal(false)
             } else {
-                throwAlert('Construtora cadastrada com sucesso.', 'success')
+                setShowWaitingModal(false)
+                setSystemMessage('Construtora cadastrada com sucesso.')
+                router.push('/painel/empreendimentos-admin')
             }
         }
-        
+
         limparFormulario()
         if (sendBt) {
             sendBt.innerHTML = 'Enviar'
@@ -210,13 +210,22 @@ export default function AddConstrutora() {
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Construtora'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar backToAdmin={true}></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}
                         show={alertShow}
                         message={alertMessage}
                         type={alertType} />
+                    <Modal show={showWaitingModal} shortModal={true} title={'Aguarde'}>
+                        <span>Aguarde enquanto é feito o upload das imagens. Isso pode levar
+                            mais de um minuto...
+                        </span>
+                        <br />
+                        <div className="spinner-border text-warning" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </Modal>
                     <div className={style.LgInput}>
                         <span>Nome da Construtora:</span>
                         <input value={name} onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />

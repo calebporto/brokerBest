@@ -101,7 +101,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                 {project.company?.thumb ? (
                     <Image priority onClick={() => windowOpen(windowElement, project.company?.thumb)} className={companyStyle.Thumb} alt="" src={project.company.thumb} width={1200} height={724}></Image>
                 ) : null}
-                {company?.admin_id == user.id || user.is_admin ? (
+                { user.is_admin ? (
                     <div className={companyStyle.EditarBt}>
                         <button onClick={() => router.push(`/painel/empreendimentos/construtora/editar?id=${project.company?.id}`)} className="btn btn-warning">Editar</button>
                     </div>
@@ -157,7 +157,7 @@ export default function ProjectData(props: { project: ProjectView }) {
         <div style={{ width: '100%' }}>
             <Container>
                 <div className={style.Body}>
-                    {project.company?.admin_id == user.id ? (
+                    {user.is_admin ? (
                         <div className={style.EditarBt}>
                             <button onClick={() => router.push(`/painel/empreendimentos/editar-empreendimento?id=${project.project?.id}`)} className="btn btn-warning">Editar Dados</button>
                         </div>
@@ -258,7 +258,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                     ) : null}
                         <div style={{ width: '100%', margin: '2rem 0' }}>
                             <p className={style.Title}>Imóveis</p>
-                            {project.company && project.company?.admin_id == user.id || user.is_admin ? (
+                            {user.is_admin ? (
                                 <div className={style.EditarBt}>
                                     <button onClick={() => router.push(`/painel/empreendimentos/adicionar-imovel?empreendimentoId=${project.project?.id}`)} className="btn btn-warning">Adicionar Imóvel</button>
                                 </div>

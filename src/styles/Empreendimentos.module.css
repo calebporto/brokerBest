@@ -82,6 +82,11 @@
 .EmpreendimentosBar {
     height: auto;
     margin: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+.SelectPremiumBtBar {
+    font-weight: bold;
 }
 @media(max-width: 767px) {
     .Thumb {
@@ -108,5 +113,11 @@
     }
     .Video {
         height: 300px;
+    }
+    .EmpreendimentosBar {
+        flex-direction: column;
+    }
+    .SelectPremiumBtBar {
+        margin: .5rem 0 0 0;
     }
 }

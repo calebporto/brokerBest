@@ -151,8 +151,8 @@ export default function CompanyCard(props: {
                 </button>
                 <Modal show={showBlockModal} setShow={setShowBlockModal} title={'Tem certeza?'} shortModal={true}>
                     {props.companyData.is_active ? (
-                    <p>Se você bloquear um empreendimento, ele não poderá ser visto pelos corretores.</p>) : (
-                        <p>Se você desbloquear um empreendimento, ele poderá ser visto pelos corretores.</p>
+                    <p>Se você bloquear uma construtora, os seus empreendimentos não poderão ser vistos pelos corretores.</p>) : (
+                        <p>Se você desbloquear uma corretora, os seus empreendimentos poderão ser vistos pelos corretores.</p>
                     )}
                     <div className={style.ConfirmarModalBt}>
                         <button onClick={() => handleBlock()} className="btn btn-dark">Excluir</button>

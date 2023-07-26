@@ -26,7 +26,7 @@ export default function ProjectCard(props: {
     function edit(event: MouseEvent, id: number | null | undefined) {
         event.stopPropagation()
         if (id) {
-            router.push(`/painel/empreendimentos/editar?id=${id}`)
+            router.push(`/painel/empreendimentos/editar-empreendimento?id=${id}`)
         }
     }
     async function pjDelete(event: MouseEvent, id: number | null | undefined) {

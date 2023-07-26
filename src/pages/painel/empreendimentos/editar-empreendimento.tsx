@@ -416,7 +416,8 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             }
             else {
                 setShowWaitingModal(false)
-                throwAlert('Cadastro alterado com sucesso.', 'success')
+                setSystemMessage('Cadastro alterado com sucesso.')
+                router.push('/painel/empreendimentos-admin')
                 return true
             }
         })
@@ -432,7 +433,7 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Construtora'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar backToAdmin={true}></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}

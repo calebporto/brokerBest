@@ -373,7 +373,8 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             }
             else {
                 setSending(false)
-                throwAlert('Empreendimento registrado com sucesso.', 'success')
+                setSystemMessage('Empreendimento registrado com sucesso.')
+                router.push('/painel/empreendimentos-admin')
                 return true
             }
         })
@@ -387,7 +388,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Modal show={showWaitingModal} shortModal={true} setShow={setShowWaitingModal} title={'Aguarde'}>
+            <Modal show={showWaitingModal} shortModal={true} title={'Aguarde'}>
                 <span>Aguarde enquanto é feito o upload das imagens. Isso pode levar
                     mais de um minuto...
                 </span>
@@ -398,7 +399,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             </Modal>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Empreendimento'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar backToAdmin={true}></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}

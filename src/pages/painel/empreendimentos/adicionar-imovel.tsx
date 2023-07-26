@@ -121,23 +121,26 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
         else setShowWaitingModal(false)
     }, [sending])
 
-    if (session == null) {
-        router.push('/entrar')
-    } else if (!session.user.is_authenticated) {
-        router.push('/entrar/auth-email')
-    } else if (user.is_complete_data == false) {
-        router.push('/auth/login-social')
-    } else {
-        if (!showPage) {
-            if (!user.id || !company) return null
-            if (company && company.admin_id == user.id) {
-                setShowPage(true)
-            } else {
-                setSystemMessage('Você não tem permissão para essa ação.')
-                router.push('/painel')
+    useEffect(() => {
+        if (session == null) {
+            router.push('/entrar')
+        } else if (session.user.is_authenticated == false) {
+            router.push('/entrar/auth-email')
+        } else if (user.is_complete_data == false) {
+            router.push('/auth/login-social')
+        } else {
+            if (!showPage) {
+                if (!user.id || !company) return
+                if (company && company.admin_id == user.id) {
+                    setShowPage(true)
+                } else {
+                    setSystemMessage('Você não tem permissão para essa ação.')
+                    router.push('/painel')
+                }
             }
         }
-    }
+
+    }, [session, user])
     function clean() {
         setName('')
         setDescription('')
@@ -270,8 +273,9 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
                 return false
             }
             else {
-                setSending(false)
-                throwAlert('Imóvel registrado com sucesso.', 'success')
+                setShowWaitingModal(false)
+                setSystemMessage('Imóvel adicionado com sucesso')
+                router.push('/painel/empreendimentos-admin')
                 return true
             }
         })
@@ -285,7 +289,7 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Modal show={showWaitingModal} shortModal={true} setShow={setShowWaitingModal} title={'Aguarde'}>
+            <Modal show={showWaitingModal} shortModal={true} title={'Aguarde'}>
                 <span>Aguarde enquanto é feito o upload das imagens. Isso pode levar
                     mais de um minuto...
                 </span>
@@ -296,7 +300,7 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
             </Modal>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Imóvel'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar backToAdmin={true}></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}

@@ -14,6 +14,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/pages/api/auth/[...nextauth]"
 import ThumbEdit from "@/layout/ThumbEdit"
+import Modal from "@/layout/Modal"
 
 export const getServerSideProps: GetServerSideProps<{ company: Company | null }> = async (context) => {
     try {
@@ -70,6 +71,7 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
     const [alertType, setAlertType] = useState('danger')
     const context = useContext(AuthContext)
     const { session, user, setSystemMessage } = context
+    const [showWaitingModal, setShowWaitingModal] = useState(false)
 
     var sendBt: HTMLButtonElement | null;
     useEffect(() => {
@@ -213,14 +215,7 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
             throwAlert('UF inválido.', 'danger')
             return
         }
-        sendBt = document.querySelector('#sendBt') as HTMLButtonElement
-        if (sendBt) {
-            sendBt.innerHTML = `
-            <div class="spinner-border text-dark" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            `
-        }
+        setShowWaitingModal(true)
 
         var ibbResponse = undefined
         if (compressedImg) {
@@ -259,8 +254,10 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
                 else return true
             })
             if (!send) {
+                setShowWaitingModal(false)
                 throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
             } else {
+                setShowWaitingModal(false)
                 setSystemMessage('Cadastro alterado com sucesso.')
                 router.push('/painel/empreendimentos-admin')
             }
@@ -282,13 +279,22 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Adicionar Construtora'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar backToAdmin={true}></EmpreendimentosBar>
             <div className={style.Body}>
                 <div className={style.Form}>
                     <Alert handleShow={setAlertShow}
                         show={alertShow}
                         message={alertMessage}
                         type={alertType} />
+                    <Modal show={showWaitingModal} shortModal={true} title={'Aguarde'}>
+                        <span>Aguarde enquanto é feito o upload das imagens. Isso pode levar
+                            mais de um minuto...
+                        </span>
+                        <br />
+                        <div className="spinner-border text-warning" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </Modal>
                     <ThumbEdit imgLoading={imgLoading} link={currentImage} setFile={setFileImg}></ThumbEdit>
                     <div className={style.LgInput}>
                         <span>Nome da Construtora:</span>

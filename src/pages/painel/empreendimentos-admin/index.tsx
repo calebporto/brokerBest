@@ -5,9 +5,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { getServerSession } from "next-auth"
 import Head from "next/head"
 import { useContext, useEffect, useRef, useState } from "react"
-import { authOptions } from "../api/auth/[...nextauth]"
 import { Company, GeneralContext, Project, ProjectData, ProjectQueryParams, ProjectResponse } from "@/helpers/interfaces"
-import MEStyle from '../../styles/MeusEmpreendimentos.module.css'
+import MEStyle from '@/styles/MeusEmpreendimentos.module.css'
 import CompanyCard from "@/layout/CompanyCard"
 import Container from "@/layout/Container"
 import { ProjectDataClass, ProjectQueryParamsClass } from "@/classes"
@@ -15,6 +14,7 @@ import ProjectCard from "@/layout/ProjectCard"
 import { useRouter } from "next/router"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 import Alert, { _throwAlert } from "@/layout/Alert"
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
 
 export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> | null }> = async (context) => {
     try {
@@ -172,7 +172,7 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
             </Head>
             <TopNavbar contextUser={context}></TopNavbar>
             <TitleBar title={'Meus Empreendimentos'}></TitleBar>
-            <EmpreendimentosBar></EmpreendimentosBar>
+            <EmpreendimentosBar selectPremium={true}></EmpreendimentosBar>
             <div style={{ width: '100%', display: 'flex' }}>
                 <Container>
                     <Alert show={alertShow} setMessage={setAlertMessage} message={alertMessage} handleShow={setAlertShow} type={alertType} showSystemMessage={true}></Alert>

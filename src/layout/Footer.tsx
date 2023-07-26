@@ -10,6 +10,9 @@ const Footer = () => {
                     <Image priority src={'/media/linkedin.png'} width={200} height={200} alt="" />
                     <Image priority src={'/media/github.png'} width={200} height={200} alt="" />
                 </div>
+                <div className="Copy">
+                    <span>Broker Best - Todos os direitos reservados</span>
+                </div>
             </Container>
         </div>
     )

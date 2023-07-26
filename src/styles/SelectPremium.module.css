@@ -1,0 +1,99 @@
+.PremiumShow {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+.Title {
+    width: 100%;
+    display: flex;
+}
+.Title p {
+    height: auto;
+    width: auto;
+    font-weight: bold;
+    font-size: 22px;
+}
+.Display {
+    width: 100%;
+    border: dotted 1px gray;
+    min-height: 5rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+.PremiumBt {
+    display: flex;
+    min-width: 30%;
+    margin: 3px;
+    padding: 3px 5px;
+    background-color: rgb(26, 26, 26);
+    color: white;
+    height: 2.5rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+.PremiumBtText {
+    width: 90%;
+    display: flex;
+}
+.PremiumBtText span {
+    margin: auto;
+}
+.PremiumBtClose {
+    width: 10%;
+    display: flex;
+    background-color: rgb(46, 46, 46);
+    border-radius: 0 .3rem .3rem 0;
+}
+.PremiumBtClose span {
+    margin: auto;
+}
+.SelectNewPremium {
+    margin: 2rem 0;
+    width: 100%;
+}
+.Select {
+    display: flex;
+}
+.Select select {
+    padding: .3rem;
+    width: 70%;
+    margin: 0 .5rem;
+}
+.Select button {
+    width: 30%;
+    margin: 0 .5rem;
+}
+.SaveBt {
+    width: 100%;
+    height: 2.5rem;
+    margin: 2rem 0;
+    font-weight: bold;
+    box-shadow: 0px 3px 3px rgb(34, 34, 34);
+}
+.SaveBt:active {
+    position: relative;
+    top: 3px;
+    box-shadow: 0px 0px 3px rgb(34, 34, 34);
+}
+
+@media(max-width: 767px) {
+    .PremiumBt {
+        width: 45%;
+    }
+    .Select {
+        flex-direction: column;
+    }
+    .Select select {
+        width: 100%;
+    }
+    .Select button {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .SaveBt {
+        margin-top: 4rem;
+    }
+}

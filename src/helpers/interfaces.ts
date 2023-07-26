@@ -154,3 +154,13 @@ export interface ProjectView {
     company: Company | null
     properties: Array<Property>
 }
+
+export interface PremiumProjectData {
+    id: number
+    name: string
+}
+
+export interface PremiumQuery {
+    premiumList: Array<PremiumProjectData>
+    projectList: Array<PremiumProjectData>
+}

@@ -13,6 +13,7 @@ import style from '../../../styles/Empreendimentos.module.css'
 import ProjectData from "@/layout/ProjectData"
 import Head from "next/head"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
+import Footer from "@/layout/Footer"
 
 export const getServerSideProps: GetServerSideProps<{project: ProjectView | null}> = async (context) => {
     
@@ -96,6 +97,7 @@ export default function Index({ project }: InferGetServerSidePropsType<typeof ge
             <TitleBar title={allFirstUppercase(project.project?.name as string)}></TitleBar>
             <Image priority onClick={() => windowOpen(windowElement, project.project?.thumb)} className={style.Thumb} alt="" src={project.project?.thumb as string} width={1200} height={724}></Image>
             <ProjectData project={project}></ProjectData>
+            <Footer></Footer>
         </>
         ) : null
     )
