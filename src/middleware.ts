@@ -3,9 +3,6 @@ import  { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 type Environment = "production" | "development" | "other";
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
     const currentEnv = process.env.NODE_ENV as Environment;
-
-    console.log(req.headers)
-    console.log(req.nextUrl)
     if (currentEnv === 'production' && 
         req.headers.get("x-forwarded-proto") !== "https,http") {
             return NextResponse.redirect(
