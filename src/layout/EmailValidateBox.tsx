@@ -31,7 +31,7 @@ export default function EmailValidateBox() {
         } else {
             if (showPage) {
                 if (session.user.is_authenticated) {
-                    Router.push('/painel')
+                    router.push('/painel')
                 } else {
                     sendToken(router.query.token as string)
                 }
@@ -52,7 +52,7 @@ export default function EmailValidateBox() {
             if (response.ok) {
                 setShowPage(false)
                 update({is_authenticated: true})
-                Router.push('/painel')
+                router.push('/painel')
             } else {
                 setSpinnerShow(false)
                 throwAlert('O código expirou. Clique aqui para gerar um novo código.', 'danger')

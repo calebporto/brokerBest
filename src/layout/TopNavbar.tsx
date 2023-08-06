@@ -122,7 +122,7 @@ const TopNavbar = (props: {
                 </div>
                 { open && (<div id='dropdown' className={style.DropdownContent}>
                     <button id="painelBt" onClick={() => Router.push('/painel')} className={ style.DropdownItem } type="button">Painel</button>
-                    {user.is_admin ? <button  id="empAdminBt" onClick={() => Router.push('/painel/empreendimentos-admin')} className={ style.DropdownItem } type="button">Empreendimentos</button> : null}
+                    {user.is_admin ? <button  id="empAdminBt" onClick={() => Router.push('/painel/empreendimentos-admin')} className={ style.DropdownItem } type="button">Administrativo</button> : null}
                     <button id="sairBt" onClick={() => globalSignOut() } className={ style.DropdownItem } type="button">Sair</button>
                 </div>)}
             </div>

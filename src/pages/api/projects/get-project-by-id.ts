@@ -9,7 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(401).json('Unauthorized')
             return
         }
-        console.log('tentou')
         const getProjectById = async () => {
             let url = `${process.env.API_URL}/project-services/get-project-by-id?id=${req.query.id}
             `

@@ -114,47 +114,14 @@ export default function AddConstrutora() {
             throwAlert('Nome inválido.', 'danger')
             return
         }
-        if (!description || description.length < 20) {
-            throwAlert('Descreva com mais detalhes a construtora.', 'danger')
-            return
-        }
-        if (!email || email.indexOf('@') == -1 || email.indexOf('.') == -1 || email.length < 8) {
-            throwAlert('E-mail inválido.', 'danger')
-            return
-        }
-        if (!tel || tel.length < 14 && tel.length > 15) {
-            throwAlert('Telefone inválido.', 'danger')
-            return
-        }
-        if (!address) {
-            throwAlert('Endereço inválido.', 'danger')
-            return
-        }
-        if (!num) {
-            throwAlert('Número inválido.', 'danger')
-            return
-        }
-        if (!district) {
-            throwAlert('Bairro inválido.', 'danger')
-            return
-        }
-        if (!city) {
-            throwAlert('Cidade inválida.', 'danger')
-            return
-        }
-        if (!uf) {
-            throwAlert('UF inválido.', 'danger')
-            return
-        }
-        if (!originalImg || originalImg.length < 1) {
-            throwAlert('Selecione uma imagem.', 'danger')
-            return
-        }
         setShowWaitingModal(true)
 
-        const imgName = `${name.replace(' ', '_')}_thumb`
-        const ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
-        if (!ibbResponse) {
+        var ibbResponse = null
+        if (originalImg && originalImg?.length > 0) {
+            const imgName = `${name.replace(' ', '_')}_thumb`
+            ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
+        }
+        if (originalImg && originalImg?.length > 0 && !ibbResponse) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
             setShowWaitingModal(false)
         } else {
@@ -171,7 +138,7 @@ export default function AddConstrutora() {
                 city,
                 uf,
                 null,
-                ibbResponse.data.image.url,
+                ibbResponse ? ibbResponse.data.image.url : '',
                 null,
                 user.id,
                 true

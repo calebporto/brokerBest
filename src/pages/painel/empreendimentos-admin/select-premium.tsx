@@ -111,7 +111,6 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
                 )
             })
         }
-        console.log('foi')
         if (premiumList.length != premiumButtons.length) {
             setPremiumButtons(renderPremiumBts(premiumList))
         }

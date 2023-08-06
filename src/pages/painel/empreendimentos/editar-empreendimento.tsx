@@ -262,7 +262,6 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
                 headers: { "Content-Type": 'application/pdf' }
             })
             if (upload.ok) {
-                console.log('Uploaded successfully!')
                 return true
             } else {
                 console.error('Upload failed.')

@@ -18,8 +18,6 @@ const AuthEmailBox = () => {
     const [alertClick2, setAlertClick2] = useState('')
     const router = useRouter()
     useEffect(() => {
-        console.log(router.route)
-        console.log(session?.user?.last_email_exp ? session.user.last_email_exp : null)
         if (session === undefined) return
         if (session === null) {
             throwAlert2('O login falhou. Clique aqui para entrar novamente.', 'danger')
@@ -34,7 +32,6 @@ const AuthEmailBox = () => {
                     let last_email_exp = new Date(session.user.last_email_exp)
                     let dateNow = new Date()
                     if (dateNow.getTime() > last_email_exp.getTime()) {
-                        console.log(last_email_exp)
                         newAuthEmail()
                     }
                     setShowPage(true)

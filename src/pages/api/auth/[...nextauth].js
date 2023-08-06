@@ -74,7 +74,11 @@ export const authOptions = {
           // Persist the OAuth access_token to the token right after signin
           if (account) {
             token.accessToken = account.access_token
-            token.provider = account.provider
+            if (account.provider == 'credentials') {
+              token.provider = 1
+            } else {
+              token.provider = account.provider
+            }
           }
           if (user) {
             token.id = user.id

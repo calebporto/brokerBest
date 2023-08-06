@@ -49,7 +49,7 @@ export default function CompanyCard(props: {
                 ) : null}
                 {company?.admin_id == user.id || user.is_admin ? (
                     <div className={companyStyle.EditarBt}>
-                        <button onClick={() => router.push(`/painel/empreendimentos/editar-construtora?id=${props.companyData.id}`)} className="btn btn-warning">Editar</button>
+                        <button onClick={() => {setShowViewModal(false), router.push(`/painel/empreendimentos/editar-construtora?id=${props.companyData.id}`)}} className="btn btn-warning">Editar</button>
                     </div>
                 ) : null}
                 <div className={companyStyle.Description}>
@@ -125,9 +125,9 @@ export default function CompanyCard(props: {
     }
     return (
         <div className={style.Card}>
-            <div className={style.Image}>
+            {/* <div className={style.Image}>
                 <Image priority className={style.Img} src={props.companyData.thumb as string} width={600} height={450} alt='' />
-            </div>
+            </div> */}
             <div className={style.Title}>
                 <p>{allFirstUppercase(props.companyData.name)}</p>
             </div>

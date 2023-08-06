@@ -112,7 +112,6 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
         setImgLoading(true)
         const compress = async() => {
             const compressed = await compressFile(fileImg[0])
-            console.log('terminou')
             const url = URL.createObjectURL(compressed);
             () => url && URL.revokeObjectURL(url);
             setCurrentImage(url);
@@ -226,7 +225,6 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
         } else {
             const img = ibbResponse.data.image.url
-            console.log('img= '+img)
             const newCompany = new Company(
                 company && company.id ? company.id : null,
                 name != '' ? name : null,

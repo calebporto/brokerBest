@@ -47,16 +47,16 @@ export default function ProjectCard(props: {
     }
     return (
         <div className={style.Card} onClick={(e) => open(e, props.id)}>
-            <div className={style.Image}>
+            {/* <div className={style.Image}>
                 <Image priority className={style.Img} src={props.thumb} width={600} height={450} alt='' />
-            </div>
+            </div> */}
             <div className={style.Title}>
                 <p>{allFirstUppercase(props.name as string)}</p>
             </div>
             <div className={style.Info}>
-                <div className={style.DeliveryDate}>
+                {/* <div className={style.DeliveryDate}>
                     <p><span>Data de Entrega: </span> {props.deliveryDate ? props.deliveryDate : null}</p>
-                </div>
+                </div> */}
                 {context.user.is_admin ? (
                     <>
                         <div className={style.EditarBt}>

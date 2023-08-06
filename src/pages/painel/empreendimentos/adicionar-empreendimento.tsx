@@ -235,12 +235,8 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             throwAlert('Nome inválido.', 'danger')
             return
         }
-        if (!description || description.length < 20) {
-            throwAlert('Descreva com mais detalhes o empreendimento.', 'danger')
-            return
-        }
         if (
-            !deliveryDate || deliveryDate.length < 10
+            deliveryDate && deliveryDate.length < 10
             || parseInt(deliveryDate.substring(0, 2)) > 31
             || parseInt(deliveryDate.substring(3, 5)) > 12
             || deliveryDate.substring(3, 5) == '02' && parseInt(deliveryDate.substring(0, 2)) > 29
@@ -250,87 +246,94 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             throwAlert('Data de entrega inválida.', 'danger')
             return
         }
-        if (!address) {
-            throwAlert('Endereço inválido.', 'danger')
-            return
-        }
-        if (!num) {
-            throwAlert('Número inválido.', 'danger')
-            return
-        }
-        if (!district) {
-            throwAlert('Bairro inválido.', 'danger')
-            return
-        }
-        if (!zone) {
-            throwAlert('Selecione uma zona.', 'danger')
-            return
-        }
-        if (!city) {
-            throwAlert('Cidade inválida.', 'danger')
-            return
-        }
-        if (!uf) {
-            throwAlert('UF inválido.', 'danger')
-            return
-        }
-        if (!latitude) {
-            throwAlert('Latitude inválida.', 'danger')
-            return
-        }
-        if (!longitude) {
-            throwAlert('Longitude inválida.', 'danger')
-            return
-        }
-        if (!status) {
-            throwAlert('Selecione o status do empreendimento.', 'danger')
-            return
-        }
-        if (!thumb || thumb.length < 1) {
-            throwAlert('Selecione uma capa.', 'danger')
-            return
-        }
-        if (!bookFile || bookFile.length < 1) {
-            throwAlert('Selecione um book em PDF.', 'danger')
-            return
-        }
-        if (!images || images.length < 1) {
-            throwAlert('Selecione ao menos uma imagem para o empreendimento.', 'danger')
-            return
-        }
-        if (images.length > 10) {
-            throwAlert('Selecione no máximo 10 imagens.', 'danger')
-            return
-        }
+        // if (!address) {
+        //     throwAlert('Endereço inválido.', 'danger')
+        //     return
+        // }
+        // if (!num) {
+        //     throwAlert('Número inválido.', 'danger')
+        //     return
+        // }
+        // if (!district) {
+        //     throwAlert('Bairro inválido.', 'danger')
+        //     return
+        // }
+        // if (!zone) {
+        //     throwAlert('Selecione uma zona.', 'danger')
+        //     return
+        // }
+        // if (!city) {
+        //     throwAlert('Cidade inválida.', 'danger')
+        //     return
+        // }
+        // if (!uf) {
+        //     throwAlert('UF inválido.', 'danger')
+        //     return
+        // }
+        // if (!latitude) {
+        //     throwAlert('Latitude inválida.', 'danger')
+        //     return
+        // }
+        // if (!longitude) {
+        //     throwAlert('Longitude inválida.', 'danger')
+        //     return
+        // }
+        // if (!status) {
+        //     throwAlert('Selecione o status do empreendimento.', 'danger')
+        //     return
+        // }
+        // if (!thumb || thumb.length < 1) {
+        //     throwAlert('Selecione uma capa.', 'danger')
+        //     return
+        // }
+        // if (!bookFile || bookFile.length < 1) {
+        //     throwAlert('Selecione um book em PDF.', 'danger')
+        //     return
+        // }
+        // if (!images || images.length < 1) {
+        //     throwAlert('Selecione ao menos uma imagem para o empreendimento.', 'danger')
+        //     return
+        // }
+        // if (images.length > 10) {
+        //     throwAlert('Selecione no máximo 10 imagens.', 'danger')
+        //     return
+        // }
         setSending(true)
         var thumbImg = ''
         try {
-            const thumbName = `${name.replace(" ", "_")}_project_thumb`
-            const thumbResponse = await compressAndUploadToIbb(thumb[0], thumbName)
-            thumbImg = thumbResponse.data.image.url
+            if (thumb && thumb?.length > 0) {
+                const thumbName = `${name.replace(" ", "_")}_project_thumb`
+                const thumbResponse = await compressAndUploadToIbb(thumb[0], thumbName)
+                thumbImg = thumbResponse.data.image.url
+            }
         } catch (error) {
             console.log(error)
         }
 
 
         const imageLinks = []
-        for (let i = 0; i < images.length; i++) {
-            let img = ''
+        if (images && images?.length > 0) {
+            for (let i = 0; i < images.length; i++) {
+                let img = ''
+                try {
+                    let imgName = `${name.replace(" ", "_")}_project_image_${i.toString()}`
+                    const imageResponse = await compressAndUploadToIbb(images[i], imgName)
+                    img = imageResponse.data.image.url
+                } catch (error) {
+                    console.log(error)
+                }
+                imageLinks.push(img)
+            }
+        }
+        var bookKey;
+        if (bookFile && bookFile.length > 0) {
             try {
-                let imgName = `${name.replace(" ", "_")}_project_image_${i.toString()}`
-                const imageResponse = await compressAndUploadToIbb(images[i], imgName)
-                img = imageResponse.data.image.url
+                bookKey = `${name.trim().toLowerCase().replace(' ', '-')}.pdf`
+                const presignedURL = await getS3PresignedURL(bookKey)
+                const uploadStatus = await bookUpload(bookFile[0], presignedURL)
             } catch (error) {
                 console.log(error)
             }
-            imageLinks.push(img)
-        }
-        const bookKey = `${name.trim().toLowerCase().replace(' ', '-')}.pdf`
-        try {
-            const presignedURL = await getS3PresignedURL(bookKey)
-            const uploadStatus = await bookUpload(bookFile[0], presignedURL)
-        } catch (error) {
-            console.log(error)
         }
         var data = new Date()
         data.setDate(parseInt(deliveryDate.substring(0, 2)))

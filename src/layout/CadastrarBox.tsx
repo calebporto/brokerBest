@@ -100,9 +100,8 @@ const CadastrarBox = () => {
     useEffect(() => {
         if (session === undefined) return
         if (session != null || user.name != null) {
-            router.push('painel')
+            router.push('/painel')
         } else {
-            console.log(showPage)
             if (!showPage) {
                 setShowPage(true)
             }

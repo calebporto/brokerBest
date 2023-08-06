@@ -186,9 +186,6 @@ export default function AddImovel({ company }: InferGetServerSidePropsType<typeo
             || parseInt(deliveryDate.substring(6, 10)) < 2023
             || parseInt(deliveryDate.substring(6, 10)) > 2100
         ) {
-            console.log(parseInt(deliveryDate.substring(0, 2)))
-            console.log(parseInt(deliveryDate.substring(3, 5)))
-            console.log(parseInt(deliveryDate.substring(6, 10)))
             throwAlert('Data de entrega inválida.', 'danger')
             return
         }

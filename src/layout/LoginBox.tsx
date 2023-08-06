@@ -4,7 +4,7 @@ import Image from "next/image"
 import Alert, { _throwAlert } from "./Alert"
 import { useContext, useEffect, useState } from "react"
 import { useSession, signIn, signOut } from "next-auth/react"
-import Router from "next/router"
+import Router, { useRouter } from "next/router"
 import { AuthContext } from "@/contexts/AuthContext"
 
 
@@ -16,6 +16,7 @@ const LoginBox = () => {
     const [alertType, setAlertType] = useState('danger')
     const context = useContext(AuthContext)
     const { session, user } = context
+    const router = useRouter()
 
     useEffect(() => {
         if (session !== undefined && user.name == null) {
@@ -28,7 +29,7 @@ const LoginBox = () => {
                     Router.push('/entrar/auth-email')
                 } else{
                     if (session.user.provider == user.provider) {
-                        Router.push('/painel')
+                        router.push('/painel')
                     }
                 }
             }
@@ -81,7 +82,7 @@ const LoginBox = () => {
         `
         var response = await signIn('credentials', {
             redirect: false,
-            callbackUrl: process.env.NEXTAUTH_URL,
+            callbackUrl: '/entrar/auth-email',
             email: email.value, 
             password: password.value,
             authorization: process.env.NEXT_PUBLIC_API_TOKEN as string
@@ -91,7 +92,6 @@ const LoginBox = () => {
             throwAlert('Usuário ou senha inválidos.', 'danger')
             return
         }
-        Router.push('/painel')
     }
     function googleLogin() {
         signIn('google', {callbackUrl: '/auth/login-social'})
