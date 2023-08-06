@@ -4,9 +4,10 @@ type Environment = "production" | "development" | "other";
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
     const currentEnv = process.env.NODE_ENV as Environment;
 
+    console.log(req.headers)
+    console.log(req.nextUrl)
     if (currentEnv === 'production' && 
         req.headers.get("x-forwarded-proto") !== "https") {
-        console.log(req.headers.get("x-forwarded-proto"))
             // return NextResponse.redirect(
         //    `https://${req.headers.get('host')}${req.nextUrl.pathname}`,
         //    301
