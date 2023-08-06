@@ -131,12 +131,14 @@ export function AuthProvider(props: {children: ReactNode}) {
                         setContextUser(user.data);
                         return;
                     } else {
+                        console.log('logout')
                         globalSignOut();
                         return
                     }
                 } else {
                     return response.json().then(data => {
                         if (session.user.alternative_id && session.user.alternative_id != data.alternative_id) {
+                            console.log('logout')
                             globalSignOut();
                         }
                         let userData = {

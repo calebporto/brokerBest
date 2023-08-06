@@ -283,7 +283,7 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             || parseInt(deliveryDate.substring(0, 2)) > 31
             || parseInt(deliveryDate.substring(3, 5)) > 12
             || deliveryDate.substring(3, 5) == '02' && parseInt(deliveryDate.substring(0, 2)) > 29
-            || parseInt(deliveryDate.substring(6, 10)) < 2023
+            || parseInt(deliveryDate.substring(6, 10)) < 2000
             || parseInt(deliveryDate.substring(6, 10)) > 2100
         ) {
             throwAlert('Data de entrega inválida.', 'danger')

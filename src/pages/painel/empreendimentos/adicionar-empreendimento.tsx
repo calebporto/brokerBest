@@ -244,7 +244,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
             || parseInt(deliveryDate.substring(0, 2)) > 31
             || parseInt(deliveryDate.substring(3, 5)) > 12
             || deliveryDate.substring(3, 5) == '02' && parseInt(deliveryDate.substring(0, 2)) > 29
-            || parseInt(deliveryDate.substring(6, 10)) < 2023
+            || parseInt(deliveryDate.substring(6, 10)) < 2000
             || parseInt(deliveryDate.substring(6, 10)) > 2100
         ) {
             throwAlert('Data de entrega inválida.', 'danger')
@@ -458,7 +458,6 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                         <select onChange={(e) => setStatus(e.target.value)} name="status" id="status">
                             <option value='' selected disabled> -- Selecione --</option>
                             <option value='pronto'>Pronto</option>
-                            <option value='em construção'>Em construção</option>
                             <option value='na planta'>Na planta</option>
                         </select>
                     </div>
@@ -475,7 +474,7 @@ export default function AddEmpreendimentos({ company }: InferGetServerSidePropsT
                         <input value={video} onChange={(e) => setVideo(e.target.value)} id="uf" maxLength={100} type="text" />
                     </div>
                     <div className={style.MdInput + ' ' + style.Right}>
-                        <span>Link do Drive Original da Imobiliária:</span>
+                        <span>Link do Drive Original da Construtora:</span>
                         <input value={link} onChange={(e) => setLink(e.target.value)} id="uf" maxLength={100} type="text" />
                     </div>
                     <div className={style.ImageInput}>

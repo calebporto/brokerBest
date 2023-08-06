@@ -256,7 +256,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                             {videoRender(project.project?.videos)}
                         </div>
                     ) : null}
-                        <div style={{ width: '100%', margin: '2rem 0' }}>
+                        {/* <div style={{ width: '100%', margin: '2rem 0' }}>
                             <p className={style.Title}>Imóveis</p>
                             {user.is_admin ? (
                                 <div className={style.EditarBt}>
@@ -268,7 +268,7 @@ export default function ProjectData(props: { project: ProjectView }) {
                                     {[...propertyCardsGenerate()]}
                                 </div>
                             ) : null}
-                        </div>
+                        </div> */}
                 </div>
             </Container>
         </div>

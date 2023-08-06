@@ -3,7 +3,7 @@ import style from "../styles/TopNavbar.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import { GeneralContext, User } from "@/helpers/interfaces"
-import Router from "next/router"
+import Router, { useRouter } from "next/router"
 import { globalSignOut } from "@/helpers/helpers"
 import { useEffect, useState } from "react"
 
@@ -14,10 +14,11 @@ const TopNavbar = (props: {
     fixed?: boolean,
     contextUser: GeneralContext
 }) => {
-    const { user, windowDimensions } = props.contextUser
+    const { user, windowDimensions, session } = props.contextUser
     const position = props.fixed ? style.TopNavbarFixed : style.TopNavbarNormal
     const isPc = windowDimensions.width as number > 767
     const [open, setOpen] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
         window.addEventListener('click', (e) => {
@@ -127,12 +128,18 @@ const TopNavbar = (props: {
             </div>
         ) : null
     }
-
+    function logoClick() {
+        if (session) {
+            router.push('/painel')
+        } else {
+            router.push('/')
+        }
+    }
     return (
         <div className={position}>
             <Container>
                 <div className={style.Divs}>
-                    <div onClick={() => Router.push('/')} className={style.Logo}>
+                    <div onClick={() => logoClick()} className={style.Logo}>
                         <Image priority width={300} height={100} src={'/media/logo2.png'} alt="" />
                     </div>
                     <div className={style.Buttons}>

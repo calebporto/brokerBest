@@ -10,12 +10,35 @@ import { AuthContext } from "@/contexts/AuthContext"
 
 
 const LoginBox = () => {
-    const { systemMessage } = useContext(AuthContext)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
-    const { data: session } = useSession() as any
+    const context = useContext(AuthContext)
+    const { session, user } = context
+
+    useEffect(() => {
+        if (session !== undefined && user.name == null) {
+            if (session == null) {
+                if (!showPage) {
+                    setShowPage(true)
+                }
+            } else {
+                if (!session.user.is_authenticated) {
+                    Router.push('/entrar/auth-email')
+                } else{
+                    if (session.user.provider == user.provider) {
+                        Router.push('/painel')
+                    }
+                }
+            }
+        } else {
+            if (session && session.user.provider != user.provider) {
+                signOut({redirect: false})
+            }
+        }
+    }, [session, user])
+
     function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
@@ -77,20 +100,6 @@ const LoginBox = () => {
         signIn('facebook', {callbackUrl: '/auth/login-social'})
     }
     
-    if (session === undefined) {
-        return null
-    } else if (session == null) {
-        if (!showPage) {
-            setShowPage(true)
-        }
-    } else {
-        if (!session.user.is_authenticated) {
-            Router.push('/entrar/auth-email')
-        } else{
-            Router.push('/painel')
-        }
-    }
-    
     return (
         showPage ? <div id="loginBox" className={style.LoginBox}>
             <Alert message={alertMessage} setMessage={setAlertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} showSystemMessage={true}/>
@@ -118,9 +127,9 @@ const LoginBox = () => {
                 <div className={`${style.Google} ${style.Alternative}`} onClick={() => googleLogin()}>
                     <Image priority src={'/media/google.png'} width={150} height={150} alt="" />
                 </div>
-                <div className={`${style.Facebook} ${style.Alternative}`} onClick={() => facebookLogin()}>
+                {/* <div className={`${style.Facebook} ${style.Alternative}`} onClick={() => facebookLogin()}>
                     <Image priority src={'/media/facebook.png'} width={150} height={150} alt="" />
-                </div>
+                </div> */}
             </div>
         </div> : null
     )

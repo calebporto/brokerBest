@@ -76,15 +76,20 @@ export default function DriveBar() {
     function projectCardsGenerate() {
         let elements = [] as Array<JSX.Element>
         projectData.current.data.forEach(item => {
+            // const Card = (
+            //     <ProjectCard 
+            //     key={item.id}
+            //     id={item.id}
+            //     thumb={item.thumb}
+            //     name={item.name}
+            //     deliveryDate={new Date(item.delivery_date as string).toLocaleDateString('pt-BR')}
+            //     admin_id={item.admin_id}
+            //     ></ProjectCard>
+            // )
             const Card = (
-                <ProjectCard 
-                key={item.id}
-                id={item.id}
-                thumb={item.thumb}
-                name={item.name}
-                deliveryDate={new Date(item.delivery_date as string).toLocaleDateString('pt-BR')}
-                admin_id={item.admin_id}
-                ></ProjectCard>
+                <div onClick={() => router.push('/painel/empreendimentos?id='+item.id)} className={style.ProjectCard + ' btn btn-dark'} key={`projectCard_${item.id}`}>
+                    {allFirstUppercase(item.name)}
+                </div>
             )
             elements.push(Card)
         })

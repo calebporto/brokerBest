@@ -2,13 +2,13 @@ import style from '@/styles/EmailValidate.module.css'
 import Alert, { _throwAlert } from './Alert'
 import Spinner from './Spinner'
 import { useSession } from 'next-auth/react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { AuthContext } from '@/contexts/AuthContext'
 
 
 export default function EmailValidateBox() {
-    const { session, update } = useContext(AuthContext)
+    const { session, update, user } = useContext(AuthContext)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
@@ -19,6 +19,26 @@ export default function EmailValidateBox() {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
     const router = useRouter()
+
+    useEffect(() => {
+        if (session === undefined) return
+        if (session == null) {
+            if (showPage) {
+                throwAlert('Você não tem uma sessão de usuário ativa. Clique aqui para fazer login.', 'danger')
+                setAlertClick('/entrar')
+                setSpinnerShow(false)
+            }
+        } else {
+            if (showPage) {
+                if (session.user.is_authenticated) {
+                    Router.push('/painel')
+                } else {
+                    sendToken(router.query.token as string)
+                }
+            }
+        }
+    }, [session, user])
+
     const sendToken = (token: string) => {
         let send = {token: token}
         fetch(`/api/auth/email-validate`, {
@@ -41,23 +61,6 @@ export default function EmailValidateBox() {
         })
     }
 
-    if (session === undefined) {
-        return null
-    } else if (session == null) {
-        if (showPage) {
-            throwAlert('Você não tem uma sessão de usuário ativa. Clique aqui para fazer login.', 'danger')
-            setAlertClick('/entrar')
-            setSpinnerShow(false)
-        }
-    } else {
-        if (showPage) {
-            if (session.user.is_authenticated) {
-                Router.push('/painel')
-            } else {
-                sendToken(router.query.token as string)
-            }
-        }
-    }
     return (
         showPage ? <>
             <div className={style.Box}>

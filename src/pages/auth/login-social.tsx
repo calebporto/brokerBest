@@ -8,6 +8,7 @@ import Alert, { _throwAlert } from "@/layout/Alert"
 import IMask from "imask"
 import TopNavbar from "@/layout/TopNavbar"
 import { CompleteData } from "@/classes"
+import { signOut } from "next-auth/react"
 
 
 export default function LoginSocial() {
@@ -18,24 +19,30 @@ export default function LoginSocial() {
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
     const [alertClick, setAlertClick] = useState('')
-    const [nome, setNome] = useState(user.name || '')
-    const [email, setEmail] = useState(user.email || '')
+    const [nome, setNome] = useState('')
+    const [email, setEmail] = useState('')
     const [tel, setTel] = useState('')
-    const [cep, setCep] = useState('')
-    const [endereco, setEndereco] = useState('')
-    const [num, setNum] = useState('')
-    const [complemento, setComplemento] = useState('')
-    const [bairro, setBairro] = useState('')
-    const [cidade, setCidade] = useState('')
-    const [uf, setUf] = useState('')
+    const [imobiliaria, setImobiliaria] = useState('')
+    // const [cep, setCep] = useState('')
+    // const [endereco, setEndereco] = useState('')
+    // const [num, setNum] = useState('')
+    // const [complemento, setComplemento] = useState('')
+    // const [bairro, setBairro] = useState('')
+    // const [cidade, setCidade] = useState('')
+    // const [uf, setUf] = useState('')
     const router = useRouter()
 
     useEffect(() => {
-        if (user && user.name) {
-            if (user.provider == 1) {
-                setSystemMessage('Você já possui cadastro na plataforma. Use seu e-mail e senha.')
-                globalSignOut(false)
-                return
+        async function _signOut() {
+            const data = await signOut({redirect: false, callbackUrl: '/entrar'})
+            router.push(data.url)
+        }
+        if (session != undefined && user.name != null) {
+            if (session == null) {
+                router.push('/entrar')
+            } else if (user.provider == 1) {
+                alert('Você já possui cadastro na plataforma. Use seu e-mail e senha.')
+                signOut({callbackUrl:'/entrar'})
             } else {
                 if (user.is_complete_data) {
                     router.push('/painel')
@@ -43,18 +50,17 @@ export default function LoginSocial() {
                 } else {
                     if (!showForm) {
                         setShowForm(true)
+                        if (user.name) {
+                            setNome(user.name)
+                        }
+                        if (user.email) {
+                            setEmail(user.email)
+                        }
                     }
                 }
             }
         }
-
-        if (user.name) {
-            setNome(user.name)
-        }
-        if (user.email) {
-            setEmail(user.email)
-        }
-    }, [user])
+    }, [session, user])
 
     useEffect(() => {
         if (showForm) {
@@ -64,85 +70,81 @@ export default function LoginSocial() {
             };
             let telMask = IMask(telefone, telOptions);
 
-            let cep = document.getElementById('cep') as HTMLInputElement
-            let cepOptions = {
-                mask: '00.000-000'
-            };
-            let cepMask = IMask(cep, cepOptions);
+            // let cep = document.getElementById('cep') as HTMLInputElement
+            // let cepOptions = {
+            //     mask: '00.000-000'
+            // };
+            // let cepMask = IMask(cep, cepOptions);
 
-            let numero = document.getElementById('num') as HTMLInputElement
-            let numeroOptions = {
-                mask: '000000'
-            };
-            let numeroMask = IMask(numero, numeroOptions);
+            // let numero = document.getElementById('num') as HTMLInputElement
+            // let numeroOptions = {
+            //     mask: '000000'
+            // };
+            // let numeroMask = IMask(numero, numeroOptions);
 
-            let uf = document.getElementById('uf') as HTMLInputElement
-            let ufOptions = {
-                mask: 'aa',
-                prepare: function (str: string) {
-                    return str.toUpperCase();
-                }
-            };
-            let ufMask = IMask(uf, ufOptions);
+            // let uf = document.getElementById('uf') as HTMLInputElement
+            // let ufOptions = {
+            //     mask: 'aa',
+            //     prepare: function (str: string) {
+            //         return str.toUpperCase();
+            //     }
+            // };
+            // let ufMask = IMask(uf, ufOptions);
         }
     }, [showForm])
 
-    if (session === undefined) return
-    else if (session == null) {
-        router.push('/entrar')
-    }
-
-    function cepCallback(conteudo: any) {
-        if (!("erro" in conteudo)) {
-            setEndereco(conteudo.logradouro)
-            setBairro(conteudo.bairro)
-            setCidade(conteudo.localidade)
-            setUf(conteudo.uf)
-        } else {
-            limpaFormulario()
-            throwAlert('CEP não encontrado. Preencha os dados manualmente.', 'warning')
-        }
-    }
-    function limpaFormulario() {
-        setEndereco('')
-        setBairro('')
-        setCidade('')
-        setUf('')
-    }
+    // function cepCallback(conteudo: any) {
+    //     if (!("erro" in conteudo)) {
+    //         setEndereco(conteudo.logradouro)
+    //         setBairro(conteudo.bairro)
+    //         setCidade(conteudo.localidade)
+    //         setUf(conteudo.uf)
+    //     } else {
+    //         limpaFormulario()
+    //         throwAlert('CEP não encontrado. Preencha os dados manualmente.', 'warning')
+    //     }
+    // }
+    // function limpaFormulario() {
+    //     setEndereco('')
+    //     setBairro('')
+    //     setCidade('')
+    //     setUf('')
+    // }
     function limpaTodoFormulario() {
         setNome('')
         setEmail('')
         setTel('')
-        setCep('')
-        setEndereco('')
-        setNum('')
-        setComplemento('')
-        setBairro('')
-        setCidade('')
-        setUf('')
+        setImobiliaria('')
+        // setCep('')
+        // setEndereco('')
+        // setNum('')
+        // setComplemento('')
+        // setBairro('')
+        // setCidade('')
+        // setUf('')
     }
-    function findCep(valor: string) {
-        var cep = valor.replace(/\D/g, '')
-        if (cep != '') {
-            var validacep = /^[0-9]{8}$/
-            if (validacep.test(cep)) {
-                setEndereco('...')
-                setBairro('...')
-                setCidade('...')
-                setUf('...')
+    // function findCep(valor: string) {
+    //     var cep = valor.replace(/\D/g, '')
+    //     if (cep != '') {
+    //         var validacep = /^[0-9]{8}$/
+    //         if (validacep.test(cep)) {
+    //             setEndereco('...')
+    //             setBairro('...')
+    //             setCidade('...')
+    //             setUf('...')
 
-                fetch('https://viacep.com.br/ws/' + cep + '/json/')
-                    .then(response => response.json())
-                    .then(data => cepCallback(data))
-            } else {
-                limpaFormulario()
-                setAlertMessage('Formato de CEP inválido')
-                setAlertShow(true)
-            }
-        } else {
-            limpaFormulario()
-        }
-    }
+    //             fetch('https://viacep.com.br/ws/' + cep + '/json/')
+    //                 .then(response => response.json())
+    //                 .then(data => cepCallback(data))
+    //         } else {
+    //             limpaFormulario()
+    //             setAlertMessage('Formato de CEP inválido')
+    //             setAlertShow(true)
+    //         }
+    //     } else {
+    //         limpaFormulario()
+    //     }
+    // }
     function throwAlert(message: string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
@@ -160,37 +162,38 @@ export default function LoginSocial() {
             throwAlert('Telefone inválido.', 'danger')
             return
         }
-        if (!endereco) {
-            throwAlert('Endereço inválido.', 'danger')
+        if (!imobiliaria) {
+            throwAlert('Informe a sua imobiliária.', 'danger')
             return
         }
-        if (!num) {
-            throwAlert('Número inválido.', 'danger')
-            return
-        }
-        if (!bairro) {
-            throwAlert('Bairro inválido.', 'danger')
-            return
-        }
-        if (!cidade) {
-            throwAlert('Cidade inválida.', 'danger')
-            return
-        }
-        if (!uf) {
-            throwAlert('UF inválido.', 'danger')
-            return
-        }
+        // if (!num) {
+        //     throwAlert('Número inválido.', 'danger')
+        //     return
+        // }
+        // if (!bairro) {
+        //     throwAlert('Bairro inválido.', 'danger')
+        //     return
+        // }
+        // if (!cidade) {
+        //     throwAlert('Cidade inválida.', 'danger')
+        //     return
+        // }
+        // if (!uf) {
+        //     throwAlert('UF inválido.', 'danger')
+        //     return
+        // }
         let send = new CompleteData(
             nome,
             email,
             tel,
-            cep,
-            endereco,
-            num,
-            complemento,
-            bairro,
-            cidade,
-            uf,
+            imobiliaria,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             user.provider as number
         )
         let body = {
@@ -234,7 +237,10 @@ export default function LoginSocial() {
                         <div className={`${style.Input} ${style.Medium}`}>
                             <input type="text" id="tel" placeholder="Telefone" maxLength={50} value={tel} onChange={(e) => setTel(e.target.value)} />
                         </div>
-                        <div className={`${style.Input} ${style.Medium}`}>
+                        <div className={`${style.Input} ${style.Large}`}>
+                            <input type="text" id="imobiliaria" placeholder="Imobiliária" maxLength={50} value={imobiliaria} onChange={(e) => setImobiliaria(e.target.value)} />
+                        </div>
+                        {/* <div className={`${style.Input} ${style.Medium}`}>
                             <input type="text" id="cep" placeholder="CEP" maxLength={50} value={cep} onBlur={() => findCep(cep)} onChange={(e) => setCep(e.target.value)} />
                         </div>
                         <div className={`${style.Input} ${style._3_4}`}>
@@ -254,7 +260,7 @@ export default function LoginSocial() {
                         </div>
                         <div className={`${style.Input} ${style._1_4}`}>
                             <input type="text" id="uf" placeholder="UF" maxLength={2} value={uf} onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} />
-                        </div>
+                        </div> */}
                         <div className={style.Button}>
                             <button onClick={() => register()}>Enviar</button>
                         </div>

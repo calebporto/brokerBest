@@ -7,9 +7,6 @@ import { checkContextUpdate } from "@/helpers/helpers"
 
 const Entrar = () => {
     const { ...context } = useContext(AuthContext)
-    if (context.user.lastUpdate) {
-        checkContextUpdate(context)
-    }
     return (
         <div className={style.Entrar}>
             <TopNavbar entrarBt={false} cadastrarBt={true} perfilBt={false} fixed={false} contextUser={context}></TopNavbar>

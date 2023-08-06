@@ -4,6 +4,7 @@ export const user = z.object({
     nome: z.string(),
     email: z.string(),
     tel: z.string(),
+    imobiliaria: z.string(),
     cep: z.string(),
     endereco: z.string(),
     num: z.string(),

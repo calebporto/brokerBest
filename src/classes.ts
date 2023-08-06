@@ -33,6 +33,7 @@ export class CompleteData {
     nome: string
     email: string
     tel: string
+    imobiliaria: string
     cep: string
     endereco: string
     num: string
@@ -43,11 +44,12 @@ export class CompleteData {
     provider: number
 
 
-    constructor(nome: string, email: string, tel: string, cep: string, endereco: string,
+    constructor(nome: string, email: string, tel: string, imobiliaria: string, cep: string, endereco: string,
         num: string, complemento: string, bairro: string, cidade: string, uf: string, provider: number) {
         this.nome = nome;
         this.email = email;
         this.tel = tel;
+        this.imobiliaria = imobiliaria;
         this.cep = cep;
         this.endereco = endereco;
         this.num = num;

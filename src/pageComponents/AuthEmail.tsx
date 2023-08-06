@@ -7,10 +7,7 @@ import { useContext } from "react"
 import { AuthContext } from "@/contexts/AuthContext"
 
 const AuthEmail = () => {
-    const { ...context } = useContext(AuthContext)
-    if (context.user.lastUpdate) {
-        checkContextUpdate(context)
-    }
+    const context = useContext(AuthContext)
     return (
         <>
             <Head>
