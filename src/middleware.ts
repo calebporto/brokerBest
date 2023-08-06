@@ -2,7 +2,6 @@ import  { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 
 type Environment = "production" | "development" | "other";
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-    console.log('ok')
     const currentEnv = process.env.NODE_ENV as Environment;
 
     if (currentEnv === 'production' && 
