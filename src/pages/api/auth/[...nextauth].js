@@ -9,8 +9,8 @@ import { sendAuthMail } from '../services/userServices'
 export const authOptions = {
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_SECRET
+            clientId: process.env.GOOGLE_AUTH_ID,
+            clientSecret: process.env.GOOGLE_AUTH_SECRET
         }),
         FacebookProvider({
             clientId: process.env.FACEBOOK_ID,
