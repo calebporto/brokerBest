@@ -273,12 +273,8 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             throwAlert('Nome inválido.', 'danger')
             return
         }
-        if (!description || description.length < 20) {
-            throwAlert('Descreva com mais detalhes a construtora.', 'danger')
-            return
-        }
         if (
-            !deliveryDate || deliveryDate.length < 10
+            deliveryDate && deliveryDate.length < 10
             || parseInt(deliveryDate.substring(0, 2)) > 31
             || parseInt(deliveryDate.substring(3, 5)) > 12
             || deliveryDate.substring(3, 5) == '02' && parseInt(deliveryDate.substring(0, 2)) > 29
@@ -286,42 +282,6 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             || parseInt(deliveryDate.substring(6, 10)) > 2100
         ) {
             throwAlert('Data de entrega inválida.', 'danger')
-            return
-        }
-        if (!address) {
-            throwAlert('Endereço inválido.', 'danger')
-            return
-        }
-        if (!num) {
-            throwAlert('Número inválido.', 'danger')
-            return
-        }
-        if (!district) {
-            throwAlert('Bairro inválido.', 'danger')
-            return
-        }
-        if (!zone) {
-            throwAlert('Selecione uma zona.', 'danger')
-            return
-        }
-        if (!city) {
-            throwAlert('Cidade inválida.', 'danger')
-            return
-        }
-        if (!uf) {
-            throwAlert('UF inválido.', 'danger')
-            return
-        }
-        if (!latitude) {
-            throwAlert('Latitude inválida.', 'danger')
-            return
-        }
-        if (!longitude) {
-            throwAlert('Longitude inválida.', 'danger')
-            return
-        }
-        if (!status) {
-            throwAlert('Selecione o status do empreendimento.', 'danger')
             return
         }
 
@@ -393,8 +353,8 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
             city,
             uf,
             null,
-            parseFloat(latitude),
-            parseFloat(longitude),
+            latitude ? parseFloat(latitude) : null,
+            longitude ? parseFloat(longitude) : null,
             status,
             newThumb,
             newImgs,

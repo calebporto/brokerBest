@@ -182,38 +182,6 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
             throwAlert('Nome inválido.', 'danger')
             return
         }
-        if (!description || description.length < 20) {
-            throwAlert('Descreva com mais detalhes a construtora.', 'danger')
-            return
-        }
-        if (!email || email.indexOf('@') == -1 || email.indexOf('.') == -1 || email.length < 8) {
-            throwAlert('E-mail inválido.', 'danger')
-            return
-        }
-        if (!tel || tel.length < 14 && tel.length > 15) {
-            throwAlert('Telefone inválido.', 'danger')
-            return
-        }
-        if (!address) {
-            throwAlert('Endereço inválido.', 'danger')
-            return
-        }
-        if (!num) {
-            throwAlert('Número inválido.', 'danger')
-            return
-        }
-        if (!district) {
-            throwAlert('Bairro inválido.', 'danger')
-            return
-        }
-        if (!city) {
-            throwAlert('Cidade inválida.', 'danger')
-            return
-        }
-        if (!uf) {
-            throwAlert('UF inválido.', 'danger')
-            return
-        }
         setShowWaitingModal(true)
 
         var ibbResponse = undefined
