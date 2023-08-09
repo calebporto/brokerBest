@@ -54,3 +54,26 @@
         margin-top: 15vh;
     }
 }
+
+@media (max-height: 910px) {
+    .Initial2 .Text .Title {
+        font-size: 20px;
+        margin-bottom: 35vh;
+    }
+    .Initial2 .Text .ContentTitle {
+        font-size: 20px;
+    }
+    .Initial2 .Text .Content {
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 670px) {
+    .Initial2 .Text .Title {
+        font-size: 20px;
+        margin-bottom: 31vh;
+    }
+    .Initial2 .Image {
+        width: 85%;
+    }
+}
