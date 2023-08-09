@@ -1,6 +1,10 @@
 .Button {
     width: 100%;
     height: auto;
+    margin-top: 10vh;
+}
+.MarginZero {
+    margin-top: 1vh!important;
 }
 .Button button {
     width: 100%;
@@ -11,7 +15,7 @@
     color: white;
     font-weight: bold;
     font-size: 20px;
-    margin: 1rem 0;
+    margin: 0;
     box-shadow: 0px 5px 5px rgba(209, 209, 209, 0.2);
     cursor: pointer;
 }

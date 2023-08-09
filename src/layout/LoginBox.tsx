@@ -30,6 +30,9 @@ const LoginBox = () => {
                 } else{
                     if (session.user.provider == user.provider) {
                         router.push('/painel')
+                    } else {
+                        console.log(session.user.provider)
+                        console.log(user.provider)
                     }
                 }
             }

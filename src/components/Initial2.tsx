@@ -1,10 +1,10 @@
 import PatternBt from './PatternBt'
 import style from '../styles/Initial2.module.css'
 import Image from 'next/image'
-import { Modal } from 'bootstrap'
-import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const Initial = () => {
+    const router = useRouter()
     return (
         <div className={style.Initial2}>
             <div className={style.Text}>
@@ -23,18 +23,17 @@ const Initial = () => {
                 O resultado?
                 </p>
                 <p className={style.ContentTitle}>
-                    + DE 9 MILHÕES EM VENDAS!
+                    + DE 20 MILHÕES EM VENDAS!
                 </p>
                 <p className={style.Content}>
-                Diante desse excelente resultado, resolvi disponibilizar o meu método para você em uma <strong>plataforma
-                moderna e poderosa</strong>, por um valor simbólico que nos permita manter os custos de desenvolvimento e 
-                manutenção, ajudando os corretores a alcançarem resultados excelentes através do poder da tecnologia.
+                Diante desse excelente resultado, resolvi disponibilizar o meu método para você em uma 
+                plataforma moderna e poderosa, <strong>GRATUITAMENTE</strong>, ajudando os corretores a 
+                alcançarem resultados excelentes através do poder da tecnologia.
                 </p>
-                <p className={style.ContentTitle}>Bora virar meu sócio?</p>
-                <PatternBt clickAction={() => console.log('a')} name="Quero ser sócio"></PatternBt>
+                <PatternBt addClass={'MarginZero'} clickAction={() => router.push('/entrar')} name="Vamos começar!"></PatternBt>
             </div>
             <div className={style.Image}>
-                <Image priority width={600} height={600} src={'/media/homem2.png'} alt=''/>
+                <Image priority width={500} height={500} src={'/media/homem2.png'} alt=''/>
             </div>
         </div>
     )

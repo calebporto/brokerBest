@@ -1,16 +1,18 @@
 import { useSession } from "next-auth/react"
 import Router, { useRouter } from "next/router"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import style from '../styles/NewPassword.module.css'
 import Alert, { _throwAlert } from "./Alert"
+import { AuthContext } from "@/contexts/AuthContext"
 
 const NewPasswordBox = () => {
+    const context = useContext(AuthContext)
+    const { session, user, setSystemMessage } = context
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('danger')
     const [alertAction, setAlertAction] = useState('')
     const router = useRouter()
-    const { data: session } = useSession() as any
     const [showPage, setShowPage] = useState(false)
     const [password, setPassword] = useState('')
     const [password2, setPassword2] = useState('')
@@ -49,10 +51,8 @@ const NewPasswordBox = () => {
         })
         .then(response => {
             if (response.status == 200) {
-                throwAlert('Senha alterada com sucesso. Clique aqui para entrar.', 'success')
-                setAlertAction('/entrar')
-                setPassword('')
-                setPassword2('')
+                router.push('/entrar')
+                setSystemMessage('Senha alterada com sucesso.')
             } else if (response.status == 461 || response.status == 462) {
                 throwAlert('Credenciais inválidas', 'danger')
                 setPassword('')

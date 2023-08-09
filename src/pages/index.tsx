@@ -5,15 +5,29 @@ import TopNavbar from '@/layout/TopNavbar'
 import Initial2 from '@/components/Initial2'
 import Initial from '@/components/Initial'
 import Footer from '@/layout/Footer'
-import { checkContextUpdate } from '@/helpers/helpers'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '@/contexts/AuthContext'
+import { useRouter } from 'next/router'
 
 export default function Home() {
-  const { ...context } = useContext(AuthContext)
-  if (context.user.lastUpdate) {
-      checkContextUpdate(context)
-  }
+  const context = useContext(AuthContext)
+  const { windowDimensions, session } = context
+  const [background, setBackground] = useState<string>('url(/media/background-g.jpg)')
+  const router = useRouter()
+
+  useEffect(() => {
+    if (windowDimensions.width && windowDimensions.width <= 500) {
+      setBackground('url(/media/background-p.jpg)')
+    } else if (windowDimensions.width && windowDimensions.width >= 768) {
+      setBackground('url(/media/background-g.jpg)')
+    }
+  }, [windowDimensions])
+  useEffect(() => {
+    if (session === undefined) return
+    if (session != null) {
+      router.push('/painel')
+    }
+  }, [session])
   return (
     <>
       <Head>
@@ -23,7 +37,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <TopNavbar entrarBt={true} cadastrarBt={true} perfilBt={false} fixed={true} contextUser={context}></TopNavbar>
-      <Body id='topo' bgImage='url(/media/img3.jpg)'>
+      <Body id='topo' bgImage={background}>
         <Container>
           <Initial/>
         </Container>

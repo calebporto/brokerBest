@@ -1,20 +1,15 @@
+import { useRouter } from 'next/router'
 import style from '../styles/Initial.module.css'
 import PatternBt from './PatternBt'
 import { signOut } from 'next-auth/react'
 
 const Initial = () => {
-    
+    const router = useRouter()
     return (
         <div className={style.Initial}>
             <div className={style.Text}>
-                <p className={style.Title}>A FERRAMENTA QUE VOCÊ PRECISA PARA DECOLAR</p>
-                <p className={style.Content}>
-                    Chega de ficar perdendo horas procurando empreendimentos por todo lugar!
-                    <br />
-                    Valorize o seu tempo, usando a plataforma que reúne os melhores empreendimentos da região em
-                    um só lugar.
-                </p>
-                <PatternBt name="Assine agora" clickAction={signOut}></PatternBt>
+                <p className={style.Title}>A FERRAMENTA QUE VOCÊ PRECISA PARA DECOLAR!</p>
+                <PatternBt name="Assine gratuitamente" clickAction={() => router.push('/entrar')}></PatternBt>
 
             </div>
         </div>
