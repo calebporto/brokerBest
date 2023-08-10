@@ -18,7 +18,11 @@ export default function Home() {
   useEffect(() => {
     if (windowDimensions.width && windowDimensions.width <= 500) {
       setBackground('url(/media/background-p.jpg)')
-    } else if (windowDimensions.width && windowDimensions.width >= 768) {
+    } else if (windowDimensions.width && windowDimensions.width <= 915) {
+      setBackground('url(/media/background-m.jpg)')
+    } else if (windowDimensions.width && windowDimensions.width <= 1300 ) {
+      setBackground('url(/media/background-mm.jpg)')
+    } else {
       setBackground('url(/media/background-g.jpg)')
     }
   }, [windowDimensions])

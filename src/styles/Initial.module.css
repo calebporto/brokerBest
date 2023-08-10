@@ -48,13 +48,48 @@
     box-shadow: 0px 2px 5px rgba(20, 20, 20, 0.2);
 }
 
+
+@media (max-width: 1300px) {
+    .Initial {
+        width: 100%;
+        justify-content: start;
+    }
+    .Initial .Text {
+        width: 100%;
+        margin-top: 72vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .Initial .Text .Title {
+        text-align: center;
+    }
+}
+@media (max-width: 915px) {
+    .Initial {
+        width: 100%;
+        justify-content: start;
+    }
+    .Initial .Text {
+        width: 100%;
+        margin-top: 78vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .Initial .Text .Title {
+        text-align: center;
+    }
+}
 @media(max-width: 500px) {
     .Initial {
         width: 100%;
         justify-content: start;
     }
-    .Initial .Text .Title {
+    .Initial .Text {
         margin-top: 70vh;
+    }
+    .Initial .Text .Title {
         font-size: 25px;
         text-align: center;
     }

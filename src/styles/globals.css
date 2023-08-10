@@ -24,6 +24,7 @@
     height: 120vh;
     color: white;
     background-size: cover;
+    background-position: center;
   }
   .Container {
     display: flex;

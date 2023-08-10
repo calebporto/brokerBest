@@ -2,13 +2,31 @@ import PatternBt from './PatternBt'
 import style from '../styles/Initial2.module.css'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useContext, useEffect, useState } from 'react'
+import { AuthContext } from '@/contexts/AuthContext'
 
 const Initial = () => {
+    const { windowDimensions } = useContext(AuthContext)
+    const [isBigWindow, setIsBigWindow] = useState(true)
     const router = useRouter()
+    useEffect(() =>{
+        if (windowDimensions.width && windowDimensions.width > 915) {
+            if (!isBigWindow) {
+                setIsBigWindow(true)
+            }
+        } else {
+            if (isBigWindow) {
+                setIsBigWindow(false)
+            }
+        }
+    }, [windowDimensions])
     return (
         <div className={style.Initial2}>
             <div className={style.Text}>
                 <p className={style.Title}>A CAIXA DE PANDORA FOI ABERTA!</p>
+                { !isBigWindow && <div className={style.Image}>
+                    <Image priority width={500} height={500} src={'/media/homem2.png'} alt='' />
+                </div>}
                 <p className={style.Content}>
                 Começar no mercado imobiliário é uma tarefa árdua, pois a dificuldade para absorver
                 a grande quantidade de informações é enorme, e a maioria tende a ficar pelo caminho.<br></br>
@@ -32,9 +50,9 @@ const Initial = () => {
                 </p>
                 <PatternBt addClass={'MarginZero'} clickAction={() => router.push('/entrar')} name="Vamos começar!"></PatternBt>
             </div>
-            <div className={style.Image}>
+            {isBigWindow && <div className={style.Image}>
                 <Image priority width={500} height={500} src={'/media/homem2.png'} alt=''/>
-            </div>
+            </div>}
         </div>
     )
 }
