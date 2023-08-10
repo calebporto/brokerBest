@@ -109,7 +109,7 @@ export default function AddConstrutora({ project }: InferGetServerSidePropsType<
                         setLatitude(project?.project?.latitude ? project?.project?.latitude.toString().replace(',', '.') : '')
                         setLongitude(project?.project?.longitude ? project?.project?.longitude.toString().replace(',', '.') : '')
                         setVideo(project?.project?.videos && project?.project?.videos.length > 0 ? project?.project?.videos[0] : '')
-                        setLink(project?.project?.link && project?.project?.link.length > 0 ? project?.project?.link[0] : '')
+                        setLink(project?.project?.link && project?.project?.link.length > 0 ? project?.project?.link : '')
                         setCurrentThumb(project?.project?.thumb ? project?.project?.thumb : '')
 
                         //setCurrentImage(project?.project?.thumb ? project?.project?.thumb : '')

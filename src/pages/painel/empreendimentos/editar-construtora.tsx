@@ -186,13 +186,15 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
 
         var ibbResponse = undefined
         if (compressedImg) {
+            alert('comporeregsfg')
             const imgName = `${name.replace(' ', '_')}_thumb`
             ibbResponse = await compressAndUploadToIbb(compressedImg, imgName)
         }
-        if (ibbResponse == null) {
+        if (ibbResponse === null) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
         } else {
-            const img = ibbResponse.data.image.url
+            const img = ibbResponse ? ibbResponse.data.image.url : null
             const newCompany = new Company(
                 company && company.id ? company.id : null,
                 name != '' ? name : null,
