@@ -20,7 +20,7 @@ export default function Home() {
       setBackground('url(/media/background-p.jpg)')
     } else if (windowDimensions.width && windowDimensions.width <= 915) {
       setBackground('url(/media/background-m.jpg)')
-    } else if (windowDimensions.width && windowDimensions.width <= 1300 ) {
+    } else if (windowDimensions.width && windowDimensions.width <= 1300) {
       setBackground('url(/media/background-mm.jpg)')
     } else {
       setBackground('url(/media/background-g.jpg)')
@@ -36,22 +36,28 @@ export default function Home() {
     <>
       <Head>
         <title>Broker Best</title>
-        <meta name="description" content="Broker Best teste" />
+        <meta name="description" content="Um guia completo de empreendimentos para você corretor imobiliário." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name='keywords' content='broker best, brokerbest, broker best uberlandia, brokerbest uberlândia, best broker, bestbroker' />
+        <meta property="og:title" content="Broker Best" />
+        <meta property="og:description" content="Um guia completo de empreendimentos para você corretor imobiliário." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/media/background-mm.jpg" />
+        <meta property="og:url" content="https://www.brokerbest.com.br" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <TopNavbar entrarBt={true} cadastrarBt={true} perfilBt={false} fixed={true} contextUser={context}></TopNavbar>
       <Body id='topo' bgImage={background}>
         <Container>
-          <Initial/>
+          <Initial />
         </Container>
       </Body>
       <Body id='topo' bgColor='black'>
         <Container>
-          <Initial2/>
+          <Initial2 />
         </Container>
       </Body>
-      <Footer/>
+      <Footer />
     </>
   )
 }
