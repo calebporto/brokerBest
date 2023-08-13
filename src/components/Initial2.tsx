@@ -48,7 +48,7 @@ const Initial = () => {
                 plataforma moderna e poderosa, <strong>GRATUITAMENTE</strong>, ajudando os corretores a 
                 alcançarem resultados excelentes através do poder da tecnologia.
                 </p>
-                <PatternBt addClass={'MarginZero'} clickAction={() => router.push('/entrar')} name="Vamos começar!"></PatternBt>
+                <PatternBt addClass={'MarginZero'} clickAction={() => router.push('/cadastrar')} name="Vamos começar!"></PatternBt>
             </div>
             {isBigWindow && <div className={style.Image}>
                 <Image priority width={500} height={500} src={'/media/homem2.png'} alt=''/>

@@ -9,7 +9,7 @@ const Initial = () => {
         <div className={style.Initial}>
             <div className={style.Text}>
                 <p className={style.Title}>A FERRAMENTA QUE VOCÊ PRECISA PARA DECOLAR!</p>
-                <PatternBt name="Assine gratuitamente" clickAction={() => router.push('/entrar')}></PatternBt>
+                <PatternBt name="Assine gratuitamente" clickAction={() => router.push('/cadastrar')}></PatternBt>
 
             </div>
         </div>
