@@ -4,3 +4,15 @@
 .Input p {
     font-weight: bold;
 }
+.ModalBody {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.Description {
+    width: 100%;
+}
+.ModalBody button {
+    font-weight: bold;
+}

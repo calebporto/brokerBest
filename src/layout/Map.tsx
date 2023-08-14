@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import style from '../styles/Map.module.css'
 import Alert, { _throwAlert } from "./Alert";
 import { LatLng } from "use-places-autocomplete";
+import Modal from "./Modal";
 
 enum OverlayType {
     /**
@@ -56,11 +57,27 @@ export default function Map() {
     const [alertType, setAlertType] = useState('danger')
     const [drawingManager, setDrawingManager] = useState<google.maps.drawing.OverlayType | null>(OverlayType.MARKER)
     const [circleCenter, setCircleCenter] = useState<{lat: number, lng: number} | null>(null)
+    const [showModal, setShowModal] = useState(false)
+    const [modalTitle, setModalTitle] = useState('')
+    const [modalChildren, setModalChildren] = useState<JSX.Element | null>(null)
+
 
     function throwAlert(message:string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
     }
     function markersGenerate(projects: Array<Project> | null) {
+        function modalGenerate(project: Project) {
+            setModalChildren(
+                <div className={style.ModalBody}>
+                    <div className={style.Description}>
+                        <p>{project.description}</p>
+                    </div>
+                    <button className="btn btn-warning" onClick={() => {router.push(`/painel/empreendimentos?id=${project.id}`), setShowModal(false)}}>Abrir</button>
+                </div>
+            )
+            setModalTitle(project.name)
+            setShowModal(true)
+        }
         if (!projects) {
             throwAlert('A busca falhou. Tente novamente mais tarde.', "danger")
             return
@@ -68,9 +85,11 @@ export default function Map() {
         let markerList = [] as Array<JSX.Element>
         projects.forEach((project, index) => {
             if (project.latitude && project.longitude) {
-                let marker = <Marker 
+                let marker = <Marker
+                key={`marker${index.toString()}`}
                 position={{lat: project.latitude, lng: project.longitude}}
-                onClick={() => router.push(`/painel/empreendimentos?id=${project.id}`)}
+                onClick={() => modalGenerate(project)}
+                icon={'media/marker.png'}
                 ></Marker>
                 markerList.push(marker)
             }
@@ -108,6 +127,9 @@ export default function Map() {
                         <p>2º - Clique no local do mapa que você deseja buscar:</p>
                     </div>
                 </div>
+                <Modal shortModal={true} show={showModal} setShow={setShowModal} title={modalTitle}>
+                    {modalChildren}
+                </Modal>
                 <GoogleMap
                     options={mapOptions}
                     zoom={13}

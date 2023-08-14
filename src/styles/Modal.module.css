@@ -50,6 +50,7 @@
 }
 .Body {
     padding-top: 10px;
+    min-height: 60%;
 }
 .Footer {
     margin-top: 1rem;
