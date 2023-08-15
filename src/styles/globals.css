@@ -85,9 +85,11 @@
     width: 100%;
     height: 50%;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .Copy span {
-    margin: auto;
+    margin: 0 auto;
     color: white;
   }
   .Footer .Info {

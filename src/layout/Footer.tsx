@@ -14,7 +14,8 @@ const Footer = () => {
                     <a href="/termos-e-condicoes-de-uso.pdf">Termos e Condições de Uso</a>
                 </div>
                 <div className="Copy">
-                    <span>Broker Best - Todos os direitos reservados</span>
+                    <span>&copy; Broker Best - Todos os direitos reservados.</span>
+                    <span> Desenvolvido por Caléb Rangel Porto - RJ</span>
                 </div>
             </Container>
         </div>
