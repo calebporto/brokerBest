@@ -53,7 +53,9 @@ export interface GeneralContext {
     setSystemMessage: Dispatch<SetStateAction<string>>,
     setUser: Dispatch<SetStateAction<User>> | null,
     contextUpdate: Function,
-    loginRequire: Function
+    loginRequire: Function,
+    checkPremiumView: boolean,
+    setCheckPremiumView: Dispatch<SetStateAction<boolean>>
 }
 
 export interface Project {
@@ -143,7 +145,9 @@ export interface Company {
     city: string | null
     uf: string | null
     cep: string | null
-    thumb: string | null
+    thumbG: string | null
+    thumbM: string | null
+    thumbP: string | null
     images: string | null
     admin_id: number | null
     is_active: boolean | null

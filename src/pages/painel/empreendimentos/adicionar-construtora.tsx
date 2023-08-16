@@ -25,7 +25,9 @@ export default function AddConstrutora() {
     const [district, setDistrict] = useState<string>('')
     const [city, setCity] = useState<string>('')
     const [uf, setUf] = useState<string>('')
-    const [originalImg, setOriginalImg] = useState<FileList | null>(null)
+    const [thumbG, setThumbG] = useState<FileList | null>(null)
+    const [thumbM, setThumbM] = useState<FileList | null>(null)
+    const [thumbP, setThumbP] = useState<FileList | null>(null)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
@@ -104,9 +106,15 @@ export default function AddConstrutora() {
         setDistrict('')
         setCity('')
         setUf('')
-        var fileInput = document.getElementById('fileInput') as HTMLInputElement
-        fileInput.value = ''
-        fileInput.files = null
+        var fileInputG = document.getElementById('fileInputG') as HTMLInputElement
+        fileInputG.value = ''
+        fileInputG.files = null
+        var fileInputM = document.getElementById('fileInputM') as HTMLInputElement
+        fileInputM.value = ''
+        fileInputM.files = null
+        var fileInputP = document.getElementById('fileInputP') as HTMLInputElement
+        fileInputP.value = ''
+        fileInputP.files = null
     }
     async function register() {
         setAlertShow(false)
@@ -116,12 +124,29 @@ export default function AddConstrutora() {
         }
         setShowWaitingModal(true)
 
-        var ibbResponse = null
-        if (originalImg && originalImg?.length > 0) {
-            const imgName = `${name.replace(' ', '_')}_thumb`
-            ibbResponse = await compressAndUploadToIbb(originalImg[0], imgName)
+        var ibbResponseG = null
+        if (thumbG && thumbG?.length > 0) {
+            let imgName = `${name.replace(' ', '_')}_thumbG`
+            ibbResponseG = await compressAndUploadToIbb(thumbG[0], imgName)
         }
-        if (originalImg && originalImg?.length > 0 && !ibbResponse) {
+        var ibbResponseM = null
+        if (thumbM && thumbM?.length > 0) {
+            let imgName = `${name.replace(' ', '_')}_thumbM`
+            ibbResponseM = await compressAndUploadToIbb(thumbM[0], imgName)
+        }
+        var ibbResponseP = null
+        if (thumbP && thumbP?.length > 0) {
+            let imgName = `${name.replace(' ', '_')}_thumbP`
+            ibbResponseP = await compressAndUploadToIbb(thumbP[0], imgName)
+        }
+
+        if (thumbG && thumbG?.length > 0 && !ibbResponseG) {
+            throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
+        } else if (thumbM && thumbM?.length > 0 && !ibbResponseM) {
+            throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
+        } else if (thumbP && thumbP?.length > 0 && !ibbResponseP) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
             setShowWaitingModal(false)
         } else {
@@ -138,7 +163,9 @@ export default function AddConstrutora() {
                 city,
                 uf,
                 null,
-                ibbResponse ? ibbResponse.data.image.url : '',
+                ibbResponseG ? ibbResponseG.data.image.url : '',
+                ibbResponseM ? ibbResponseM.data.image.url : '',
+                ibbResponseP ? ibbResponseP.data.image.url : '',
                 null,
                 user.id,
                 true
@@ -234,8 +261,16 @@ export default function AddConstrutora() {
                         <input value={uf} onInput={(e) => setUf(e.currentTarget.value)} onChange={(e) => setUf(e.target.value)} id="uf" maxLength={2} type="text" />
                     </div>
                     <div className={style.ImageInput}>
-                        <span>Imagem de Capa:</span>
-                        <input max={1} onChange={(e) => setOriginalImg(e.target.files)} id="fileInput" type="file" accept="image/*" />
+                        <span>Imagem grande para patrocínio (O tamanho deve ser 1000x300px):</span>
+                        <input max={1} onChange={(e) => setThumbG(e.target.files)} id="fileInputG" type="file" accept="image/*" />
+                    </div>
+                    <div className={style.ImageInput}>
+                        <span>Imagem média para patrocínio (O tamanho deve ser 750x300px):</span>
+                        <input max={1} onChange={(e) => setThumbM(e.target.files)} id="fileInputM" type="file" accept="image/*" />
+                    </div>
+                    <div className={style.ImageInput}>
+                        <span>Imagem pequena para patrocínio (O tamanho deve ser 350x250px):</span>
+                        <input max={1} onChange={(e) => setThumbP(e.target.files)} id="fileInputP" type="file" accept="image/*" />
                     </div>
                     <div className={style.SendButton}>
                         <button id="sendBt" onClick={() => register()} className="btn btn-warning">Enviar</button>

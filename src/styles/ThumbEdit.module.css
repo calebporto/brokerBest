@@ -1,7 +1,35 @@
-.Thumb {
+.ThumbG {
+    margin: 1rem auto;
     width: 100%;
-    height: 600px;
+    height: 300px;
     position: relative;
+}
+.ThumbG img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ThumbM {
+    margin: 1rem auto;
+    width: 750px;
+    height: 300px;
+    position: relative;
+}
+.ThumbM img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ThumbP {
+    margin: 1rem auto;
+    width: 350px;
+    height: 250px;
+    position: relative;
+}
+.ThumbP img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .ChangeBt {
     position: absolute;
@@ -9,7 +37,7 @@
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.712);
     top: 80%;
-    height: 4rem;
+    height: 3.5rem;
     display: flex;
 }
 .ChangeBt:hover {
@@ -28,9 +56,4 @@
     height: 100%;
     cursor: pointer;
     position: absolute;
-}
-.Thumb img {
-    width: 100%;
-    height: 95%;
-    object-fit: cover;
 }

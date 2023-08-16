@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<{ companies: Array<Company> 
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
 
-export default function MeusEmpreendimentos({ companies }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function EmpreendimentosAdmin({ companies }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const context = useContext(AuthContext) as GeneralContext
     const router = useRouter()
     const [companiesElements, setCompaniesElements] = useState<Array<JSX.Element> | null>(null)
@@ -145,9 +145,9 @@ export default function MeusEmpreendimentos({ companies }: InferGetServerSidePro
     function companyCards(companiesData: Array<Company>) {
         let list = [] as Array<JSX.Element>
 
-        companiesData.forEach(company => {
+        companiesData.forEach((company, index) => {
             list.push(
-                <CompanyCard companyData={company} getProjects={getProjectsData} queryParams={queryParams} projectData={projectData}></CompanyCard>
+                <CompanyCard key={`companyCard${index.toString()}`} companyData={company} getProjects={getProjectsData} queryParams={queryParams} projectData={projectData}></CompanyCard>
             )
         })
         return list

@@ -10,6 +10,7 @@ import Map from './Map'
 import { PremiumContext } from '@/contexts/PremiumContext'
 import Image from 'next/image'
 import Modal from './Modal'
+import { AuthContext } from '@/contexts/AuthContext'
 
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
@@ -28,6 +29,7 @@ export default function DriveBar() {
     const [showList, setShowList] = useState(true)
     const [showVerMais, setShowVerMais] = useState(false)
     const { companyes } = useContext(PremiumContext)
+    const { windowDimensions, checkPremiumView, setCheckPremiumView } = useContext(AuthContext)
     const [premiumElements, setPremiumElements] = useState<Array<JSX.Element> | null>(null)
     const [showPremiumModal, setShowPremiumModal] = useState(false)
     const router = useRouter()
@@ -51,21 +53,48 @@ export default function DriveBar() {
         } 
     }, [mapSelect])
     useEffect(() => {
+        function openCompanyData(company: Company) {
+            setContrutoraSelect(true)
+            setBairroSelect(false)
+            setRegiaoSelect(false)
+            setMapSelect(false)
+            if (filterType.current != 'construtora') {
+                filterType.current = 'construtora'
+                getFilterData()
+            }
+            queryParams.current = InitQueryParams
+            queryParams.current.key = company.name || ''
+            queryParams.current.offset = 0
+            projectData.current.data = []
+            getProjectsData()
+            setShowPremiumModal(false)
+        }
         function renderPremium(companyes: Array<Company>): Array<JSX.Element> {
             return companyes.map((company, index) => {
+                let src;
+                if (windowDimensions.width && windowDimensions.width > 1000) {
+                    src = company.thumbG
+                } else if (windowDimensions.width && windowDimensions.width > 767) {
+                    src = company.thumbM
+                } else {
+                    src = company.thumbP
+                }
                 return (
-                    <div onClick={() => console.log(company.id)} key={`premiumImg${index.toString()}`} className={style.CompanyImg}>
-                        <Image src={company.thumb || ''} width={1000} height={300} alt='' />
+                    <div onClick={() => openCompanyData(company)} key={`premiumImg${index.toString()}`} className={style.CompanyImg}>
+                        <Image src={src || ''} width={1000} height={300} alt='' />
                     </div>
                 )
             })
         }
         if (!companyes || companyes.length == 0) return
         else {
-            setPremiumElements(renderPremium(companyes))
-            setShowPremiumModal(true)
+            if (!showPremiumModal && checkPremiumView == false) {
+                setPremiumElements(renderPremium(companyes))
+                setCheckPremiumView(true)
+                setShowPremiumModal(true)
+            }
         }
-    }, [companyes])
+    }, [companyes, windowDimensions, checkPremiumView])
 
     function getProjectsData() {
         fetch(`/api/projects/get-projects?filterBy=${filterType.current}&key=${queryParams.current.key}&orderBy=${queryParams.current.order_by}&offset=${queryParams.current.offset}&guidance=${queryParams.current.guidance}`)
@@ -142,7 +171,7 @@ export default function DriveBar() {
             </>
         )
     }
-    function getFilterData() {
+    async function getFilterData() {
         setItemList(
             <div className="d-flex justify-content-center" style={{width: '100%'}}>
                 <div className="spinner-border text-warning" role="status">
@@ -150,7 +179,7 @@ export default function DriveBar() {
                 </div>
             </div>
         )
-        fetch(`/api/projects/drive-list?type=${filterType.current}`, {
+        await fetch(`/api/projects/drive-list?type=${filterType.current}`, {
             headers: {
                 'authorization': process.env.NEXT_PUBLIC_API_TOKEN as string
             }
@@ -252,10 +281,10 @@ export default function DriveBar() {
                             {selectedFilter && (
                                 <>
                                     {selectedFilter}
-                                    <span>Exibindo 
+                                    {/* <span>Exibindo 
                                         {" " + projectData.current.partialCount.toString()} 
                                         {projectData.current.partialCount > 1 ? ' itens ' : ' item '} 
-                                        de {projectData.current.totalCount.toString()} no total.</span>
+                                        de {projectData.current.totalCount.toString()} no total.</span> */}
                                 </>
                             )}
                         </div>

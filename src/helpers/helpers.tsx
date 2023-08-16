@@ -188,7 +188,7 @@ export async function uploadToIbb(imageFile: File | null, imgName: string) {
             })
         })
         return await ibbUpload
-
+        
     } catch (error) {
         console.log(error)
         return null

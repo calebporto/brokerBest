@@ -35,7 +35,9 @@ const initialData = {
     setSystemMessage: () => null,
     setUser: null,
     contextUpdate: () => null,
-    loginRequire: () => null
+    loginRequire: () => null,
+    checkPremiumView: false,
+    setCheckPremiumView: () => null
 }
 
 export const AuthContext = createContext<GeneralContext>(initialData)
@@ -43,6 +45,7 @@ export const AuthContext = createContext<GeneralContext>(initialData)
 
 export function AuthProvider(props: {children: ReactNode}) {
     const [systemMessage, setSystemMessage] = useState<string>('')
+    const [checkPremiumView, setCheckPremiumView] = useState<boolean>(false)
     const [contextUser, setContextUser] = useState<User>(initialData.user)
     const [contextWindowDimensions, setContextWindowDimensions] = useState<WindowDimensions>(initialData.windowDimensions)
     const { data: session, update} = useSession() as any
@@ -188,7 +191,9 @@ export function AuthProvider(props: {children: ReactNode}) {
         setSystemMessage: setSystemMessage,
         setUser: setContextUser,
         contextUpdate: contextUpdate,
-        loginRequire: loginRequire
+        loginRequire: loginRequire,
+        checkPremiumView: checkPremiumView,
+        setCheckPremiumView: setCheckPremiumView
     }
 
     return (

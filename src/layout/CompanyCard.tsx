@@ -44,9 +44,9 @@ export default function CompanyCard(props: {
         const company = props.companyData
         return (
             <div className={companyStyle.Company}>
-                {props.companyData?.thumb ? (
+                {/* {props.companyData?.thumb ? (
                     <Image priority onClick={() => windowOpen(windowElement, props.companyData?.thumb)} className={companyStyle.Thumb} alt="" src={props.companyData.thumb} width={1200} height={724}></Image>
-                ) : null}
+                ) : null} */}
                 {company?.admin_id == user.id || user.is_admin ? (
                     <div className={companyStyle.EditarBt}>
                         <button onClick={() => {setShowViewModal(false), router.push(`/painel/empreendimentos/editar-construtora?id=${props.companyData.id}`)}} className="btn btn-warning">Editar</button>
@@ -146,7 +146,7 @@ export default function CompanyCard(props: {
                 <button onClick={() => router.push(`/painel/empreendimentos/editar-construtora?id=${props.companyData.id}`)} className={`btn btn-warning ${style.OptBt}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                     </svg>
                 </button>
                 <Modal show={showBlockModal} setShow={setShowBlockModal} title={'Tem certeza?'} shortModal={true}>

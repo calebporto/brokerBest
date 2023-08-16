@@ -61,9 +61,15 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
     const [district, setDistrict] = useState<string | null>('')
     const [city, setCity] = useState<string | null>('')
     const [uf, setUf] = useState<string | null>('')
-    const [currentImage, setCurrentImage] = useState<string>('')
-    const [fileImg, setFileImg] = useState<FileList | null>(null)
-    const [compressedImg, setCompressedImg] = useState<File | null>(null)
+    const [currentImageG, setCurrentImageG] = useState<string>('')
+    const [fileImgG, setFileImgG] = useState<FileList | null>(null)
+    const [compressedImgG, setCompressedImgG] = useState<File | null>(null)
+    const [currentImageM, setCurrentImageM] = useState<string>('')
+    const [fileImgM, setFileImgM] = useState<FileList | null>(null)
+    const [compressedImgM, setCompressedImgM] = useState<File | null>(null)
+    const [currentImageP, setCurrentImageP] = useState<string>('')
+    const [fileImgP, setFileImgP] = useState<FileList | null>(null)
+    const [compressedImgP, setCompressedImgP] = useState<File | null>(null)
     const [imgLoading, setImgLoading] = useState(false)
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
@@ -98,7 +104,9 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
                         setDistrict(company.district ? company.district : '')
                         setCity(company.city ? company.city : '')
                         setUf(company.uf ? company.uf : '')
-                        setCurrentImage(company.thumb ? company.thumb : '')
+                        setCurrentImageG(company.thumbG ? company.thumbG : '')
+                        setCurrentImageM(company.thumbM ? company.thumbM : '')
+                        setCurrentImageP(company.thumbP ? company.thumbP : '')
                         setShowPage(true)
                     }
                 }
@@ -108,19 +116,47 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
 
     //Visualização de imagem
     useEffect(() => {
-        if (!fileImg) return;
+        if (!fileImgG) return;
         setImgLoading(true)
         const compress = async() => {
-            const compressed = await compressFile(fileImg[0])
+            const compressed = await compressFile(fileImgG[0])
             const url = URL.createObjectURL(compressed);
             () => url && URL.revokeObjectURL(url);
-            setCurrentImage(url);
-            setCompressedImg(compressed)
+            setCurrentImageG(url);
+            setCompressedImgG(compressed)
             setImgLoading(false)
         }
         compress()
         .catch(console.error);
-    }, [fileImg]);
+    }, [fileImgG]);
+    useEffect(() => {
+        if (!fileImgM) return;
+        setImgLoading(true)
+        const compress = async() => {
+            const compressed = await compressFile(fileImgM[0])
+            const url = URL.createObjectURL(compressed);
+            () => url && URL.revokeObjectURL(url);
+            setCurrentImageG(url);
+            setCompressedImgG(compressed)
+            setImgLoading(false)
+        }
+        compress()
+        .catch(console.error);
+    }, [fileImgM]);
+    useEffect(() => {
+        if (!fileImgP) return;
+        setImgLoading(true)
+        const compress = async() => {
+            const compressed = await compressFile(fileImgP[0])
+            const url = URL.createObjectURL(compressed);
+            () => url && URL.revokeObjectURL(url);
+            setCurrentImageG(url);
+            setCompressedImgG(compressed)
+            setImgLoading(false)
+        }
+        compress()
+        .catch(console.error);
+    }, [fileImgP]);
 
     useEffect(() => {
         if (showPage) {
@@ -155,11 +191,11 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
 
     // Visualização de imagem
     // useEffect(() => {
-    //     if (!compressedImg) return;
-    //     const url = URL.createObjectURL(compressedImg);
+    //     if (!compressedImgG) return;
+    //     const url = URL.createObjectURL(compressedImgG);
     //     setTestImageURL(url);
     //     () => url && URL.revokeObjectURL(url);
-    // }, [compressedImg]);
+    // }, [compressedImgG]);
 
     function throwAlert(message: string, type: 'warning' | 'danger' | 'success') {
         _throwAlert(setAlertShow, setAlertMessage, setAlertType, message, type)
@@ -184,17 +220,36 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
         }
         setShowWaitingModal(true)
 
-        var ibbResponse = undefined
-        if (compressedImg) {
-            alert('comporeregsfg')
-            const imgName = `${name.replace(' ', '_')}_thumb`
-            ibbResponse = await compressAndUploadToIbb(compressedImg, imgName)
+        var ibbResponseG = undefined
+        if (compressedImgG) {
+            let imgName = `${name.replace(' ', '_')}_thumbG`
+            ibbResponseG = await uploadToIbb(compressedImgG, imgName)
         }
-        if (ibbResponse === null) {
+        var ibbResponseM = undefined
+        if (compressedImgM) {
+            let imgName = `${name.replace(' ', '_')}_thumbM`
+            ibbResponseM = await uploadToIbb(compressedImgM, imgName)
+        }
+        var ibbResponseP = undefined
+        if (compressedImgP) {
+            let imgName = `${name.replace(' ', '_')}_thumbP`
+            ibbResponseP = await uploadToIbb(compressedImgP, imgName)
+        }
+
+        if (ibbResponseG === null) {
+            console.log('errado')
+            throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
+        } else if (ibbResponseM === null) {
+            throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
+            setShowWaitingModal(false)
+        }else if (ibbResponseP === null) {
             throwAlert('Algo deu errado. Tente novamente mais tarde.', 'danger')
             setShowWaitingModal(false)
         } else {
-            const img = ibbResponse ? ibbResponse.data.image.url : null
+            const imgG = ibbResponseG ? ibbResponseG.data.image.url : null
+            const imgM = ibbResponseM ? ibbResponseM.data.image.url : null
+            const imgP = ibbResponseP ? ibbResponseP.data.image.url : null
             const newCompany = new Company(
                 company && company.id ? company.id : null,
                 name != '' ? name : null,
@@ -208,7 +263,9 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
                 city != '' ? city : null,
                 uf != '' ? uf : null,
                 null,
-                img ? img : null,
+                imgG ? imgG : null,
+                imgM ? imgM : null,
+                imgP ? imgP : null,
                 null,
                 user.id,
                 true
@@ -263,7 +320,9 @@ export default function AddConstrutora({ company }: InferGetServerSidePropsType<
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     </Modal>
-                    <ThumbEdit imgLoading={imgLoading} link={currentImage} setFile={setFileImg}></ThumbEdit>
+                    <ThumbEdit imgLoading={imgLoading} link={currentImageG} setFile={setFileImgG}></ThumbEdit>
+                    <ThumbEdit size="M" imgLoading={imgLoading} link={currentImageM} setFile={setFileImgM}></ThumbEdit>
+                    <ThumbEdit size="P" imgLoading={imgLoading} link={currentImageP} setFile={setFileImgP}></ThumbEdit>
                     <div className={style.LgInput}>
                         <span>Nome da Construtora:</span>
                         <input value={name as string} onChange={(e) => setName(e.target.value)} maxLength={50} type="text" />

@@ -117,7 +117,9 @@ export class Company {
     city: string | null
     uf: string | null
     cep: string | null
-    thumb: string | null
+    thumbG: string | null
+    thumbM: string | null
+    thumbP: string | null
     images: string | null
     admin_id: number | null
     is_active: boolean | null
@@ -135,7 +137,9 @@ export class Company {
         city: string | null,
         uf: string | null,
         cep: string | null,
-        thumb: string | null,
+        thumbG: string | null,
+        thumbM: string | null,
+        thumbP: string | null,
         images: string | null,
         admin_id: number | null,
         is_active: boolean | null
@@ -152,7 +156,9 @@ export class Company {
         this.city = city
         this.uf = uf
         this.cep = cep
-        this.thumb = thumb
+        this.thumbG = thumbG
+        this.thumbM = thumbM
+        this.thumbP = thumbP
         this.images = images
         this.admin_id = admin_id
         this.is_active = is_active
