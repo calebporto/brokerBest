@@ -24,7 +24,7 @@ export default function EmpreendimentosBar(props: {selectPremium?: boolean, back
                             </span> Painel Administrativo</button>
                         )}
                     {props.selectPremium ? (
-                    <button onClick={() => router.push('/painel/empreendimentos-admin/select-premium')} className={`btn btn-dark ${style.SelectPremiumBtBar}`} >Selecionar Empreendimentos Premium</button>) : null}
+                    <button onClick={() => router.push('/painel/empreendimentos-admin/select-premium')} className={`btn btn-dark ${style.SelectPremiumBtBar}`} >Selecionar Construtoras Premium</button>) : null}
                 </div>
             </Container>
         </div>

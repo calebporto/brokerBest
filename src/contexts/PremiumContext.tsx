@@ -1,5 +1,5 @@
 import { PremiumDataClass } from "@/classes";
-import { PremiumData, Project } from "@/helpers/interfaces";
+import { PremiumData, Project, Company } from "@/helpers/interfaces";
 import { ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 
@@ -8,7 +8,7 @@ const InitialPremiumData = new PremiumDataClass()
 export const PremiumContext = createContext<PremiumData>(InitialPremiumData)
 
 export function PremiumProvider(props: {children: ReactNode}) {
-    const [premiumProjects, setPremiumProjects] = useState<Array<Project>>([])
+    const [premiumProjects, setPremiumProjects] = useState<Array<Company>>([])
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
     const {session} = useContext(AuthContext)
 
@@ -23,7 +23,7 @@ export function PremiumProvider(props: {children: ReactNode}) {
         .then(response => {
             if (!response.ok) return
             else return response.json()
-            .then((data: Array<Project>) => {
+            .then((data: Array<Company>) => {
                 setPremiumProjects(data)
                 setLastUpdate(new Date())
             })

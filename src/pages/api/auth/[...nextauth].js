@@ -25,7 +25,6 @@ export const authOptions = {
                   console.log('Autorization error')
                   return null
                 }
-                
                 const response = credentialsModel.safeParse(credentials)
                 if (!response.success) {
                   const { error } = response.error;
@@ -46,10 +45,13 @@ export const authOptions = {
                   return data
                 })
                 const user = await getUser
+                console.log(credentials)
+                console.log(user)
                 if (!user || !await checkPass(credentials.password, user.hash)) {
                   return null
                 }
                 
+                console.log('até aqui')
                 const payload = payloadUserSendMail.safeParse(user)
                 if (!payload.success) {
                   const { error } = payload.error;

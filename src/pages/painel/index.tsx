@@ -48,7 +48,7 @@ const PainelPage = () => {
             <TopNavbar perfilBt={true} contextUser={context}/>
             <TitleBar title='Painel do Corretor' />
             <Alert message={alertMessage} setMessage={setAlertMessage} type={alertType} show={alertShow} handleShow={setAlertShow} showSystemMessage={true}></Alert>
-            <Destaques/>
+            {/* <Destaques/> */}
             {/* <FiltroBar /> */}
             {/* <PainelList/> */}
             <DriveBar />

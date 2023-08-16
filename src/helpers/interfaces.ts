@@ -108,7 +108,7 @@ export interface ProjectData {
 }
 
 export interface PremiumData {
-    projects: Array<Project> | null
+    companyes: Array<Company> | null
     lastUpdate: Date | null
     premiumUpdate?: Function
 }
@@ -155,12 +155,12 @@ export interface ProjectView {
     properties: Array<Property>
 }
 
-export interface PremiumProjectData {
+export interface PremiumCompanyData {
     id: number
     name: string
 }
 
 export interface PremiumQuery {
-    premiumList: Array<PremiumProjectData>
-    projectList: Array<PremiumProjectData>
+    premiumList: Array<PremiumCompanyData>
+    companyList: Array<PremiumCompanyData>
 }

@@ -1,4 +1,4 @@
-import { BasicProject, Project as ProjectType } from "./helpers/interfaces"
+import { BasicProject, Company as CompanyType } from "./helpers/interfaces"
 
 export class newUser {
     nome: string
@@ -93,12 +93,12 @@ export class ProjectDataClass {
 }
 
 export class PremiumDataClass {
-    projects: Array<ProjectType> | null
+    companyes: Array<CompanyType> | null
     lastUpdate: Date | null
     premiumUpdate?: Function
 
-    constructor(projects: Array<ProjectType> | null = [], lastUpdate: Date | null = null, premiumUpdate?: Function) {
-        this.projects = projects
+    constructor(companyes: Array<CompanyType> | null = [], lastUpdate: Date | null = null, premiumUpdate?: Function) {
+        this.companyes = companyes
         this.lastUpdate = lastUpdate
         this.premiumUpdate = premiumUpdate
     }

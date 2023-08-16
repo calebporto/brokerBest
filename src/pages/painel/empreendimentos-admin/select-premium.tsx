@@ -1,5 +1,5 @@
 import { AuthContext } from "@/contexts/AuthContext"
-import { PremiumProjectData, PremiumQuery } from "@/helpers/interfaces"
+import { PremiumCompanyData, PremiumQuery } from "@/helpers/interfaces"
 import EmpreendimentosBar from "@/layout/EmpreendimentosBar"
 import Footer from "@/layout/Footer"
 import TitleBar from "@/layout/TitleBar"
@@ -51,10 +51,10 @@ export const getServerSideProps: GetServerSideProps<{ premiumQuery: PremiumQuery
 export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const context = useContext(AuthContext)
     const { session, user, setSystemMessage } = context
-    const [premiumList, setPremiumList] = useState<Array<PremiumProjectData>>([])
+    const [premiumList, setPremiumList] = useState<Array<PremiumCompanyData>>([])
     const [premiumButtons, setPremiumButtons] = useState<Array<JSX.Element>>([])
-    const [projectList, setProjectList] = useState<Array<PremiumProjectData>>([])
-    const [projectOptions, setProjectOptions] = useState<Array<JSX.Element>>([])
+    const [companyList, setCompanyList] = useState<Array<PremiumCompanyData>>([])
+    const [companyOptions, setCompanyOptions] = useState<Array<JSX.Element>>([])
     const router = useRouter()
     const [showPage, setShowPage] = useState(false)
     const [alertShow, setAlertShow] = useState(false)
@@ -88,25 +88,25 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
 
     useEffect(() => {
         if (premiumQuery == null) {
-            setSystemMessage('Erro ao carregar os projetos premium.')
+            setSystemMessage('Erro ao carregar as construtoras premium.')
             router.push('/painel/empreendimentos-admin')
         } else {
             setPremiumList(premiumQuery.premiumList)
-            setProjectList(premiumQuery.projectList)
+            setCompanyList(premiumQuery.companyList)
         }
     }, [premiumQuery])
 
     useEffect(() => {
-        function renderPremiumBts(list: Array<PremiumProjectData>): Array<JSX.Element> {
+        function renderPremiumBts(list: Array<PremiumCompanyData>): Array<JSX.Element> {
             function removePremium(id: number) {
                 var newList = premiumList.filter(item => item.id != id)
                 setPremiumList(newList)
             }
-            return list.map((project, index) => {
+            return list.map((company, index) => {
                 return (
                     <div key={'premiumBt_' + index.toString()} className={style.PremiumBt}>
-                        <div onClick={() => router.push(`/painel/empreendimentos?id=${project.id}`)} className={style.PremiumBtText}><span>{allFirstUppercase(project.name)}</span></div>
-                        <div onClick={() => removePremium(project.id)} className={style.PremiumBtClose}><span>x</span></div>
+                        <div onClick={() => router.push(`/painel/empreendimentos?id=${company.id}`)} className={style.PremiumBtText}><span>{allFirstUppercase(company.name)}</span></div>
+                        <div onClick={() => removePremium(company.id)} className={style.PremiumBtClose}><span>x</span></div>
                     </div>
                 )
             })
@@ -117,15 +117,15 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
     }, [premiumList])
 
     useEffect(() => {
-        function renderProjectOptions(list: Array<PremiumProjectData>): Array<JSX.Element> {
-            return list.map((project, index) => {
+        function renderCompanyOptions(list: Array<PremiumCompanyData>): Array<JSX.Element> {
+            return list.map((company, index) => {
                 return (
-                    <option key={'selectOption_' + index.toString()} value={project.id}>{allFirstUppercase(project.name)}</option>
+                    <option key={'selectOption_' + index.toString()} value={company.id}>{allFirstUppercase(company.name)}</option>
                 )
             })
         }
-        setProjectOptions(renderProjectOptions(projectList))
-    }, [projectList])
+        setCompanyOptions(renderCompanyOptions(companyList))
+    }, [companyList])
 
     function addPremium() {
         if (premiumList.length > 2) {
@@ -146,7 +146,7 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
             // Verifica se já tem o mesmo empreendimento entre os premium
             for (let i = 0; i < newPremium.length; i++) {
                 if (newPremium[i].id == newPremiumProject.id) {
-                    throwAlert('Este empreendimento já está na lista.', 'warning')
+                    throwAlert('Esta construtora já está na lista.', 'warning')
                     return
                 }
             }
@@ -197,11 +197,11 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
                 <Container>
                     <div className={style.PremiumShow}>
                         <div className={style.Title}>
-                            <p>Empreendimentos Premium:</p>
+                            <p>Construtoras Premium:</p>
                         </div>
                         <div className={style.Display}>
                             {premiumButtons.length > 0 ? premiumButtons : (
-                                <p>Nenhum empreendimento premium selecionado.</p>
+                                <p>Nenhuma construtora premium selecionada.</p>
                             )}
                         </div>
                     </div>
@@ -212,7 +212,7 @@ export default function SelectPremium({ premiumQuery }: InferGetServerSidePropsT
                         <div className={style.Select}>
                             <select name="" id="selectPremium">
                                 <option value="" selected disabled>--  Selecione um empreendimento  --</option>
-                                {[...projectOptions]}
+                                {[...companyOptions]}
                             </select>
                             <button onClick={() => addPremium()} className="btn btn-dark">Adicionar</button>
                         </div>

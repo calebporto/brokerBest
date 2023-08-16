@@ -1,12 +1,15 @@
-import { ReactNode, createRef, useEffect, useRef, useState } from 'react'
+import { ReactNode, createRef, useContext, useEffect, useRef, useState } from 'react'
 import style from '../styles/DriveBar.module.css'
 import Container from './Container'
 import { useRouter } from 'next/router'
-import { BasicProject, Project, ProjectData, ProjectQueryParams, ProjectResponse } from '@/helpers/interfaces'
+import { BasicProject, Company, Project, ProjectData, ProjectQueryParams, ProjectResponse } from '@/helpers/interfaces'
 import { ProjectDataClass, ProjectQueryParamsClass } from '@/classes'
 import ProjectCard from './ProjectCard'
 import { allFirstUppercase } from '@/helpers/helpers'
 import Map from './Map'
+import { PremiumContext } from '@/contexts/PremiumContext'
+import Image from 'next/image'
+import Modal from './Modal'
 
 const InitQueryParams = new ProjectQueryParamsClass()
 const InitProjectData = new ProjectDataClass()
@@ -24,7 +27,9 @@ export default function DriveBar() {
     const [projectElements, setProjectElements] = useState<Array<JSX.Element>>([])
     const [showList, setShowList] = useState(true)
     const [showVerMais, setShowVerMais] = useState(false)
-    const [map, setMap] = useState()
+    const { companyes } = useContext(PremiumContext)
+    const [premiumElements, setPremiumElements] = useState<Array<JSX.Element> | null>(null)
+    const [showPremiumModal, setShowPremiumModal] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -45,6 +50,22 @@ export default function DriveBar() {
             //destroyMap()
         } 
     }, [mapSelect])
+    useEffect(() => {
+        function renderPremium(companyes: Array<Company>): Array<JSX.Element> {
+            return companyes.map((company, index) => {
+                return (
+                    <div onClick={() => console.log(company.id)} key={`premiumImg${index.toString()}`} className={style.CompanyImg}>
+                        <Image src={company.thumb || ''} width={1000} height={300} alt='' />
+                    </div>
+                )
+            })
+        }
+        if (!companyes || companyes.length == 0) return
+        else {
+            setPremiumElements(renderPremium(companyes))
+            setShowPremiumModal(true)
+        }
+    }, [companyes])
 
     function getProjectsData() {
         fetch(`/api/projects/get-projects?filterBy=${filterType.current}&key=${queryParams.current.key}&orderBy=${queryParams.current.order_by}&offset=${queryParams.current.offset}&guidance=${queryParams.current.guidance}`)
@@ -154,7 +175,6 @@ export default function DriveBar() {
             if (showVerMais) setShowVerMais(false)
         }
     }
-
     function porBairro() {
         if (bairroSelect) return
 
@@ -205,6 +225,9 @@ export default function DriveBar() {
     return (
         <div style={{ width: '100%', display: 'flex', height: 'auto' }}>
             <Container>
+                <Modal show={showPremiumModal} setShow={setShowPremiumModal} title={'Premium'}>
+                    {premiumElements}
+                </Modal>
                 <div className={style.DriveBar}>
                     <p className={style.Title}>
                         Drive Imobiliário
